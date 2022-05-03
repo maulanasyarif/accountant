@@ -20,7 +20,7 @@ const KegiatanUI = ((SET) => {
 
             $("#t_kegiatan tbody").html(body);
         },
-
+.
         __renderDirectFooter: (
             { results },
             { search, sort_by, limit, sort_by_option }
@@ -454,7 +454,6 @@ const KegiatanController = ((SET, UI) => {
             __openAdd();
             __submitAdd(TOKEN);
 
-<<<<<<< HEAD
             __openDirectOption()
             __submitDirectFilter(TOKEN, direct_filter)
             __resetDirectFilter(TOKEN)
@@ -466,36 +465,27 @@ const KegiatanController = ((SET, UI) => {
 
         detail: (TOKEN, id) => {
             __fetchPrintKegiatan(TOKEN, id, data => {
-                $('#total').text(data.judul)
                 let body = data[0].detail_kegiatan
-                    .map(v => {
-                        return `
-                            <tr>
-                                <td style="width: 25%;">${v.uraian}</td>
-                                <td style="width: 25%;">${v.satuan}</td>
-                                <td style="width: 25%;">${v.harga_satuan}</td>
-                                <td style="width: 25%;">${v.jumlah_harga}</td>
-                            </tr>
+                .map(v => {
+                    return `
+                    <tr>
+                    <td style="width: 25%;">${v.uraian}</td>
+                    <td style="width: 25%;">${v.satuan}</td>
+                    <td style="width: 25%;">${v.harga_satuan}</td>
+                    <td style="width: 25%;">${v.jumlah_harga}</td>
+                    </tr>
+                    `;
 
-                            <tr id="total" colspan="4">
-
-                            </tr>
-                        `;
-                    }).join("");
-    
+                    `<tr id="total">
+                        <td  colspan="4">
+                        
+                        </td>
+                    </tr>`
+                }).join("");
+                $('#total').text(data.judul)
+                
                 $("#t_printKegiatan tbody").html(body);
             });
         }
     }
 })(SettingController, KegiatanUI)
-=======
-            __openDirectOption();
-            __submitDirectFilter(TOKEN, direct_filter);
-            __resetDirectFilter(TOKEN);
-            __fetchDirectKegiatan(TOKEN, direct_filter, null);
-            __clickDirectPagination(TOKEN, direct_filter);
-            __closeDirectFilter(TOKEN);
-        },
-    };
-})(SettingController, KegiatanUI);
->>>>>>> 441aace494bed055dec070ac525ee52ab3b90aa4
