@@ -196,7 +196,6 @@ $("#export_pdf").click(function() {
 
 // Jumlah Harga
 
-
 const hargaSatuan = $('#jumlah_harga').val()
 $('#satuan').keyup(function(){
     let satuan = parseInt($('#satuan').val())

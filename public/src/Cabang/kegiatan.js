@@ -290,7 +290,8 @@ const KegiatanController = ((SET, UI) => {
     var i = 1;
     $("#addDetailKegiatan").on("click", function () {
         i++;
-        $("#multiple").append(`
+        $("#multiple").append(
+            `
             <div id="apanih" class="col-md-12">
             <div class="row">
 
@@ -302,12 +303,16 @@ const KegiatanController = ((SET, UI) => {
 
                 <div class="form-group">
                     <label for="">Satuan/Volume</label>
-                    <input type="text" name="satuan[]" id="satuan" class="form-control">
+                    <input type="text" name="satuan[]" id="satuan` +
+                i +
+                `" class="form-control">
                 </div>
 
                 <div class="form-group">
                     <label for="">Harga Satuan</label>
-                    <input type="text" name="harga_satuan[]" id="harga_satuan" class="form-control">
+                    <input type="text" name="harga_satuan[]" id="harga_satuan` +
+                i +
+                `" class="form-control">
                 </div>
             </div>
 
@@ -315,7 +320,9 @@ const KegiatanController = ((SET, UI) => {
                 
                 <div class="form-group">
                     <label for="">Jumlah Harga</label>
-                    <input type="text" name="jumlah_harga[]" id="jumlah_harga" class="form-control">
+                    <input type="text" name="jumlah_harga[]" disabled id="jumlah_harga` +
+                i +
+                `" class="form-control">
                 </div>
 
                 <div class="form-group">
@@ -330,11 +337,24 @@ const KegiatanController = ((SET, UI) => {
 
             </div>
             </div>
-        `);
+        `
+        );
 
         $("#multiple").on("click", ".remove-input-field", function () {
             $(this).parent("#apanih div").remove();
             i--;
+        });
+        $("#satuan" + i).on("keyup", function () {
+            let satuan = parseInt($("#satuan" + i).val());
+            let harga_satuan = parseInt($("#harga_satuan" + i).val());
+            let total = satuan * harga_satuan;
+            $("#jumlah_harga" + i).val(isNaN(total) ? "-" : total);
+        });
+        $("#harga_satuan" + i).on("keyup", function () {
+            let satuan = parseInt($("#satuan" + i).val());
+            let harga_satuan = parseInt($("#harga_satuan" + i).val());
+            let total = satuan * harga_satuan;
+            $("#jumlah_harga" + i).val(isNaN(total) ? "-" : total);
         });
     });
 
