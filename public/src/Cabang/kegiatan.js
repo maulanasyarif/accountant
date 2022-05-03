@@ -5,10 +5,14 @@ const KegiatanUI = ((SET) => {
                 .map(v => {
                     return `
                         <tr>
-                            <td style="width: 30%;">${v.judul}</td>
-                            <td style="width: 30%;">${v.kegiatan_name}</td>
-                            <td style="width: 30%;">${v.lokasi}</td>
+                            <td style="width: 20%;">${v.judul}</td>
+                            <td style="width: 20%;">${v.kegiatan_name}</td>
+                            <td style="width: 20%;">${v.lokasi}</td>
                             <td style="width: 10%;">${v.kegiatan_waktu}</td>
+                            <td style="width: 30%;">
+                                <a href="" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_edit">Edit</a>
+                                <a href="${SET.__baseURL()}printKegiatanCabang/${v.id}" type="button" class="btn btn-sm btn-danger waves-effect" id="btn_print">Print</a>
+                            </td>
                         </tr>
                     `;
                 }).join("");
@@ -252,6 +256,42 @@ const KegiatanController = ((SET, UI) => {
         });
     };
 
+    const __fetchPrintKegiatan = (TOKEN, id, callback) => {
+        $.ajax({
+            url: `${SET.__apiURL()}cabang/printKegiatan${id}`,
+            type: 'GET',
+            dataType: 'JSON',
+            // beforeSend: SET.__tableLoader('#t_printKegiatan', 7),
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            success: (res) => {
+                // console.log(res.results);
+                callback(res.results);
+            },
+            error: err => {
+
+            },
+            complete: () => {
+
+            },
+            statusCode: {
+                404: function () {
+                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                },
+                422: function () {
+                    toastr.error("Please Check Input Name or Value", "Failed 422", SET.__bottomNotif());
+                },
+                401: function () {
+                    window.location.href = `${SET.__baseURL()}delete_session`;
+                },
+                500: function () {
+
+                }
+            }
+        })
+    }
+
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
             $("#form_add")[0].reset();
@@ -391,8 +431,32 @@ const KegiatanController = ((SET, UI) => {
             __submitDirectFilter(TOKEN, direct_filter)
             __resetDirectFilter(TOKEN)
             __fetchDirectKegiatan(TOKEN, direct_filter, null)
+            __fetchPrintKegiatan(TOKEN);
             __clickDirectPagination(TOKEN, direct_filter)
             __closeDirectFilter(TOKEN)
+        },
+
+        detail: (TOKEN, id) => {
+            __fetchPrintKegiatan(TOKEN, id, data => {
+                $('#total').text(data.judul)
+                let body = data[0].detail_kegiatan
+                    .map(v => {
+                        return `
+                            <tr>
+                                <td style="width: 25%;">${v.uraian}</td>
+                                <td style="width: 25%;">${v.satuan}</td>
+                                <td style="width: 25%;">${v.harga_satuan}</td>
+                                <td style="width: 25%;">${v.jumlah_harga}</td>
+                            </tr>
+
+                            <tr id="total" colspan="4">
+
+                            </tr>
+                        `;
+                    }).join("");
+    
+                $("#t_printKegiatan tbody").html(body);
+            });
         }
     }
 })(SettingController, KegiatanUI)

@@ -22,4 +22,9 @@ class KegiatanController extends Controller
     {
         return view('__page.cabang.kegiatan.edit', ['id' => $id]);
     }
+
+    public function print($id)
+    {
+        return view('__page.cabang.kegiatan.print', ['id' => $id]);
+    }
 }

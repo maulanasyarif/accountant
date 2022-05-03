@@ -51,6 +51,7 @@ Route::group([
     
     Route::get('kegiatanCabang', 'Cabang\KegiatanController@index')->name('kegiatanCabang');
     Route::get('addKegiatanCabang', 'Cabang\KegiatanController@add')->name('addKegiatanCabang');
+    Route::get('printKegiatanCabang/{id}', 'Cabang\KegiatanController@print')->name('printKegiatanCabang');
     // Route::get('addDaftarPerkiraanCabang', 'Cabang\DaftarPerkiraanController@add')->name('addDaftarPerkiraanCabang');
     
 

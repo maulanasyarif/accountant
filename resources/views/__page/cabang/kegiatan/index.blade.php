@@ -152,17 +152,20 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="width: 30%;" id="id">
+                                                <td style="width: 25%;" id="id">
                                                     <strong>{{ __('Judul') }}</strong>
                                                 </td>
-                                                <td style="width: 30%;" id="id">
+                                                <td style="width: 25%;" id="id">
                                                     <strong>{{ __('Kegiatan') }}</strong>
                                                 </td>
-                                                <td style="width: 30%;" id="id">
+                                                <td style="width: 20%;" id="id">
                                                     <strong>{{ __('Lokasi') }}</strong>
                                                 </td>
                                                 <td style="width: 10%;" id="id">
                                                     <strong>{{ __('Tahun') }}</strong>
+                                                </td>
+                                                <td style="width: 20%;" id="id">
+                                                    <strong>{{ __('Action') }}</strong>
                                                 </td>
                                             </tr>
                                         </thead>
