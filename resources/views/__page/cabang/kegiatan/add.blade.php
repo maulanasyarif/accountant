@@ -106,7 +106,7 @@
                                                         
                                                         <div class="form-group">
                                                             <label for="">{{ __('Jumlah Harga') }}</label>
-                                                            <input type="text" name="jumlah_harga[]" id="jumlah_harga" class="form-control">
+                                                            <input type="text" name="jumlah_harga[]" id="jumlah_harga" class="form-control" disabled>
                                                         </div>
     
                                                         <div class="form-group">
@@ -193,6 +193,24 @@ $("#export_pdf").click(function() {
         $(".noImport").show();
     }, 500);
 })
+
+// Jumlah Harga
+
+
+const hargaSatuan = $('#jumlah_harga').val()
+$('#satuan').keyup(function(){
+    let satuan = parseInt($('#satuan').val())
+    let harga_satuan = parseInt($('#harga_satuan').val())
+    let total = satuan*harga_satuan
+    $('#jumlah_harga').val(isNaN(total) ? '-' : total )
+})
+$('#harga_satuan').keyup(function(){
+    let satuan = parseInt($('#satuan').val())
+    let harga_satuan = parseInt($('#harga_satuan').val())
+    let total = satuan*harga_satuan
+    $('#jumlah_harga').val(isNaN(total) ? '-' : total )
+})
+
 </script>
 
 <script src="{{ asset('src/cabang/kegiatan.js') }}"></script>
