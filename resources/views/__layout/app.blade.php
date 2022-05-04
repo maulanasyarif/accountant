@@ -273,13 +273,23 @@
                         @elseif(Session::get('admin-auth.user')->role == 'ADMIN')
                         <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="{{ url('') }}" aria-expanded="false"><i class="mdi mdi-receipt"></i><span
-                                    class="hide-menu text-white">{{ __('Keuangan') }}</span></a></li>
+                                    class="hide-menu text-white">{{ __('Keuangan') }}</span></a>
+                        </li>
+                                <li class="sidebar-item"> 
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('kegiatanCabang') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt">
+                                        </i>
+                                        <span
+                                            class="hide-menu text-white">{{ __('Kegiatan') }}
+                                        </span>
+                                    </a>
+                        </li>
                         <!-- <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                 href="{{ url('') }}" aria-expanded="false"><i
                                     class="mdi mdi-ticket-confirmation"></i><span
                                     class="hide-menu text-white">{{ __('Inventory') }}</span></a></li> -->
-
-                        @elseif(Session::get('admin-auth.user')->role == 'CABANG')
+                        @elseif(Session::get('admin-auth.user')->role == 'ADMIN'||'CABANG')
                         <!-- <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                                 href="javascript:void(0)" aria-expanded="false"><span
                                     class="hide-menu text-white">Manajemen Perkiraan</span></a>
@@ -295,14 +305,24 @@
                             </ul>
                         </li> -->
 
-                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
-                                href="javascript:void(0)" aria-expanded="false"><span
-                                    class="hide-menu text-white">Manajemen Kegiatan</span></a>
+                        <li class="sidebar-item"> 
+                            <a class="sidebar-link has-arrow waves-effect waves-dark"
+                                href="javascript:void(0)" aria-expanded="false">
+                                <span
+                                    class="hide-menu text-white">Manajemen Kegiatan
+                                </span>
+                            </a>
                             <ul aria-expanded="false" class="collapse first-level">
-                                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                <li class="sidebar-item"> 
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('kegiatanCabang') }}" aria-expanded="false"><i
-                                            class="mdi mdi-receipt"></i><span
-                                            class="hide-menu text-white">{{ __('Kegiatan') }}</span></a></li>
+                                            class="mdi mdi-receipt">
+                                        </i>
+                                        <span
+                                            class="hide-menu text-white">{{ __('Kegiatan') }}
+                                        </span>
+                                    </a>
+                                        </li>
                             </ul>
                         </li>
                         @endif

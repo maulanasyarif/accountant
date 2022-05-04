@@ -21,7 +21,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ]);
-// dd($response);
+        // dd($response);
         $decode = json_decode($response->body());
 
         if ($response->status() === 200) {
@@ -40,12 +40,12 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $api_url = config('app.api_url');
-
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $request->session()->get('admin-auth.token'),
         ])->get($api_url . 'logout');
 
+        // dd($request->session());
         $decode = json_decode($response->body());
 
         if ($response->status() === 200) {

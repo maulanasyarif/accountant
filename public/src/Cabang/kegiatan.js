@@ -11,7 +11,9 @@ const KegiatanUI = ((SET) => {
                             <td style="width: 10%;">${v.kegiatan_waktu}</td>
                             <td style="width: 30%;">
                                 <a href="" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_edit">Edit</a>
-                                <a href="${SET.__baseURL()}printKegiatanCabang/${v.id}" type="button" class="btn btn-sm btn-danger waves-effect" id="btn_print">Print</a>
+                                <a href="${SET.__baseURL()}printKegiatanCabang/${
+                        v.id
+                    }" type="button" class="btn btn-sm btn-danger waves-effect" id="btn_print">Print</a>
                             </td>
                         </tr>
                     `;
@@ -20,7 +22,7 @@ const KegiatanUI = ((SET) => {
 
             $("#t_kegiatan tbody").html(body);
         },
-.
+
         __renderDirectFooter: (
             { results },
             { search, sort_by, limit, sort_by_option }
@@ -267,38 +269,40 @@ const KegiatanController = ((SET, UI) => {
     const __fetchPrintKegiatan = (TOKEN, id, callback) => {
         $.ajax({
             url: `${SET.__apiURL()}cabang/printKegiatan${id}`,
-            type: 'GET',
-            dataType: 'JSON',
+            type: "GET",
+            dataType: "JSON",
             // beforeSend: SET.__tableLoader('#t_printKegiatan', 7),
             headers: {
-                'Authorization': `Bearer ${TOKEN}`
+                Authorization: `Bearer ${TOKEN}`,
             },
             success: (res) => {
                 // console.log(res.results);
                 callback(res.results);
             },
-            error: err => {
-
-            },
-            complete: () => {
-
-            },
+            error: (err) => {},
+            complete: () => {},
             statusCode: {
                 404: function () {
-                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                    toastr.error(
+                        "Endpoint Not Found",
+                        "Failed 404",
+                        SET.__bottomNotif()
+                    );
                 },
                 422: function () {
-                    toastr.error("Please Check Input Name or Value", "Failed 422", SET.__bottomNotif());
+                    toastr.error(
+                        "Please Check Input Name or Value",
+                        "Failed 422",
+                        SET.__bottomNotif()
+                    );
                 },
                 401: function () {
                     window.location.href = `${SET.__baseURL()}delete_session`;
                 },
-                500: function () {
-
-                }
-            }
-        })
-    }
+                500: function () {},
+            },
+        });
+    };
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -454,38 +458,40 @@ const KegiatanController = ((SET, UI) => {
             __openAdd();
             __submitAdd(TOKEN);
 
-            __openDirectOption()
-            __submitDirectFilter(TOKEN, direct_filter)
-            __resetDirectFilter(TOKEN)
-            __fetchDirectKegiatan(TOKEN, direct_filter, null)
+            __openDirectOption();
+            __submitDirectFilter(TOKEN, direct_filter);
+            __resetDirectFilter(TOKEN);
+            __fetchDirectKegiatan(TOKEN, direct_filter, null);
             __fetchPrintKegiatan(TOKEN);
-            __clickDirectPagination(TOKEN, direct_filter)
-            __closeDirectFilter(TOKEN)
+            __clickDirectPagination(TOKEN, direct_filter);
+            __closeDirectFilter(TOKEN);
         },
 
         detail: (TOKEN, id) => {
-            __fetchPrintKegiatan(TOKEN, id, data => {
+            __fetchPrintKegiatan(TOKEN, id, (data) => {
                 let body = data[0].detail_kegiatan
-                .map(v => {
-                    return `
+                    .map((v) => {
+                        return `
                     <tr>
                     <td style="width: 25%;">${v.uraian}</td>
                     <td style="width: 25%;">${v.satuan}</td>
                     <td style="width: 25%;">${v.harga_satuan}</td>
                     <td style="width: 25%;">${v.jumlah_harga}</td>
                     </tr>
+                    
                     `;
 
-                    `<tr id="total">
-                        <td  colspan="4">
-                        
-                        </td>
-                    </tr>`
-                }).join("");
-                $('#total').text(data.judul)
-                
+                        `<tr id="total">
+                    <td  colspan="3">
+                    
+                    </td>
+                </tr>`;
+                    })
+                    .join("");
+                $("#total").text(data.judul);
+
                 $("#t_printKegiatan tbody").html(body);
             });
-        }
-    }
-})(SettingController, KegiatanUI)
+        },
+    };
+})(SettingController, KegiatanUI);

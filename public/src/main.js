@@ -1,15 +1,15 @@
 const MainUI = ((SET) => {
-
     return {
-        __renderDataLog : data => {
-
-            
+        __renderDataLog: (data) => {
             let html = `
                 <div class="steamline">
-                    ${data.map(v => {
-                        var date = moment(`${v.datetime}`).startOf('minute').fromNow(); 
+                    ${data
+                        .map((v) => {
+                            var date = moment(`${v.datetime}`)
+                                .startOf("minute")
+                                .fromNow();
 
-                        return `
+                            return `
                             <div class="sl-item">
                                 <div class="sl-left bg-success"> <i class="ti-user"></i></div>
                                 <div class="sl-right">
@@ -17,71 +17,63 @@ const MainUI = ((SET) => {
                                     <div class="desc">${date}</div>
                                 </div>
                             </div>
-                        `
-                    }).join('')}
+                        `;
+                        })
+                        .join("")}
                     
                 </div>
-            `
-            $('#sidebar_log').html(html)
-        }
-    }
+            `;
+            $("#sidebar_log").html(html);
+        },
+    };
+})(SettingController);
 
-})(SettingController)
-
-const MainController = ((SET , UI) => {
-
+const MainController = ((SET, UI) => {
     const __logoutSystem = () => {
-        $('#logout').on('click', function(){
-
+        $("#logout").on("click", function () {
             $.ajax({
-                url: `${SET.__baseURL()}logout`,
-                type: 'GET',
-                dataType: 'JSON',
-                beforeSend: xhr => {
-                    SET.__pageLoader()
+                url: `user-mika.test/logout`,
+                type: "GET",
+                dataType: "JSON",
+                beforeSend: (xhr) => {
+                    SET.__pageLoader();
                 },
-                success: res => {
-                    window.location.href = `${SET.__baseURL()}login`
+                success: (res) => {
+                    window.location.href = `${SET.__baseURL()}login`;
                 },
-                error: err => {
+                error: (err) => {
                     let error = err.responseJSON;
                     toastr.error("Failed", error.message, SET.__bottomNotif());
                 },
                 complete: () => {
-                    SET.__closePageLoader()
-                }
-            })
-        })
-    }
+                    SET.__closePageLoader();
+                },
+            });
+        });
+    };
 
-    const __fetchDataLog = TOKEN => {
-
-        $('.service-panel-toggle').on('click' , function() {
+    const __fetchDataLog = (TOKEN) => {
+        $(".service-panel-toggle").on("click", function () {
             $.ajax({
                 url: `${SET.__apiURL()}log`,
-                type: 'GET',
-                dataType: 'JSON',
+                type: "GET",
+                dataType: "JSON",
                 headers: {
-                    'Authorization': `Bearer ${TOKEN}`
+                    Authorization: `Bearer ${TOKEN}`,
                 },
                 success: (res) => {
                     UI.__renderDataLog(res.results);
                 },
-                error: err => {
-
-                },
-                complete: () => {
-
-                }
-            })
-        })
-
-    }
+                error: (err) => {},
+                complete: () => {},
+            });
+        });
+    };
 
     return {
-        init: TOKEN => {
+        init: (TOKEN) => {
             __logoutSystem();
             __fetchDataLog(TOKEN);
-        }
-    }
-})(SettingController , MainUI)
+        },
+    };
+})(SettingController, MainUI);
