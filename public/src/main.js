@@ -32,7 +32,7 @@ const MainController = ((SET, UI) => {
     const __logoutSystem = () => {
         $("#logout").on("click", function () {
             $.ajax({
-                url: `user-mika.test/logout`,
+                url: `${SET.__baseURL()}logout`,
                 type: "GET",
                 dataType: "JSON",
                 beforeSend: (xhr) => {

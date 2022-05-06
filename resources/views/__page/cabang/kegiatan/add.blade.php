@@ -106,7 +106,7 @@
                                                         
                                                         <div class="form-group">
                                                             <label for="">{{ __('Jumlah Harga') }}</label>
-                                                            <input type="text" name="jumlah_harga[]" id="jumlah_harga" class="form-control" disabled>
+                                                            <input type="text" name="jumlah_harga[]" id="jumlah_harga" class="form-control">
                                                         </div>
     
                                                         <div class="form-group">

@@ -364,7 +364,7 @@ const KegiatanController = ((SET, UI) => {
                 
                 <div class="form-group">
                     <label for="">Jumlah Harga</label>
-                    <input type="text" name="jumlah_harga[]" disabled id="jumlah_harga` +
+                    <input type="text" name="jumlah_harga[]" id="jumlah_harga` +
                 i +
                 `" class="form-control">
                 </div>
