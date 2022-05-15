@@ -112,7 +112,7 @@
                                                                 <div class="input-group mb-3">
                                                                     <select name="sort_by" id="direct_filter_name"
                                                                         class="form-control">
-                                                                        <option value="name" selected>
+                                                                        <option value="keterangan" selected>
                                                                             {{ __('Keterangan') }}</option>
                                                                         <!-- <option value="type">Type</option> -->
                                                                     </select>
@@ -204,7 +204,7 @@
 
                     <div class="form-group">
                         <label for="">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control" />
+                        <input type="date" name="tanggal" id="tanggal" class="form-control"/>
                     </div>
                     
                     <div class="form-group">
@@ -214,14 +214,14 @@
 
                     <div class="form-group">
                         <label for="">{{ __('Debit') }}</label>
-                        <select name="perkiraan_id" id="direct_filter_arrival" class="form-control" style="width: 100%;">
+                        <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
                             <option value="">-- {{ __('Select Perkiraan') }} --</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="">{{ __('Kredit') }}</label>
-                        <select name="perkiraan_id" id="direct_filter_arrival" class="form-control" style="width: 100%;">
+                        <select name="kredit_id" id="direct_kredit" class="form-control" style="width: 100%;">
                             <option value="">-- {{ __('Select Perkiraan') }} --</option>
                         </select>
                     </div>
@@ -236,6 +236,85 @@
                     <button type="button" class="btn btn-danger waves-effect"
                         data-dismiss="modal">{{ __('Tutup') }}</button>
                     <button type="submit" class="btn btn-info waves-effect" id="btn_submit">{{ __('Simpan') }}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</form>
+
+<!-- modal edit -->
+<form id="form_edit">
+    <div id="modal_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">{{ __('Edit Jurnal') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="">Tanggal</label>
+                        <input type="date" name="tanggal" id="tanggal" class="form-control"/>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="">{{ __('Keterangan') }}</label>
+                        <input type="text" name="keterangan" id="keterangan" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">{{ __('Debit') }}</label>
+                        <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
+                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">{{ __('Kredit') }}</label>
+                        <select name="kredit_id" id="direct_kredit" class="form-control" style="width: 100%;">
+                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">{{ __('Jumlah') }}</label>
+                        <input type="text" name="jumlah" id="jumlah" class="form-control">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger waves-effect"
+                        data-dismiss="modal">{{ __('Tutup') }}</button>
+                    <button type="submit" class="btn btn-info waves-effect" id="btn_edit">{{ __('Update') }}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</form>
+
+<!-- modal delete -->
+<form id="form_delete">
+    <div id="modal_delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">{{ __('Hapus Jurnal') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <h4>{{ __('Are you sure delete ') }}<b><span id="delete_name"></span> ?</b></h4>
+                    <h5>{{ __('Data will removed permanently.') }}</h5>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id" id="delete_id">
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">{{ __('Tutup') }}</button>
+                    <button type="submit" class="btn btn-info waves-effect" id="btn_submit_delete">Ya</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -295,6 +374,6 @@ $("#export_pdf").click(function() {
 </script>
 <script src="{{ asset('src/cabang/kas.js') }}"></script>
 <script>
-    KasController.init('{{ Session::get('admin - auth.token ')}}');
+    KasController.init('{{ Session::get('admin-auth.token')}}');
 </script>
 @endsection

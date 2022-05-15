@@ -142,7 +142,7 @@ const PengajuanController = ((SET, UI) => {
     const __fetchDirectPengajuan = (TOKEN, filter = {}, link = null) => {
         $.ajax({
             url: `${
-                link === null ? SET.__apiURL() + "cabang/get_pengajuan" : link
+                link === null ? SET.__apiURL() + 'cabang/get_pengajuan' : link
             }`,
             type: "GET",
             dataType: "JSON",
