@@ -375,5 +375,5 @@ $("#export_pdf").click(function() {
 <script src="{{ asset('src/cabang/kas.js') }}"></script>
 <script>
     KasController.init('{{ Session::get('admin-auth.token')}}');
-</script>
+</script> 
 @endsection
