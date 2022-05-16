@@ -486,9 +486,9 @@ const PengajuanController = ((SET, UI) => {
                             SET.__bottomNotif()
                         );
                     },
-                    // 401: function () {
-                    //     window.location.href = `${SET.__baseURL()}delete_session`;
-                    // },
+                    401: function () {
+                        window.location.href = `${SET.__baseURL()}delete_session`;
+                    },
                     500: function () {},
                 },
             });
