@@ -59,9 +59,11 @@ Route::group([
     //CABANG
     Route::get('perkiraanCabang', 'Cabang\PerkiraanController@index')->name('perkiraanCabang');
     Route::get('addperkiraanCabang', 'Cabang\PerkiraanController@add')->name('addperkiraanCabang');
+    Route::get('editperkiraanCabang/{id}', 'Cabang\PerkiraanController@edit')->name('editperkiraanCabang');
 
     Route::get('daftarPerkiraanCabang', 'Cabang\DaftarPerkiraanController@index')->name('daftarPerkiraanCabang');
     Route::get('addDaftarPerkiraanCabang', 'Cabang\DaftarPerkiraanController@add')->name('addDaftarPerkiraanCabang');
+    Route::get('editaftarPerkiraanCabang/{id}', 'Cabang\DaftarPerkiraanController@edit')->name('editaftarPerkiraanCabang');
     
     Route::get('kegiatanCabang', 'Cabang\KegiatanController@index')->name('kegiatanCabang');
     Route::get('addKegiatanCabang', 'Cabang\KegiatanController@add')->name('addKegiatanCabang');
@@ -69,6 +71,7 @@ Route::group([
     // Route::get('addDaftarPerkiraanCabang', 'Cabang\DaftarPerkiraanController@add')->name('addDaftarPerkiraanCabang');
     
     Route::get('jurnalUmumCabang', 'Cabang\KasController@index')->name('jurnalUmumCabang');
+    Route::get('editjurnalUmumCabang/{id}', 'Cabang\KasController@edit')->name('editjurnalUmumCabang');
     
     
     Route::get('pengajuanCabang', 'Cabang\KegiatanController@pengajuan')->name('pengajuanCabang');

@@ -353,7 +353,7 @@
             @yield('content')
 
             <footer class="footer text-center">
-                <!-- All Rights Reserved by PT. Mida Karya Abadi. -->
+                All Rights Reserved by PT. Mida Karya Abadi.
             </footer>
 
         </div>
@@ -362,9 +362,6 @@
     <aside class="customizer">
         <a href="javascript:void(0)" class="service-panel-toggle"><i class="fa fa-spin fa-cog"></i></a>
         <div class="customizer-body">
-            <!-- <ul class="nav customizer-tab" role="tablist">
-                
-            </!-->
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade p-15 show active" id="pills-contact" role="tabpanel"
                     aria-labelledby="pills-contact-tab">
@@ -416,7 +413,7 @@
         toastr.success('{{ session(' message ') }}', 'Success', SettingController.__bottomRightNotif());
     @endif
 
-    MainController.init('{{ Session::get(' admin - auth.token ') }}')
+    MainController.init('{{ Session::get(' admin-auth.token ') }}')
     </script>
 
     @yield('js-source')

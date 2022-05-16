@@ -148,13 +148,15 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="width: 50%;" id="id">
+                                                <td style="width: 40%;" id="id">
                                                     <strong>{{ __('No Perkiraan') }}</strong>
                                                 </td>
-                                                <td style="width: 50%;" id="id">
+                                                <td style="width: 40%;" id="id">
                                                     <strong>{{ __('Nama Perkiraan') }}</strong>
                                                 </td>
-                                                <!-- <td style="width: 30%;"><strong>Status</strong></td> -->
+                                                <td style="width: 20%;">
+                                                    <strong>{{__('Action')}}</strong>
+                                                </td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -205,6 +207,31 @@
                     <button type="button" class="btn btn-danger waves-effect"
                         data-dismiss="modal">{{ __('Tutup') }}</button>
                     <button type="submit" class="btn btn-info waves-effect" id="btn_submit">{{ __('Simpan') }}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</form>
+
+<!-- modal delete -->
+<form id="form_delete">
+    <div id="modal_delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">{{ __('Hapus Perkiraan') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <h4>{{ __('Are you sure delete ') }}<b><span id="delete_name"></span> ?</b></h4>
+                    <h5>{{ __('Data will removed permanently.') }}</h5>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id" id="delete_id">
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">{{ __('Tutup') }}</button>
+                    <button type="submit" class="btn btn-info waves-effect" id="btn_submit_delete">Ya</button>
                 </div>
             </div>
             <!-- /.modal-content -->

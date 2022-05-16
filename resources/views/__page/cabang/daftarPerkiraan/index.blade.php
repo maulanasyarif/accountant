@@ -148,17 +148,20 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="width: 25%;" id="id">
+                                                <td style="width: 20%;" id="id">
                                                     <strong>{{ __('No Perkiraan') }}</strong>
                                                 </td>
-                                                <td style="width: 25%;" id="id">
+                                                <td style="width: 30%;" id="id">
                                                     <strong>{{ __('Nama Perkiraan') }}</strong>
                                                 </td>
-                                                <td style="width: 25%;" id="id">
+                                                <td style="width: 15%;" id="id">
                                                     <strong>{{ __('Debet') }}</strong>
                                                 </td>
-                                                <td style="width: 25%;" id="id">
+                                                <td style="width: 15%;" id="id">
                                                     <strong>{{ __('Kredit') }}</strong>
+                                                </td>
+                                                <td style="width: 20%;" id="id">
+                                                    <strong>{{ __('Action') }}</strong>
                                                 </td>
                                             </tr>
                                         </thead>
@@ -227,6 +230,31 @@
     </div>
 </form>
 
+<!-- modal delete -->
+<form id="form_delete">
+    <div id="modal_delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">{{ __('Hapus Daftar Perkiraan') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <h4>{{ __('Are you sure delete ') }}<b><span id="delete_name"></span> ?</b></h4>
+                    <h5>{{ __('Data will removed permanently.') }}</h5>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id" id="delete_id">
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">{{ __('Tutup') }}</button>
+                    <button type="submit" class="btn btn-info waves-effect" id="btn_submit_delete">Ya</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</form>
+
 @endsection
 
 
@@ -279,6 +307,6 @@ $("#export_pdf").click(function() {
 
 <script src="{{ asset('src/cabang/daftarPerkiraan.js') }}"></script>
 <script>
-    DaftarPerkiraanController.init('{{ Session::get('admin - auth.token ')}}');
+    DaftarPerkiraanController.init('{{ Session::get('admin-auth.token')}}');
 </script>
 @endsection

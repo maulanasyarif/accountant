@@ -11,4 +11,9 @@ class KasController extends Controller
     {
         return view('__page.cabang.kas.index');
     }
+
+    public function edit($id)
+    {
+        return view('__page.cabang.kas.edit', ['id' => $id]);
+    }
 }

@@ -5,10 +5,16 @@ const daftarPerkiraanUI = ((SET) => {
                 .map(v => {
                     return `
                         <tr>
-                            <td style="width: 25%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
-                            <td style="width: 25%;">${v.perkiraan.perkiraan_name}</td>
-                            <td style="width: 25%;">${SET.__realCurrency(v.debit)}</td>
-                            <td style="width: 25%;">${SET.__realCurrency(v.kredit)}</td>
+                            <td style="width: 20%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
+                            <td style="width: 30%;">${v.perkiraan.perkiraan_name}</td>
+                            <td style="width: 15%;">${SET.__realCurrency(v.debit)}</td>
+                            <td style="width: 15%;">${SET.__realCurrency(v.kredit)}</td>
+                            <td style="width: 20%;">
+                                <div class="btn-group">
+                                    <a href="${SET.__baseURL()}editaftarPerkiraanCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                    <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.perkiraan.perkiraan_name}">Delete</button>
+                                </div>
+                            </td>
                         </tr>
                     `;
                 }).join("");
@@ -134,7 +140,7 @@ const DaftarPerkiraanController = ((SET, UI) => {
             data: filter,
             beforeSend: SET.__tableLoader('#t_daftarPerkiraan', 7),
             headers: {
-                'Authorization': `Bearer ${TOKEN}`
+                Authorization: `Bearer ${TOKEN}`
             },
             success: (res) => {
                 $("#count_regencies").text(res.total_all);
@@ -239,6 +245,148 @@ const DaftarPerkiraanController = ((SET, UI) => {
         });
     };
 
+    const __submitDelete = (TOKEN, filter) => {
+        $("#form_delete").validate({
+            errorClass: "is-invalid",
+            errorElement: "div",
+            errorPlacement: function (error, element) {
+                error.addClass("invalid-feedback");
+                error.insertAfter(element);
+            },
+            rules: {
+                id: "required"
+            },
+            submitHandler: form => {
+                let id = $('#delete_id').val()
+
+                $.ajax({
+                    url: `${SET.__apiURL()}cabang/deleteDaftarPerkiraan/${id}`,
+                    type: "DELETE",
+                    dataType: "JSON",
+                    data: $(form).serialize(),
+                    beforeSend: xhr => {
+                        SET.__buttonLoader("#btn_submit_delete");
+                    },
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    },
+                    success: res => {
+                        __fetchDirectPerkiraan(TOKEN, filter);
+                        $('#modal_delete').modal('hide');
+                        toastr.success(
+                            "Success",
+                            res.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    error: err => {
+                    },
+                    complete: () => {
+                        SET.__closeButtonLoader("#btn_submit_delete");
+                    },
+
+                    statusCode: {
+                        404: function () {
+                            toastr.error("Cannot find ID Or Endpoint Not Found", "Failed", SET.__bottomNotif());
+                        },
+                        401: function () {
+                            window.location.href = `${SET.__baseURL()}delete_session`;
+                        },
+                        500: function () {
+
+                        }
+                    }
+
+                });
+            }
+        });
+    };
+    
+
+    const __fetchDetailDaftarPerkiraan = (TOKEN, id, callback) => {
+        $.ajax({
+            url: `${SET.__apiURL()}cabang/editDaftarPerkiraan/${id}`,
+            type: 'GET',
+            dataType: 'JSON',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            success: (res) => {
+                callback(res.results);
+            },
+            error: err => {
+
+            },
+            complete: () => {
+
+            },
+            statusCode: {
+                404: function () {
+                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                },
+                401: function () {
+                    window.location.href = `${SET.__baseURL()}delete_session`;
+                },
+                500: function () {
+
+                }
+            }
+        })
+    };
+
+    const __submitUpdatePerkiraan = (TOKEN, id) => {
+        var url = window.location.pathname;
+        var id = url.substring(url.lastIndexOf('/') + 1);
+
+        $("#form_edit_daftarPerkiraan").on('submit', function(e){
+            e.preventDefault()
+        }).validate({
+            errorElement: "div",
+            errorPlacement: function (error, element) {
+                error.addClass("invalid-feedback");
+                error.insertAfter(element);
+            },
+            rules: {
+                perkiraan_id: 'required',
+                debet: 'required',
+                kredit: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.__apiURL()}cabang/updateDaftarPerkiraan/${id}`,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        SET.__buttonLoader("#btn_update_daftarPerkiraan");
+                    },
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    },
+                    success: (res) => {
+                        window.location.href = `${SET.__baseURL()}daftarPerkiraanCabang`;
+                        toastr.success(
+                            "Success",
+                            res.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    error: err => {
+                        let error = err.responseJSON;
+
+                        toastr.error(
+                            "Failed",
+                            error.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                });
+            }
+        });
+    }
+
     const __pluginDirectInit = TOKEN => {
         $("#direct_filter_arrival").select2({
             placeholder: "-- Select Perkiraan --",
@@ -268,7 +416,7 @@ const DaftarPerkiraanController = ((SET, UI) => {
                         res.results.data.map(v => {
                             let city = {
                                 id: v.id,
-                                text: `${v.perkiraan_no} | ${v.perkiraan_name}`,
+                                text: `${SET.__threedigis(v.perkiraan_no)} | ${v.perkiraan_name}`,
                             };
 
                             group.children.push(city);
@@ -292,6 +440,17 @@ const DaftarPerkiraanController = ((SET, UI) => {
             $("#modal_add").modal("show");
         });
     };
+
+    const __openDelete = () => {
+        $("#t_daftarPerkiraan, #options").on("click", ".btn-delete", function () {
+            let delete_id = $(this).data('id');
+            let delete_name = $(this).data('name');
+
+            $("#delete_id").val(delete_id);
+            $("#delete_name").text(delete_name);
+            $('#modal_delete').modal('show')
+        });
+    }
 
     const __clickDirectPagination = (TOKEN, filter = {}) => {
         $('#t_daftarPerkiraan').on('click', '.btn-pagination', function () {
@@ -349,6 +508,9 @@ const DaftarPerkiraanController = ((SET, UI) => {
             __openAdd();
             __submitAdd(TOKEN);
 
+            __openDelete();
+            __submitDelete(TOKEN, direct_filter);
+
             __openDirectOption()
             __submitDirectFilter(TOKEN, direct_filter)
             __resetDirectFilter(TOKEN)
@@ -356,6 +518,21 @@ const DaftarPerkiraanController = ((SET, UI) => {
             __clickDirectPagination(TOKEN, direct_filter)
             __closeDirectFilter(TOKEN)
             __pluginDirectInit(TOKEN)
+
+            __submitUpdatePerkiraan(TOKEN, id);
+        },
+
+        detail: (TOKEN, id) => {
+            __fetchDetailDaftarPerkiraan(TOKEN, id, data => {
+                $('#fetch_noPerkiraan').text(data.perkiraan.perkiraan_no !== null ? `${SET.__threedigis(data.perkiraan.perkiraan_no)}` : '-');
+                $('#fetch_perkiraanNama').text(data.perkiraan.perkiraan_name);
+                $('#fetch_debet').text(data.debit);
+                $('#fetch_kredit').text(data.kredit);
+
+                //edit daftar perkiraan
+                $('#debet').val(data.debit);
+                $('#kredit').val(data.kredit);
+            });
         }
     }
 })(SettingController, daftarPerkiraanUI)
