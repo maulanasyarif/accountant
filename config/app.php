@@ -235,7 +235,7 @@ return [
 
     ],
 
-    'api_url' => env('API_URL', 'http://api-mika.test:8080/api/'),
+    'api_url' => env('API_URL', 'http://api-mika.test/api/'),
     // 'file_url' => env('FILE_URL', 'https://api-provider.dipass.id/file/'),
 
 ];

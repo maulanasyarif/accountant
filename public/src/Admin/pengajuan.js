@@ -1,36 +1,39 @@
 const PengajuanUI = ((SET) => {
     return {
-        __renderDirectData: ({ results }, {limit}) => {
+        __renderDirectData: ({ results }, { limit }) => {
             let body = results.data
                 .map((v) => {
-                    return (
-                        `
+                    return `
                         <tr>
                             <td style="width: 25%;">${v.company_name}</td>
                             <td style="width: 20%;">${v.kegiatan.no_surat}</td>
                             <td style="width: 25%;">${v.kegiatan.judul}</td>
                             <td style="width: 30%;">
-                                ${v.status === 'pending' ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
+                                ${
+                                    v.status === "pending"
+                                        ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
                                     <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                    JSON.stringify(v.kegiatan) +
-                                    `'>
+                                          JSON.stringify(v.kegiatan) +
+                                          `'>
                                         <button type="button" value="review" name="${v.kegiatan.id}" id="review${v.kegiatan.id}" class="btn btn-sm btn-warning">Review</button>
                                         <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
                                         <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
-                                    </form>` 
-                                : v.status === 'review' ? 
-                                    `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
+                                    </form>`
+                                        : v.status === "review"
+                                        ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
                                     <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                    JSON.stringify(v.kegiatan) +
-                                    `'>
+                                          JSON.stringify(v.kegiatan) +
+                                          `'>
                                         <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
                                         <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
-                                    </form>` : v.status === 'approve' ? `<a type="button" class="btn btn-outline-success disabled">${v.status}</a>`
-                                    : `<a type="button" class="btn btn-outline-danger disabled">${v.status}</a>`}
+                                    </form>`
+                                        : v.status === "approve"
+                                        ? `<a type="button" class="btn btn-outline-success disabled">${v.status}</a>`
+                                        : `<a type="button" class="btn btn-outline-danger disabled">${v.status}</a>`
+                                }
                             </td>
                         </tr>
-                    `
-                    );
+                    `;
                 })
                 .join("");
 
@@ -151,7 +154,6 @@ const PengajuanUI = ((SET) => {
 })(SettingController);
 
 const PengajuanController = ((SET, UI) => {
-
     const __fetchDirectPengajuan = (TOKEN, filter = {}, link = null) => {
         $.ajax({
             url: `${
@@ -200,13 +202,13 @@ const PengajuanController = ((SET, UI) => {
 
     const __verifikasiPengajuan = (TOKEN, filter) => {
         $(document).ready(function () {
-            $(document).on("click", "button", function (e) {
+            $("#t_pengajuan").on("click", "button", function (e) {
                 e.preventDefault();
                 var formData = {
                     data: $("#data_json" + this.id.slice(-1)).val(),
                     status: this.id,
                     id: this.name,
-                    value: this.value
+                    value: this.value,
                 };
                 $.ajax({
                     url: `${SET.__apiURL()}admin/verifikasipengajuan`,
@@ -217,9 +219,11 @@ const PengajuanController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`,
                     },
                     success: (res) => {
-                        if(formData.value === 'review'){
-                            location.href = `${SET.__baseURL()}editPengajuanAdmin/${formData.id}`
-                        }else {
+                        if (formData.value === "review") {
+                            location.href = `${SET.__baseURL()}editPengajuanAdmin/${
+                                formData.id
+                            }`;
+                        } else {
                             __fetchDirectPengajuan(TOKEN, filter);
                         }
                     },
@@ -363,38 +367,42 @@ const PengajuanController = ((SET, UI) => {
     };
 
     const __fetchDetailPengajuan = (TOKEN, id, callback) => {
+        const searchParam = new URLSearchParams(window.location.search);
+        const getParam = searchParam.get("page");
         $.ajax({
-            url: `${SET.__apiURL()}admin/get_detailPengajuan/${id}`,
-            type: 'GET',
-            dataType: 'JSON',
+            url: `${SET.__apiURL()}admin/get_detailPengajuan/${id}?page=${getParam}`,
+            type: "GET",
+            dataType: "JSON",
             headers: {
-                'Authorization': `Bearer ${TOKEN}`
+                Authorization: `Bearer ${TOKEN}`,
             },
             success: (res) => {
                 callback(res.results);
             },
-            error: err => {
-
-            },
-            complete: () => {
-
-            },
+            error: (err) => {},
+            complete: () => {},
             statusCode: {
                 404: function () {
-                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                    toastr.error(
+                        "Endpoint Not Found",
+                        "Failed 404",
+                        SET.__bottomNotif()
+                    );
                 },
                 422: function () {
-                    toastr.error("Please Check Input Name or Value", "Failed 422", SET.__bottomNotif());
+                    toastr.error(
+                        "Please Check Input Name or Value",
+                        "Failed 422",
+                        SET.__bottomNotif()
+                    );
                 },
                 401: function () {
                     window.location.href = `${SET.__baseURL()}delete_session`;
                 },
-                500: function () {
-
-                }
-            }
-        })
-    }
+                500: function () {},
+            },
+        });
+    };
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -443,6 +451,50 @@ const PengajuanController = ((SET, UI) => {
         });
     };
 
+    const __updateDetailKegiatan = (TOKEN) => {
+        $("#updateDetailPengajuan").click(function (e) {
+            e.preventDefault();
+            const idDetail = $("#id_detailKegiatan").val();
+            $.ajax({
+                url: `${SET.__apiURL()}admin/updateDetailKegiatan/${idDetail}/edit`,
+                type: "PATCH",
+                dataType: "json",
+                data: $("#edit-pengajuan").serialize(),
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`,
+                },
+                success: (res) => {
+                    toastr.success("Success", res.message, SET.__bottomNotif());
+                    window.setTimeout(() => {
+                        window.location.reload(window.location.href);
+                    }, 2000);
+                },
+                error: (err) => {},
+                complete: () => {},
+                statusCode: {
+                    404: function () {
+                        toastr.error(
+                            "Endpoint Not Found",
+                            "Failed 404",
+                            SET.__bottomNotif()
+                        );
+                    },
+                    422: function () {
+                        toastr.error(
+                            "Please Check Input Name or Value",
+                            "Failed 422",
+                            SET.__bottomNotif()
+                        );
+                    },
+                    // 401: function () {
+                    //     window.location.href = `${SET.__baseURL()}delete_session`;
+                    // },
+                    500: function () {},
+                },
+            });
+        });
+    };
+
     return {
         init: (TOKEN) => {
             let direct_filter = {
@@ -460,7 +512,7 @@ const PengajuanController = ((SET, UI) => {
             __openAdd();
             __submitAdd(TOKEN);
             __verifikasiPengajuan(TOKEN);
-
+            __updateDetailKegiatan(TOKEN);
             __openDirectOption();
             __submitDirectFilter(TOKEN, direct_filter);
             __resetDirectFilter(TOKEN);
@@ -471,12 +523,47 @@ const PengajuanController = ((SET, UI) => {
         },
 
         detail: (TOKEN, id) => {
-            __fetchDetailPengajuan(TOKEN, id, data => {
-                $('#judul').text(data[0].judul);
-                $('#no_surat').text(data[0].no_surat);
-                $('#kegiatan_waktu').text(data[0].kegiatan_waktu);
-            })
-        }
-        
+            $(document).ready(function () {
+                __fetchDetailPengajuan(TOKEN, id, (data) => {
+                    $("#judul").text(data.data[0].judul);
+                    $("#no_surat").text(data.data[0].no_surat);
+                    $("#kegiatan_waktu").text(data.data[0].kegiatan_waktu);
+                    data.data.map((v) => {
+                        $("#id_detailKegiatan").val(v.id);
+                        $("#tanggal").val(v.tanggal);
+                        $("#uraian").val(v.uraian);
+                        $("#nomor_rekening").val(v.nomor_rekening);
+                        $("#nama_bank").val(v.nama_bank);
+                        $("#satuan").val(v.satuan);
+                        $("#harga_satuan").val(v.harga_satuan);
+                        $("#jumlah_harga").val(v.jumlah_harga);
+                    });
+                    const urlParams = new URLSearchParams(
+                        window.location.search
+                    );
+                    const getParam = urlParams.get("page");
+                    $("#prev").attr(
+                        "href",
+                        `${SET.__baseURL()}editPengajuanAdmin/${id}?page=${
+                            data.prev_page_url
+                                ? data.prev_page_url.substr(
+                                      data.prev_page_url.length - 1
+                                  )
+                                : getParam
+                        }`
+                    );
+                    $("#next").attr(
+                        "href",
+                        `${SET.__baseURL()}editPengajuanAdmin/${id}?page=${
+                            data.next_page_url
+                                ? data.next_page_url.substr(
+                                      data.next_page_url.length - 1
+                                  )
+                                : getParam
+                        }`
+                    );
+                });
+            });
+        },
     };
 })(SettingController, PengajuanUI);

@@ -302,6 +302,24 @@
                             </ul>
                         </li>
 
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
+                            href="javascript:void(0)" aria-expanded="false"><span
+                                class="hide-menu text-white">Manajemen Keuangan</span></a>
+                        <ul aria-expanded="false" class="collapse first-level">
+                            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ url('perkiraanCabang') }}" aria-expanded="false"><i
+                                        class="mdi mdi-receipt"></i><span
+                                        class="hide-menu text-white">{{ __('Perkiraan') }}</span></a></li>
+                            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ url('daftarPerkiraanCabang') }}" aria-expanded="false"><i
+                                        class="mdi mdi-receipt"></i><span
+                                        class="hide-menu text-white">{{ __('Daftar Perkiraan') }}</span></a></li>
+                            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                    href="{{ url('jurnalUmumCoorporate') }}" aria-expanded="false"><i
+                                        class="mdi mdi-receipt"></i><span
+                                        class="hide-menu text-white">{{ __('Jurnal Umum') }}</span></a></li>
+                        </ul>
+                    </li>
                         @elseif(Session::get('admin-auth.user')->role == 'CABANG')
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                                 href="javascript:void(0)" aria-expanded="false"><span

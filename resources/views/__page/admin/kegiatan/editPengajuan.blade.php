@@ -70,12 +70,13 @@
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane show active" id="profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                             <div class="card-body">
+                                <form id="edit-pengajuan" method="post" action="#">
                                 <div class="row" id="multiple">
                                     <hr style="height:2px; width:100%; border-width:0; color:red; background-color:red">
                                     <div class="col-md-6">
-
                                         <div class="form-group">
                                             <label for="">{{ __('Tanggal') }}</label>
+                                            <input type="hidden" name="id_detailKegiatan" id="id_detailKegiatan">
                                             <input type="date" name="tanggal" id="tanggal" value="" class="form-control">
                                         </div>
 
@@ -112,11 +113,13 @@
                                             <label for="">{{ __('Jumlah Harga') }}</label>
                                             <input type="text" name="jumlah_harga" id="jumlah_harga" class="form-control">
                                         </div>
+                                        <button type="submit" id="updateDetailPengajuan" class="btn btn-success btn-update">Update</button>
                                     </div>
-
                                 </div>
+                            </form>
+                                <a href="#" id="prev" class="btn btn-primary btn-sm">Prev</a>
+                                <a href="#" id="next" class="btn btn-primary btn-sm">Next</a>
                             </div>
-
                             </div>
                         </div>
 
@@ -133,6 +136,9 @@
 @section('js-source')
     <script src="{{ asset('assets/libs/dropify/dist/js/dropify.min.js') }}"></script>
     <script src="{{ asset('src/admin/pengajuan.js') }}"></script>
+    <script>
+        PengajuanController.init('{{ Session::get('admin-auth.token') }}');
+    </script>
     <script>
         PengajuanController.detail('{{ Session::get('admin-auth.token') }}', {{ $id }});
     </script>
