@@ -169,7 +169,7 @@ const CabangController = ((SET, UI) => {
     }
 
     const __submitAdd = (TOKEN, filter) => {
-        $("#form_add").validate({
+        $("#formAdd").validate({
             errorClass: "is-invalid",
             errorElement: "div",
             errorPlacement: function (error, element) {
@@ -177,12 +177,18 @@ const CabangController = ((SET, UI) => {
                 error.insertAfter(element);
             },
             rules: {
-                regency_id: {
-                    required: true
-                },
-                total: {
-                    required: true
-                }
+                company_name: 'required',
+                address: 'required',
+                phone: 'required',
+                email: 'required',
+                fax: 'required',
+                npwp: 'required',
+
+                username: 'required',
+                name: 'required',
+                email: 'required',
+                password: 'required',
+                phone: 'required',
             },
 
             submitHandler: (form) => {
@@ -190,16 +196,21 @@ const CabangController = ((SET, UI) => {
                     url: `${SET.__apiURL()}admin/storeCabang`,
                     type: "POST",
                     dataType: "JSON",
-                    data: $(form).serialize(),
+                    // data: $(form).serialize(),
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
                     beforeSend: (xhr) => {
-                        SET.__buttonLoader("#btn_submit");
+                        SET.__buttonLoader("#btn_submit_cabang");
                     },
                     headers: {
                         Authorization: `Bearer ${TOKEN}`,
                     },
                     success: (res) => {
-                        __fetchDirectCabang(TOKEN, filter);
-                        $("#modal_add").modal("hide");
+                        // __fetchDirectCabang(TOKEN, filter);
+                        // $("#modal_add").modal("hide");
+
+                        window.location.href = `${SET.__baseURL()}cabang`;
                         toastr.success(
                             "Success",
                             res.message,
@@ -215,7 +226,7 @@ const CabangController = ((SET, UI) => {
                         );
                     },
                     complete: () => {
-                        SET.__closeButtonLoader("#btn_submit");
+                        SET.__closeButtonLoader("#btn_submit_cabang");
                     },
                     statusCode: {
                         422: function () {
@@ -381,6 +392,16 @@ const CabangController = ((SET, UI) => {
         })
     }
 
+    const __showPassword = () => {
+        $(".show-password").on("click", function() {
+            if ($(this).is(":checked")) {
+                $("#password").attr("type", "text");
+            } else {
+                $("#password").attr("type", "password");
+            }
+        });
+    };
+
     return {
         init : (TOKEN) => {
             let direct_filter = {
@@ -397,6 +418,8 @@ const CabangController = ((SET, UI) => {
 
             __openAdd();
             __submitAdd(TOKEN);
+
+            __showPassword();
 
             __openDirectOption()
             __submitDirectFilter(TOKEN, direct_filter)
@@ -419,6 +442,15 @@ const CabangController = ((SET, UI) => {
                 $('#profile_company_fax').text(data[0].fax);
                 $('#profile_company_npwp').text(data[0].npwp);
                 $('#profile_company_address').text(data[0].address);
+
+                //edit profile
+                $('#company_name').val(data[0].company_name);
+                $('#address').val(data[0].address);
+                $('#phone').val(data[0].phone);
+                $('#email').val(data[0].email);
+                $('#fax').val(data[0].fax);
+                $('#npwp').val(data[0].npwp);
+                $('#alias').val(data[0].alias);
             })
         }
     }

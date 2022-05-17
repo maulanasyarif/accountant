@@ -1,41 +1,28 @@
-const daftarPerkiraanUI = ((SET) => {
+const InventoryUI = ((SET) => {
     return {
-        __renderDirectData: ({ results }, { limit }) => {
+        __renderDirectData: ({ results }, {limit}) => {
             let body = results.data
                 .map((v) => {
-                    return `
+                    return (
+                        `
                         <tr>
-<<<<<<< HEAD
-                            <td style="width: 25%;">${SET.__threedigis(
-                                v.perkiraan.perkiraan_no
-                            )}</td>
-                            <td style="width: 25%;">${
-                                v.perkiraan.perkiraan_name
-                            }</td>
-                            <td style="width: 25%;">${SET.__realCurrency(
-                                v.debit
-                            )}</td>
-                            <td style="width: 25%;">${SET.__realCurrency(
-                                v.kredit
-                            )}</td>
-=======
-                            <td style="width: 20%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
-                            <td style="width: 30%;">${v.perkiraan.perkiraan_name}</td>
-                            <td style="width: 15%;">${SET.__realCurrency(v.debit)}</td>
-                            <td style="width: 15%;">${SET.__realCurrency(v.kredit)}</td>
-                            <td style="width: 20%;">
+                            <td style="width: 30%;">${v.barang_name}</td>
+                            <td style="width: 20%;">${v.total_awal}</td>
+                            <td style="width: 20%;">${v.terpakai !== null ? `${v.terpakai}` : '-'}</td>
+                            <td style="width: 15%;">${v.total_awal-v.terpakai}</td>
+                            <td style="width: 15%;">
                                 <div class="btn-group">
-                                    <a href="${SET.__baseURL()}editaftarPerkiraanCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
-                                    <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.perkiraan.perkiraan_name}">Delete</button>
+                                    <a href="${SET.__baseURL()}editInventoryAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                    <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.barang_name}">Delete</button>
                                 </div>
                             </td>
->>>>>>> maul
                         </tr>
-                    `;
+                    `
+                    );
                 })
-                .join("");
+                .join("");  
 
-            $("#t_daftarPerkiraan tbody").html(body);
+            $("#t_inventory tbody").html(body);
         },
 
         __renderDirectFooter: (
@@ -120,7 +107,7 @@ const daftarPerkiraanUI = ((SET) => {
             </tr>
         `;
 
-            $("#t_daftarPerkiraan tfoot").html(footer);
+            $("#t_inventory tfoot").html(footer);
         },
 
         __renderDirectNoData: () => {
@@ -142,7 +129,7 @@ const daftarPerkiraanUI = ((SET) => {
             `;
             $("#detail , #form_edit_route").html(nodata);
 
-            $("#t_daftarPerkiraan tbody").html(html);
+            $("#t_inventory tbody").html(html);
         },
 
         __renderDirectOrder: (results) => {
@@ -151,24 +138,19 @@ const daftarPerkiraanUI = ((SET) => {
     };
 })(SettingController);
 
-const DaftarPerkiraanController = ((SET, UI) => {
-    const __fetchDirectPerkiraan = (TOKEN, filter = {}, link = null) => {
+const InventoryController = ((SET, UI) => {
+
+    const __fetchDirectInventory = (TOKEN, filter = {}, link = null) => {
         $.ajax({
             url: `${
-                link === null
-                    ? SET.__apiURL() + "cabang/get_daftarPerkiraan"
-                    : link
+                link === null ? SET.__apiURL() + "admin/get_inventory" : link
             }`,
             type: "GET",
             dataType: "JSON",
             data: filter,
-            beforeSend: SET.__tableLoader("#t_daftarPerkiraan", 7),
+            beforeSend: SET.__tableLoader("#t_inventory", 7),
             headers: {
-<<<<<<< HEAD
                 Authorization: `Bearer ${TOKEN}`,
-=======
-                Authorization: `Bearer ${TOKEN}`
->>>>>>> maul
             },
             success: (res) => {
                 $("#count_regencies").text(res.total_all);
@@ -213,20 +195,14 @@ const DaftarPerkiraanController = ((SET, UI) => {
                 error.insertAfter(element);
             },
             rules: {
-                perkiraan_id: {
-                    required: true,
-                },
-                debit: {
-                    required: true,
-                },
-                kredit: {
+                kegiatan_id: {
                     required: true,
                 },
             },
 
             submitHandler: (form) => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/storeDaftarPerkiraan`,
+                    url: `${SET.__apiURL()}admin/storeInventory`,
                     type: "POST",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -237,7 +213,7 @@ const DaftarPerkiraanController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`,
                     },
                     success: (res) => {
-                        __fetchDirectPerkiraan(TOKEN, filter);
+                        __fetchDirectInventory(TOKEN, filter);
                         $("#modal_add").modal("hide");
                         toastr.success(
                             "Success",
@@ -274,70 +250,9 @@ const DaftarPerkiraanController = ((SET, UI) => {
         });
     };
 
-<<<<<<< HEAD
-    const __pluginDirectInit = (TOKEN) => {
-=======
-    const __submitDelete = (TOKEN, filter) => {
-        $("#form_delete").validate({
-            errorClass: "is-invalid",
-            errorElement: "div",
-            errorPlacement: function (error, element) {
-                error.addClass("invalid-feedback");
-                error.insertAfter(element);
-            },
-            rules: {
-                id: "required"
-            },
-            submitHandler: form => {
-                let id = $('#delete_id').val()
-
-                $.ajax({
-                    url: `${SET.__apiURL()}cabang/deleteDaftarPerkiraan/${id}`,
-                    type: "DELETE",
-                    dataType: "JSON",
-                    data: $(form).serialize(),
-                    beforeSend: xhr => {
-                        SET.__buttonLoader("#btn_submit_delete");
-                    },
-                    headers: {
-                        Authorization: `Bearer ${TOKEN}`
-                    },
-                    success: res => {
-                        __fetchDirectPerkiraan(TOKEN, filter);
-                        $('#modal_delete').modal('hide');
-                        toastr.success(
-                            "Success",
-                            res.message,
-                            SET.__bottomNotif()
-                        );
-                    },
-                    error: err => {
-                    },
-                    complete: () => {
-                        SET.__closeButtonLoader("#btn_submit_delete");
-                    },
-
-                    statusCode: {
-                        404: function () {
-                            toastr.error("Cannot find ID Or Endpoint Not Found", "Failed", SET.__bottomNotif());
-                        },
-                        401: function () {
-                            window.location.href = `${SET.__baseURL()}delete_session`;
-                        },
-                        500: function () {
-
-                        }
-                    }
-
-                });
-            }
-        });
-    };
-    
-
-    const __fetchDetailDaftarPerkiraan = (TOKEN, id, callback) => {
+    const __fetchDetailInventory = (TOKEN, id, callback) => {
         $.ajax({
-            url: `${SET.__apiURL()}cabang/editDaftarPerkiraan/${id}`,
+            url: `${SET.__apiURL()}admin/editInventory/${id}`,
             type: 'GET',
             dataType: 'JSON',
             headers: {
@@ -366,39 +281,38 @@ const DaftarPerkiraanController = ((SET, UI) => {
         })
     };
 
-    const __submitUpdatePerkiraan = (TOKEN, id) => {
+    const __submitInventory = (TOKEN, id) => {
         var url = window.location.pathname;
         var id = url.substring(url.lastIndexOf('/') + 1);
 
-        $("#form_edit_daftarPerkiraan").on('submit', function(e){
+        $("#form_edit_inventory").on('submit', function(e){
             e.preventDefault()
         }).validate({
             errorElement: "div",
             errorPlacement: function (error, element) {
-                error.addClass("invalid-feedback");
-                error.insertAfter(element);
+                    error.addClass("invalid-feedback");
+                    error.insertAfter(element);
             },
             rules: {
-                perkiraan_id: 'required',
-                debet: 'required',
-                kredit: 'required',
+                barang_name: 'required',
+                total_terpakai: 'required'
             },
             submitHandler: form => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/updateDaftarPerkiraan/${id}`,
+                    url: `${SET.__apiURL()}admin/updateInventory/${id}`,
                     type: "POST",
                     dataType: "JSON",
                     data: new FormData(form),
                     contentType: false,
                     processData: false,
                     beforeSend: xhr => {
-                        SET.__buttonLoader("#btn_update_daftarPerkiraan");
+                        SET.__buttonLoader("#btn_update_inventory");
                     },
                     headers: {
                         Authorization: `Bearer ${TOKEN}`
                     },
                     success: (res) => {
-                        window.location.href = `${SET.__baseURL()}daftarPerkiraanCabang`;
+                        window.location.href = `${SET.__baseURL()}inventoryAdmin`;
                         toastr.success(
                             "Success",
                             res.message,
@@ -417,54 +331,64 @@ const DaftarPerkiraanController = ((SET, UI) => {
                 });
             }
         });
-    }
-
-    const __pluginDirectInit = TOKEN => {
->>>>>>> maul
-        $("#direct_filter_arrival").select2({
-            placeholder: "-- Select Perkiraan --",
-            ajax: {
-                url: `${SET.__apiURL()}cabang/get_perkiraan`,
-                dataType: "JSON",
-                type: "GET",
-                headers: {
-                    Authorization: `Bearer ${TOKEN}`,
-                },
-                data: function (params) {
-                    let query = {
-                        search: params.term,
-                    };
-
-                    return query;
-                },
-                processResults: function (res) {
-                    let filtered = [];
-
-                    if (res.results.data.length !== 0) {
-                        let group = {
-                            text: "Perkiraan",
-                            children: [],
-                        };
-
-                        res.results.data.map((v) => {
-                            let city = {
-                                id: v.id,
-                                text: `${SET.__threedigis(v.perkiraan_no)} | ${v.perkiraan_name}`,
-                            };
-
-                            group.children.push(city);
-                        });
-
-                        filtered.push(group);
-                    }
-                    return {
-                        results: filtered,
-                    };
-                },
-                cache: true,
-            },
-        });
     };
+
+    const __submitDelete = (TOKEN, filter) => {
+        $("#form_delete").validate({
+            errorClass: "is-invalid",
+            errorElement: "div",
+            errorPlacement: function (error, element) {
+                error.addClass("invalid-feedback");
+                error.insertAfter(element);
+            },
+            rules: {
+                id: "required"
+            },
+            submitHandler: form => {
+                let id = $('#delete_id').val()
+
+                $.ajax({
+                    url: `${SET.__apiURL()}admin/deleteInventory/${id}`,
+                    type: "DELETE",
+                    dataType: "JSON",
+                    data: $(form).serialize(),
+                    beforeSend: xhr => {
+                        SET.__buttonLoader("#btn_submit_delete");
+                    },
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    },
+                    success: res => {
+                        __fetchDirectInventory(TOKEN, filter);
+                        $('#modal_delete').modal('hide');
+                        toastr.success(
+                            "Success",
+                            res.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    error: err => {
+                    },
+                    complete: () => {
+                        SET.__closeButtonLoader("#btn_submit_delete");
+                    },
+
+                    statusCode: {
+                        404: function () {
+                            toastr.error("Cannot find ID Or Endpoint Not Found", "Failed", SET.__bottomNotif());
+                        },
+                        401: function () {
+                            window.location.href = `${SET.__baseURL()}delete_session`;
+                        },
+                        500: function () {
+
+                        }
+                    }
+
+                });
+            }
+        });
+    }
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -475,7 +399,7 @@ const DaftarPerkiraanController = ((SET, UI) => {
     };
 
     const __openDelete = () => {
-        $("#t_daftarPerkiraan, #options").on("click", ".btn-delete", function () {
+        $("#t_inventory, #options").on("click", ".btn-delete", function () {
             let delete_id = $(this).data('id');
             let delete_name = $(this).data('name');
 
@@ -486,9 +410,9 @@ const DaftarPerkiraanController = ((SET, UI) => {
     }
 
     const __clickDirectPagination = (TOKEN, filter = {}) => {
-        $("#t_daftarPerkiraan").on("click", ".btn-pagination", function () {
+        $("#t_inventory").on("click", ".btn-pagination", function () {
             let link = $(this).data("url");
-            __fetchDirectPerkiraan(TOKEN, filter, link);
+            __fetchDirectInventory(TOKEN, filter, link);
         });
     };
 
@@ -512,7 +436,7 @@ const DaftarPerkiraanController = ((SET, UI) => {
             (filter.sort_by = $("#sort_by").val()),
                 (filter.limit = $("#direct_filter_limit").val()),
                 (filter.sort_by_option = $("#sort_by_option").val()),
-                __fetchDirectPerkiraan(TOKEN, filter, null);
+                __fetchDirectInventory(TOKEN, filter, null);
         });
     };
 
@@ -520,7 +444,7 @@ const DaftarPerkiraanController = ((SET, UI) => {
         $("#btn_direct_reset").on("click", function () {
             $("#form_direct_filter")[0].reset();
 
-            __fetchDirectPerkiraan(TOKEN, { limit: 10 });
+            __fetchDirectInventory(TOKEN, { limit: 10 });
         });
     };
 
@@ -541,44 +465,30 @@ const DaftarPerkiraanController = ((SET, UI) => {
             __openAdd();
             __submitAdd(TOKEN);
 
-<<<<<<< HEAD
-            __openDirectOption();
-            __submitDirectFilter(TOKEN, direct_filter);
-            __resetDirectFilter(TOKEN);
-            __fetchDirectPerkiraan(TOKEN, direct_filter, null);
-            __clickDirectPagination(TOKEN, direct_filter);
-            __closeDirectFilter(TOKEN);
-            __pluginDirectInit(TOKEN);
-        },
-    };
-})(SettingController, daftarPerkiraanUI);
-=======
             __openDelete();
             __submitDelete(TOKEN, direct_filter);
 
-            __openDirectOption()
-            __submitDirectFilter(TOKEN, direct_filter)
-            __resetDirectFilter(TOKEN)
-            __fetchDirectPerkiraan(TOKEN, direct_filter, null)
-            __clickDirectPagination(TOKEN, direct_filter)
-            __closeDirectFilter(TOKEN)
-            __pluginDirectInit(TOKEN)
+            __openDirectOption();
+            __submitDirectFilter(TOKEN, direct_filter);
+            __resetDirectFilter(TOKEN);
+            __fetchDirectInventory(TOKEN, direct_filter, null);
+            __clickDirectPagination(TOKEN, direct_filter);
+            __closeDirectFilter(TOKEN);
 
-            __submitUpdatePerkiraan(TOKEN, id);
+            __submitInventory(TOKEN, id);
         },
 
         detail: (TOKEN, id) => {
-            __fetchDetailDaftarPerkiraan(TOKEN, id, data => {
-                $('#fetch_noPerkiraan').text(data.perkiraan.perkiraan_no !== null ? `${SET.__threedigis(data.perkiraan.perkiraan_no)}` : '-');
-                $('#fetch_perkiraanNama').text(data.perkiraan.perkiraan_name);
-                $('#fetch_debet').text(data.debit);
-                $('#fetch_kredit').text(data.kredit);
+            __fetchDetailInventory(TOKEN, id, data => {
+                $('#fetch_barang_name').text(data.barang_name);
+                $('#fetch_total_awal').text(data.total_awal);
+                $('#fetch_sisa').text(data.total_awal);
 
-                //edit daftar perkiraan
-                $('#debet').val(data.debit);
-                $('#kredit').val(data.kredit);
+                //edit inventory
+                $('#barang_name').val(data.barang_name);
+                $('#total_awal').val(data.total_awal);
             });
         }
-    }
-})(SettingController, daftarPerkiraanUI)
->>>>>>> maul
+        
+    };
+})(SettingController, InventoryUI);

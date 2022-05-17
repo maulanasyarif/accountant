@@ -19,6 +19,6 @@ class PerkiraanController extends Controller
     
     public function edit($id)
     {
-        return view('__page.cabang.daftarPerkiraan.edit', ['id' => $id]);
+        return view('__page.cabang.perkiraan.edit', ['id' => $id]);
     }
 }

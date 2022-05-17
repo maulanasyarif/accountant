@@ -1,6 +1,6 @@
 @extends('__layout.app')
 
-@section('title', 'Cabang')
+@section('title', 'Data Transaksi')
 
 @section('css-source')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/select2_new/dist/css/select2.min.css') }}">
@@ -14,7 +14,7 @@
 <div class="page-breadcrumb">
     <div class="row">
         <div class="col-5 align-self-center">
-            <h4 class="page-title">{{ __('Cabang') }}</h4>
+            <h4 class="page-title">{{ __('Data Transaksi') }}</h4>
         </div>
         <div class="col-7 align-self-center">
             <div class="d-flex align-items-center justify-content-end">
@@ -23,7 +23,7 @@
                         <li class="breadcrumb-item" aria-current="page">
                             <a href="{{ url('dashboard') }}">{{ __('Dasbor') }}</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Cabang') }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Data Transaksi') }}</li>
                     </ol>
                 </nav>
             </div>
@@ -39,7 +39,7 @@
                 <div class="card-body text-white">
                     <div class="d-flex flex-row">
                         <div class="p-10 align-self-center">
-                            <h4 class="m-b-0">Total Cabang</h4>
+                            <h4 class="m-b-0">Total Data Transaksi</h4>
                             <span>{{ __('Semua') }}</span>
                         </div>
                         <div class="ml-auto align-self-center">
@@ -68,16 +68,14 @@
                                                 <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
                                             </div>
                                             <div class="btn-group">
-                                                <!-- <button class="btn btn-info btn-md" id="btn_add"><i class="fas fa-plus"></i>
-                                                    {{ __('Tambah') }}</button> -->
-                                                <a href="{{ url('addCabang')}}" class="btn btn-info btn-md"><i class="fas fa-plus"></i>
-                                                    {{ __('Tambah') }}</a>
+                                                <button class="btn btn-info btn-md" id="btn_add"><i class="fas fa-plus"></i>
+                                                    {{ __('Tambah') }}</button>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover data-table" id="t_cabang">
+                                    <table class="table table-hover data-table" id="t_transaksi">
                                         <thead class="thead-light">
                                             <tr id="option_direct_container" style="display: none;" class="noExl">
                                                 <th scope="col" colspan="7">
@@ -86,12 +84,12 @@
 
                                                             <div class="col-lg-6 col-12">
                                                                 <div class="form-group">
-                                                                    <label for="">{{ __('Cabang Name') }}</label>
+                                                                    <label for="">{{ __('Nama Barang') }}</label>
                                                                     <input type="text" id="direct_filter_name"
                                                                         autocomplete="off" name="name"
                                                                         class="form-control"
-                                                                        placeholder="{{ __('Search Cabang Name') }}"
-                                                                        aria-label="{{ __('Search Cabang Name') }}"
+                                                                        placeholder="{{ __('Search Nama Barang') }}"
+                                                                        aria-label="{{ __('Search Nama Barang') }}"
                                                                         aria-describedby="basic-addon1">
                                                                 </div>
                                                             </div>
@@ -99,8 +97,9 @@
                                                             <div class="col-lg-6 col-12">
                                                                 <label>Show</label>
                                                                 <div class="input-group mb-3">
-                                                                    <input type="number" name="limit" id="direct_filter_limit"
-                                                                        class="form-control" value="10">
+                                                                    <input type="number" name="limit"
+                                                                        id="direct_filter_limit" class="form-control"
+                                                                        value="10">
                                                                     <div class="input-group-append">
                                                                         <span class="input-group-text">/page</span>
                                                                     </div>
@@ -110,10 +109,11 @@
                                                             <div class="col-lg-6 col-12">
                                                                 <label>Sort By</label>
                                                                 <div class="input-group mb-3">
-                                                                    <select name="sort_by" id="direct_filter_name" class="form-control">
+                                                                    <select name="sort_by" id="direct_filter_name"
+                                                                        class="form-control">
                                                                         <option value="name" selected>
-                                                                            {{ __('Nama Cabang') }}</option>
-                                                                        <!-- <option value="type">Type</option> -->
+                                                                            {{ __('Nama Barang') }}</option>
+                                                                        <!-- <option value="cabang_name">{{__('Nama Cabang')}}</option> -->
                                                                     </select>
                                                                     <select name="sort_by_option" id="sort_by_option"
                                                                         class="form-control">
@@ -150,14 +150,11 @@
                                                 <td style="width: 30%;" id="id">
                                                     <strong>{{ __('Nama Cabang') }}</strong>
                                                 </td>
+                                                <td style="width: 30%;" id="id">
+                                                    <strong>{{ __('Nama Barang') }}</strong>
+                                                </td>
                                                 <td style="width: 20%;" id="id">
-                                                    <strong>{{ __('Address') }}</strong>
-                                                </td>
-                                                <td style="width: 15%;" id="id">
-                                                    <strong>{{ __('Email') }}</strong>
-                                                </td>
-                                                <td style="width: 15%;" id="id">
-                                                    <strong>{{ __('Phone') }}</strong>
+                                                    <strong>{{ __('Jumlah') }}</strong>
                                                 </td>
                                                 <td style="width: 20%">
                                                     <strong>Action</strong>
@@ -186,58 +183,69 @@
 </div>
 
 
-<!-- modal add perkiraan -->
+<!-- modal add inventory -->
 <form id="form_add">
     <div id="modal_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">{{ __('Tambah Corporate') }}</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{ __('Tambah Inventory') }}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
+
                     <div class="form-group">
                         <label for="">{{ __('Nama Cabang') }}</label>
-                        <input type="text" name="company_name" id="company_name" class="form-control">
+                        <select name="company_id" id="direct_cabang" class="form-control"
+                            style="width: 100%;">
+                            <option value="">-- {{ __('Nama Cabang') }} --</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="">{{ __('Address') }}</label>
-                        <input type="text" name="address" id="address" class="form-control">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="">{{ __('Phone') }}</label>
-                        <input type="text" name="phone" id="phone" class="form-control">
+                        <label for="">{{ __('Nama Inventory') }}</label>
+                        <select name="inventory_id" id="direct_inventory" class="form-control"
+                            style="width: 100%;">
+                            <option value="">-- {{ __('Nama Inventory') }} --</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="email" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Fax') }}</label>
-                        <input type="text" name="fax" id="fax" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('NPWP') }}</label>
-                        <input type="text" name="npwp" id="npwp" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Alias') }}</label>
-                        <input type="text" name="alias" id="alias" class="form-control">
+                        <label for="">{{ __('Jumlah') }}</label>
+                        <input type="text" name="total" id="total" class="form-control">
                     </div>
 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger waves-effect"
                         data-dismiss="modal">{{ __('Close') }}</button>
-                    <button type="submit" class="btn btn-info waves-effect"
-                        id="btn_submit">{{ __('Save') }}</button>
+                    <button type="submit" class="btn btn-info waves-effect" id="btn_submit">{{ __('Save') }}</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+</form>
+
+<!-- modal delete -->
+<form id="form_delete">
+    <div id="modal_delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">{{ __('Hapus Perkiraan') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                </div>
+                <div class="modal-body">
+                    <h4>{{ __('Are you sure delete ') }}<b><span id="delete_name"></span> ?</b></h4>
+                    <h5>{{ __('Data will removed permanently.') }}</h5>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="id" id="delete_id">
+                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">{{ __('Tutup') }}</button>
+                    <button type="submit" class="btn btn-info waves-effect" id="btn_submit_delete">Ya</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -263,10 +271,10 @@
 
 <script>
 $("#export_excel").click(function() {
-    $("#t_cabang").table2excel({
+    $("#t_transaksi").table2excel({
         exclude: ".noExl",
         fileext: ".xlsx",
-        filename: "Cabang",
+        filename: "Inventory",
         exclude_links: true,
         preserveColors: false,
     });
@@ -277,7 +285,7 @@ $("#export_pdf").click(function() {
 
     $(".noImport").hide();
 
-    html2canvas($('#t_cabang')[0], {
+    html2canvas($('#t_transaksi')[0], {
         onrendered: function(canvas) {
             var data = canvas.toDataURL();
             var docDefinition = {
@@ -286,7 +294,7 @@ $("#export_pdf").click(function() {
                     width: 500
                 }],
             };
-            pdfMake.createPdf(docDefinition).download("Cabang.pdf");
+            pdfMake.createPdf(docDefinition).download("Inventory.pdf");
         }
     });
 
@@ -296,8 +304,8 @@ $("#export_pdf").click(function() {
 })
 </script>
 
-<script src="{{ asset('src/Admin/Cabang.js') }}"></script>
+<script src="{{ asset('src/Admin/Transaksi.js') }}"></script>
 <script>
-    CabangController.init('{{ Session::get('admin-auth.token') }}');
+    TransaksiController.init('{{ Session::get('admin-auth.token') }}');
 </script>
 @endsection

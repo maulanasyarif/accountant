@@ -213,7 +213,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="">{{ __('Debit') }}</label>
+                        <label for="">{{ __('Debet') }}</label>
                         <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
                             <option value="">-- {{ __('Select Perkiraan') }} --</option>
                         </select>
@@ -267,7 +267,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="">{{ __('Debit') }}</label>
+                        <label for="">{{ __('Debet') }}</label>
                         <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
                             <option value="">-- {{ __('Select Perkiraan') }} --</option>
                         </select>

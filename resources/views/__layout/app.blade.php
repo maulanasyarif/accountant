@@ -303,6 +303,7 @@
                         </li>
 
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
+<<<<<<< HEAD
                             href="javascript:void(0)" aria-expanded="false"><span
                                 class="hide-menu text-white">Manajemen Keuangan</span></a>
                         <ul aria-expanded="false" class="collapse first-level">
@@ -320,6 +321,28 @@
                                         class="hide-menu text-white">{{ __('Jurnal Umum') }}</span></a></li>
                         </ul>
                     </li>
+=======
+                                href="javascript:void(0)" aria-expanded="false"><span
+                                    class="hide-menu text-white">Manajemen Inventory</span></a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('inventoryAdmin') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Data Inventory') }}</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('transaksiInventory') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Data Transaksi') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
+>>>>>>> maul
                         @elseif(Session::get('admin-auth.user')->role == 'CABANG')
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                                 href="javascript:void(0)" aria-expanded="false"><span
@@ -364,6 +387,20 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
+                                href="javascript:void(0)" aria-expanded="false"><span
+                                    class="hide-menu text-white">Data Inventory</span></a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('inventoryCabang') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Inventory') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         @endif
                     </ul>
                 </nav>
@@ -374,9 +411,11 @@
 
             @yield('content')
 
-            <footer class="footer text-center">
-                <!-- All Rights Reserved by PT. Mida Karya Abadi. -->
-            </footer>
+            <!-- <div class="navbar fixed-bottom"> -->
+                <footer class="footer text-center">
+                    All Rights Reserved by PT. Mida Karya Abadi.
+                </footer>
+            <!-- </div> -->
 
         </div>
     </div>
@@ -384,9 +423,6 @@
     <aside class="customizer">
         <a href="javascript:void(0)" class="service-panel-toggle"><i class="fa fa-spin fa-cog"></i></a>
         <div class="customizer-body">
-            <!-- <ul class="nav customizer-tab" role="tablist">
-                
-            </!-->
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade p-15 show active" id="pills-contact" role="tabpanel"
                     aria-labelledby="pills-contact-tab">
@@ -438,7 +474,7 @@
         toastr.success('{{ session(' message ') }}', 'Success', SettingController.__bottomRightNotif());
     @endif
 
-    MainController.init('{{ Session::get(' admin - auth.token ') }}')
+    MainController.init('{{ Session::get(' admin-auth.token ') }}')
     </script>
 
     @yield('js-source')

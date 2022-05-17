@@ -12,6 +12,11 @@ class CabangController extends Controller
         return view('__page.admin.cabang.index');
     }
 
+    public function add()
+    {
+        return view('__page.admin.cabang.add');
+    }
+
     public function detail($id)
     {
         return view('__page.admin.cabang.detail', ['id' => $id]);
