@@ -7,23 +7,6 @@ const KasUI = ((SET) => {
                     <tr>
                         <td style="width: 15%;">${v.tanggal}</td>
                         <td style="width: 30%;">${v.keterangan}</td>
-<<<<<<< HEAD
-                        <td style="width: 10%;">${v.debit}</td>
-                        <td style="width: 10%;">${v.kredit}</td>
-                        <td style="width: 20%;">${
-                            v.jumlah !== null
-                                ? `IDR ${SET.__realCurrency(v.jumlah)}`
-                                : "-"
-                        }</td>
-                        <td style="width: 15%;">
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-warning btn-edit" data-id="${
-                                    v.id
-                                }">Edit</button>
-                                <button class="btn btn-sm btn-danger btn-delete" data-id="${
-                                    v.id
-                                }" data-name="${v.keterangan}">Delete</button>
-=======
                         <td style="width: 10%;">${SET.__threedigis(v.debet[0].perkiraan_no)}</td>
                         <td style="width: 10%;">${SET.__threedigis(v.kredit[0].perkiraan_no)}</td>
                         <td style="width: 20%;">${v.jumlah !== null ? `IDR ${SET.__realCurrency(v.jumlah)}` : '-'}</td>
@@ -31,7 +14,6 @@ const KasUI = ((SET) => {
                             <div class="btn-group">
                                 <a href="${SET.__baseURL()}editjurnalUmumCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
                                 <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
->>>>>>> maul
                             </div>
                         </td>
                     </tr>
@@ -122,13 +104,8 @@ const KasUI = ((SET) => {
         </tr>
     `;
 
-<<<<<<< HEAD
-            $("#t_daftarPerkiraan tfoot").html(footer);
-        },
-=======
         $("#t_jurnalUmum tfoot").html(footer);
     },
->>>>>>> maul
 
         __renderDirectNoData: () => {
             let html = `
@@ -203,11 +180,7 @@ const KasController = ((SET, UI) => {
         });
     };
 
-<<<<<<< HEAD
     const __pluginDirectInitDebit = (TOKEN) => {
-=======
-    const __pluginDirectInitDebet = TOKEN => {
->>>>>>> maul
         $("#direct_debit").select2({
             placeholder: "-- Select Perkiraan --",
             ajax: {
@@ -528,16 +501,6 @@ const KasController = ((SET, UI) => {
         });
     };
 
-<<<<<<< HEAD
-    const __openEdit = () => {
-        $("#t_jurnalUmum, #options").on("click", ".btn-edit", function () {
-            let edit_id = $(this).data("id");
-
-            $("#edit_id").val(edit_id);
-            $("#modal_edit").modal("show");
-        });
-    };
-=======
     // const __openEdit = () => {
     //     $("#t_jurnalUmum, #options").on("click", ".btn-edit", function () {
     //         let edit_id = $(this).data('id');
@@ -546,7 +509,6 @@ const KasController = ((SET, UI) => {
     //         $('#modal_edit').modal('show');
     //     });
     // }    
->>>>>>> maul
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -621,16 +583,10 @@ const KasController = ((SET, UI) => {
 
             __openAdd();
             __submitAdd(TOKEN);
-<<<<<<< HEAD
-
-            __openEdit();
-
-=======
             
             // __openEdit(TOKEN);
             // __getDetail(TOKEN, id);
             
->>>>>>> maul
             __openDelete();
             __submitDelete(TOKEN, direct_filter);
 
@@ -638,15 +594,6 @@ const KasController = ((SET, UI) => {
             __submitDirectFilter(TOKEN, direct_filter);
             __resetDirectFilter(TOKEN);
             __fetchDirectKas(TOKEN, direct_filter, null);
-<<<<<<< HEAD
-            __clickDirectPagination(TOKEN, direct_filter);
-            __closeDirectFilter(TOKEN);
-            __pluginDirectInitDebit(TOKEN);
-            __pluginDirectInitkredit(TOKEN);
-        },
-    };
-})(SettingController, KasUI);
-=======
             __clickDirectPagination(TOKEN, direct_filter)
             __closeDirectFilter(TOKEN)
             __pluginDirectInitDebet(TOKEN)
@@ -676,4 +623,3 @@ const KasController = ((SET, UI) => {
     };
 
 })(SettingController, KasUI)
->>>>>>> maul

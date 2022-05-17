@@ -303,7 +303,6 @@
                         </li>
 
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
-<<<<<<< HEAD
                             href="javascript:void(0)" aria-expanded="false"><span
                                 class="hide-menu text-white">Manajemen Keuangan</span></a>
                         <ul aria-expanded="false" class="collapse first-level">
@@ -321,7 +320,6 @@
                                         class="hide-menu text-white">{{ __('Jurnal Umum') }}</span></a></li>
                         </ul>
                     </li>
-=======
                                 href="javascript:void(0)" aria-expanded="false"><span
                                     class="hide-menu text-white">Manajemen Inventory</span></a>
                             <ul aria-expanded="false" class="collapse first-level">
@@ -342,7 +340,6 @@
                             </ul>
                         </li>
 
->>>>>>> maul
                         @elseif(Session::get('admin-auth.user')->role == 'CABANG')
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                                 href="javascript:void(0)" aria-expanded="false"><span
