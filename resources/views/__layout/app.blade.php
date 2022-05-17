@@ -425,7 +425,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"
         integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg=="
-        crossorigin="anonymous"></script> -->
+        crossorigin="anonymous"></script>
 
     <script src="{{ asset('src/setting.js') }}"></script>
     <script src="{{ asset('src/main.js') }}"></script>

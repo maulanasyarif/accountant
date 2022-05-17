@@ -279,6 +279,6 @@ $("#export_pdf").click(function() {
 
 <script src="{{ asset('src/cabang/daftarPerkiraan.js') }}"></script>
 <script>
-    DaftarPerkiraanController.init('{{ Session::get('admin - auth.token ')}}');
+    DaftarPerkiraanController.init('{{ Session::get('admin-auth.token')}}');
 </script>
 @endsection

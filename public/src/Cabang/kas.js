@@ -1,107 +1,122 @@
 const KasUI = ((SET) => {
     return {
-    __renderDirectData: ({ results }, { limit }) => {
-        let body = results.data
-            .map(v => {
-                return `
+        __renderDirectData: ({ results }, { limit }) => {
+            let body = results.data
+                .map((v) => {
+                    return `
                     <tr>
                         <td style="width: 15%;">${v.tanggal}</td>
                         <td style="width: 30%;">${v.keterangan}</td>
-                        <td style="width: 10%;">${v.debet}</td>
+                        <td style="width: 10%;">${v.debit}</td>
                         <td style="width: 10%;">${v.kredit}</td>
-                        <td style="width: 20%;">${v.jumlah !== null ? `IDR ${SET.__realCurrency(v.jumlah)}` : '-'}</td>
+                        <td style="width: 20%;">${
+                            v.jumlah !== null
+                                ? `IDR ${SET.__realCurrency(v.jumlah)}`
+                                : "-"
+                        }</td>
                         <td style="width: 15%;">
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-warning btn-edit" data-id="${v.id}">Edit</button>
-                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
+                                <button class="btn btn-sm btn-warning btn-edit" data-id="${
+                                    v.id
+                                }">Edit</button>
+                                <button class="btn btn-sm btn-danger btn-delete" data-id="${
+                                    v.id
+                                }" data-name="${v.keterangan}">Delete</button>
                             </div>
                         </td>
                     </tr>
                 `;
-            }).join("");
+                })
+                .join("");
 
-        $("#t_jurnalUmum tbody").html(body);
-    },
+            $("#t_jurnalUmum tbody").html(body);
+        },
 
-    __renderDirectFooter: ({ results }, { search, sort_by, limit, sort_by_option }) => {
-        let max_page = 10;
-        let start = results.current_page - 5;
-        let end = results.current_page + 5;
+        __renderDirectFooter: (
+            { results },
+            { search, sort_by, limit, sort_by_option }
+        ) => {
+            let max_page = 10;
+            let start = results.current_page - 5;
+            let end = results.current_page + 5;
 
-        if (start <= 1) {
-            start = 2;
-        }
-        if (end > results.last_page) {
-            end = results.last_page - 1;
-        }
-        let footer = `
+            if (start <= 1) {
+                start = 2;
+            }
+            if (end > results.last_page) {
+                end = results.last_page - 1;
+            }
+            let footer = `
         <tr class="noExl noImport">
             <td colspan="7" class="text-center">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-secondary btn-pagination" ${results.prev_page_url === null ? "disabled" : ""
-        } data-url="${results.first_page_url}"> << </button>
-                    <button type="button" class="btn btn-secondary btn-pagination" ${results.prev_page_url === null ? "disabled" : ""
-        } data-url="${results.prev_page_url}"> < </button>
+                    <button type="button" class="btn btn-secondary btn-pagination" ${
+                        results.prev_page_url === null ? "disabled" : ""
+                    } data-url="${results.first_page_url}"> << </button>
+                    <button type="button" class="btn btn-secondary btn-pagination" ${
+                        results.prev_page_url === null ? "disabled" : ""
+                    } data-url="${results.prev_page_url}"> < </button>
                 </div>
     `;
 
-    footer += `
+            footer += `
         <div class="btn-group mr-2" role="group" aria-label="Third group">
-            <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === 1 ? "disabled" : ""
-        } data-url="${results.first_page_url}">1</button>`;
+            <button type="button" class="btn btn-secondary btn-pagination" ${
+                results.current_page === 1 ? "disabled" : ""
+            } data-url="${results.first_page_url}">1</button>`;
 
-    if (results.current_page != 1) {
-        footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
-    }
+            if (results.current_page != 1) {
+                footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
+            }
 
-    for (let i = start; i <= end /* && ($i<=$max_pages)*/; i++) {
-        if (i === results.current_page) {
-            footer += `<button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === i ? "disabled" : ""
-                } data-url="${results.path
-                }?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
-        } else {
-            footer += `<button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === i ? "disabled" : ""
-                } data-url="${results.path
-                }?limit=${limit}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
-        }
-    }
+            for (let i = start; i <= end /* && ($i<=$max_pages)*/; i++) {
+                if (i === results.current_page) {
+                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${
+                        results.current_page === i ? "disabled" : ""
+                    } data-url="${
+                        results.path
+                    }?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
+                } else {
+                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${
+                        results.current_page === i ? "disabled" : ""
+                    } data-url="${
+                        results.path
+                    }?limit=${limit}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
+                }
+            }
 
-    if (results.current_page != results.last_page) {
-        footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
-    }
+            if (results.current_page != results.last_page) {
+                footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
+            }
 
-    footer += `    
-            <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === results.last_page
-            ? "disabled"
-            : ""
-        } data-url="${results.last_page_url}">${results.last_page
-        }</button>
+            footer += `    
+            <button type="button" class="btn btn-secondary btn-pagination" ${
+                results.current_page === results.last_page ? "disabled" : ""
+            } data-url="${results.last_page_url}">${results.last_page}</button>
         </div>
     `;
 
-    footer += `
+            footer += `
                 <div class="btn-group" role="group" aria-label="Third group">
-                        <button type="button" class="btn btn-secondary btn-pagination" ${results.next_page_url === null
-            ? "disabled"
-            : ""
-        } data-url="${results.next_page_url
-        }"> > </button>
-                        <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === results.last_page
-            ? "disabled"
-            : ""
-        } data-url="${results.last_page_url
-        }"> >> </button>
+                        <button type="button" class="btn btn-secondary btn-pagination" ${
+                            results.next_page_url === null ? "disabled" : ""
+                        } data-url="${results.next_page_url}"> > </button>
+                        <button type="button" class="btn btn-secondary btn-pagination" ${
+                            results.current_page === results.last_page
+                                ? "disabled"
+                                : ""
+                        } data-url="${results.last_page_url}"> >> </button>
                     </div>
                 </div>
             </td>
         </tr>
     `;
 
-        $("#t_daftarPerkiraan tfoot").html(footer);
-    },
+            $("#t_daftarPerkiraan tfoot").html(footer);
+        },
 
-    __renderDirectNoData: () => {
-        let html = `
+        __renderDirectNoData: () => {
+            let html = `
             <tr>
                 <td class="text-center" colspan="7">
                     <img class="img-fluid" src="${SET.__baseURL()}assets/images/no_data_table.png" alt="" style="height: 200px; margin-bottom: 35px;"><br>
@@ -111,30 +126,27 @@ const KasUI = ((SET) => {
             </tr>
         `;
 
-        let nodata = `
+            let nodata = `
             <div class="text-center">
                 <img class="img-fluid" src="${SET.__baseURL()}assets/images/no_data-svg.png" alt="" style="height: 450px;">
             </div>
 
-        `
-        $("#detail , #form_edit_route").html(nodata);
+        `;
+            $("#detail , #form_edit_route").html(nodata);
 
-        $("#t_jurnalUmum tbody").html(html);
-    },
+            $("#t_jurnalUmum tbody").html(html);
+        },
 
-
-    __renderDirectOrder: (results) => {
-
-        let html
-    },
-};
-
-})(SettingController)
+        __renderDirectOrder: (results) => {
+            let html;
+        },
+    };
+})(SettingController);
 
 const KasController = ((SET, UI) => {
     const __fetchDirectKas = (TOKEN, filter = {}, link = null) => {
         $.ajax({
-            url: `${link === null ? SET.__apiURL() + 'cabang/get_kas' : link}`,
+            url: `${link === null ? SET.__apiURL() + "cabang/get_kas" : link}`,
             type: "GET",
             dataType: "JSON",
             data: filter,
@@ -176,7 +188,7 @@ const KasController = ((SET, UI) => {
         });
     };
 
-    const __pluginDirectInitDebit = TOKEN => {
+    const __pluginDirectInitDebit = (TOKEN) => {
         $("#direct_debit").select2({
             placeholder: "-- Select Perkiraan --",
             ajax: {
@@ -184,7 +196,7 @@ const KasController = ((SET, UI) => {
                 dataType: "JSON",
                 type: "GET",
                 headers: {
-                    Authorization: `Bearer ${TOKEN}`
+                    Authorization: `Bearer ${TOKEN}`,
                 },
                 data: function (params) {
                     let query = {
@@ -199,13 +211,15 @@ const KasController = ((SET, UI) => {
                     if (res.results.data.length !== 0) {
                         let group = {
                             text: "Perkiraan",
-                            children: []
-                        }
+                            children: [],
+                        };
 
-                        res.results.data.map(v => {
+                        res.results.data.map((v) => {
                             let perkiraan = {
                                 id: v.id,
-                                text: `${SET.__threedigis(v.perkiraan_no)} | ${v.perkiraan_name}`,
+                                text: `${SET.__threedigis(v.perkiraan_no)} | ${
+                                    v.perkiraan_name
+                                }`,
                             };
 
                             group.children.push(perkiraan);
@@ -217,12 +231,12 @@ const KasController = ((SET, UI) => {
                         results: filtered,
                     };
                 },
-                cache: true
-            }
+                cache: true,
+            },
         });
     };
 
-    const __pluginDirectInitkredit = TOKEN => {
+    const __pluginDirectInitkredit = (TOKEN) => {
         $("#direct_kredit").select2({
             placeholder: "-- Select Perkiraan --",
             ajax: {
@@ -230,7 +244,7 @@ const KasController = ((SET, UI) => {
                 dataType: "JSON",
                 type: "GET",
                 headers: {
-                    Authorization: `Bearer ${TOKEN}`
+                    Authorization: `Bearer ${TOKEN}`,
                 },
                 data: function (params) {
                     let query = {
@@ -245,13 +259,15 @@ const KasController = ((SET, UI) => {
                     if (res.results.data.length !== 0) {
                         let group = {
                             text: "Perkiraan",
-                            children: []
-                        }
+                            children: [],
+                        };
 
-                        res.results.data.map(v => {
+                        res.results.data.map((v) => {
                             let perkiraan = {
                                 id: v.id,
-                                text: `${SET.__threedigis(v.perkiraan_no)} | ${v.perkiraan_name}`,
+                                text: `${SET.__threedigis(v.perkiraan_no)} | ${
+                                    v.perkiraan_name
+                                }`,
                             };
 
                             group.children.push(perkiraan);
@@ -263,13 +279,13 @@ const KasController = ((SET, UI) => {
                         results: filtered,
                     };
                 },
-                cache: true
-            }
+                cache: true,
+            },
         });
     };
 
     const __submitAdd = (TOKEN, filter) => {
-        $('#form_add').validate({
+        $("#form_add").validate({
             errorClass: "is-invalid",
             errorElement: "div",
             errorPlacement: function (error, element) {
@@ -278,18 +294,18 @@ const KasController = ((SET, UI) => {
             },
             rules: {
                 kegiatan_id: {
-                    required: true
-                }
+                    required: true,
+                },
             },
 
             submitHandler: (form) => {
                 $.ajax({
                     url: `${SET.__apiURL()}cabang/storeKas`,
-                    type: 'POST',
-                    dataType: 'JSON',
+                    type: "POST",
+                    dataType: "JSON",
                     data: $(form).serialize(),
                     beforeSend: (xhr) => {
-                        SET.__buttonLoader('#btn_submit');
+                        SET.__buttonLoader("#btn_submit");
                     },
                     headers: {
                         Authorization: `Bearer ${TOKEN}`,
@@ -341,76 +357,80 @@ const KasController = ((SET, UI) => {
                 error.insertAfter(element);
             },
             rules: {
-                id: "required"
+                id: "required",
             },
-            submitHandler: form => {
-                let id = $('#delete_id').val()
+            submitHandler: (form) => {
+                let id = $("#delete_id").val();
 
                 $.ajax({
                     url: `${SET.__apiURL()}cabang/deleteKas/${id}`,
                     type: "DELETE",
                     dataType: "JSON",
                     data: $(form).serialize(),
-                    beforeSend: xhr => {
+                    beforeSend: (xhr) => {
                         SET.__buttonLoader("#btn_submit_delete");
                     },
                     headers: {
-                        Authorization: `Bearer ${TOKEN}`
+                        Authorization: `Bearer ${TOKEN}`,
                     },
-                    success: res => {
+                    success: (res) => {
                         __fetchDirectKas(TOKEN, filter);
-                        $('#modal_delete').modal('hide');
+                        $("#modal_delete").modal("hide");
                         toastr.success(
                             "Success",
                             res.message,
                             SET.__bottomNotif()
                         );
                     },
-                    error: err => {
-                    },
+                    error: (err) => {},
                     complete: () => {
                         SET.__closeButtonLoader("#btn_submit_delete");
                     },
 
                     statusCode: {
                         404: function () {
-                            toastr.error("Cannot find ID Or Endpoint Not Found", "Failed", SET.__bottomNotif());
+                            toastr.error(
+                                "Cannot find ID Or Endpoint Not Found",
+                                "Failed",
+                                SET.__bottomNotif()
+                            );
                         },
                         422: function () {
-                            toastr.error("Please Check Input Name or Value", "Failed 422", SET.__bottomNotif());
+                            toastr.error(
+                                "Please Check Input Name or Value",
+                                "Failed 422",
+                                SET.__bottomNotif()
+                            );
                         },
                         401: function () {
                             window.location.href = `${SET.__baseURL()}delete_session`;
                         },
-                        500: function () {
-
-                        }
-                    }
-
+                        500: function () {},
+                    },
                 });
-            }
+            },
         });
-    }
+    };
 
     const __openDelete = () => {
         $("#t_jurnalUmum, #options").on("click", ".btn-delete", function () {
-            let delete_id = $(this).data('id');
-            let delete_name = $(this).data('name');
+            let delete_id = $(this).data("id");
+            let delete_name = $(this).data("name");
 
             $("#delete_id").val(delete_id);
             $("#delete_name").text(delete_name);
-            $('#modal_delete').modal('show')
+            $("#modal_delete").modal("show");
         });
-    }
+    };
 
     const __openEdit = () => {
         $("#t_jurnalUmum, #options").on("click", ".btn-edit", function () {
-            let edit_id = $(this).data('id');
+            let edit_id = $(this).data("id");
 
             $("#edit_id").val(edit_id);
-            $('#modal_edit').modal('show')
+            $("#modal_edit").modal("show");
         });
-    }
+    };
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -481,26 +501,24 @@ const KasController = ((SET, UI) => {
             });
 
             SET.__openOption();
-            SET.__closeGlobalLoader()
+            SET.__closeGlobalLoader();
 
             __openAdd();
             __submitAdd(TOKEN);
-            
+
             __openEdit();
-            
+
             __openDelete();
             __submitDelete(TOKEN, direct_filter);
 
-            __openDirectOption()
-            __submitDirectFilter(TOKEN, direct_filter)
-            __resetDirectFilter(TOKEN)
+            __openDirectOption();
+            __submitDirectFilter(TOKEN, direct_filter);
+            __resetDirectFilter(TOKEN);
             __fetchDirectKas(TOKEN, direct_filter, null);
-            __clickDirectPagination(TOKEN, direct_filter)
-            __closeDirectFilter(TOKEN)
-            __pluginDirectInitDebit(TOKEN)
-            __pluginDirectInitkredit(TOKEN)
-
-        }
-    }
-
-})(SettingController, KasUI)
+            __clickDirectPagination(TOKEN, direct_filter);
+            __closeDirectFilter(TOKEN);
+            __pluginDirectInitDebit(TOKEN);
+            __pluginDirectInitkredit(TOKEN);
+        },
+    };
+})(SettingController, KasUI);
