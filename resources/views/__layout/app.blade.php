@@ -302,6 +302,27 @@
                             </ul>
                         </li>
 
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
+                                href="javascript:void(0)" aria-expanded="false"><span
+                                    class="hide-menu text-white">Manajemen Inventory</span></a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('inventoryAdmin') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Data Inventory') }}</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('transaksiInventory') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Data Transaksi') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                         @elseif(Session::get('admin-auth.user')->role == 'CABANG')
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                                 href="javascript:void(0)" aria-expanded="false"><span
@@ -342,6 +363,20 @@
                                 </li>
                             </ul>
                         </li>
+
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
+                                href="javascript:void(0)" aria-expanded="false"><span
+                                    class="hide-menu text-white">Data Inventory</span></a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('inventoryCabang') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Inventory') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
                         @endif
                     </ul>
                 </nav>
@@ -352,9 +387,11 @@
 
             @yield('content')
 
-            <footer class="footer text-center">
-                All Rights Reserved by PT. Mida Karya Abadi.
-            </footer>
+            <!-- <div class="navbar fixed-bottom"> -->
+                <footer class="footer text-center">
+                    All Rights Reserved by PT. Mida Karya Abadi.
+                </footer>
+            <!-- </div> -->
 
         </div>
     </div>
@@ -404,7 +441,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.js"
         integrity="sha512-QEiC894KVkN9Tsoi6+mKf8HaCLJvyA6QIRzY5KrfINXYuP9NxdIkRQhGq3BZi0J4I7V5SidGM3XUQ5wFiMDuWg=="
-        crossorigin="anonymous"></script> -->
+        crossorigin="anonymous"></script>
 
     <script src="{{ asset('src/setting.js') }}"></script>
     <script src="{{ asset('src/main.js') }}"></script>

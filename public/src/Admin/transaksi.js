@@ -1,4 +1,4 @@
-const PengajuanUI = ((SET) => {
+const TransaksiUI = ((SET) => {
     return {
         __renderDirectData: ({ results }, {limit}) => {
             let body = results.data
@@ -6,31 +6,13 @@ const PengajuanUI = ((SET) => {
                     return (
                         `
                         <tr>
-                            <td style="width: 25%;">${v.company_name}</td>
-                            <td style="width: 20%;">${v.kegiatan.no_surat}</td>
-                            <td style="width: 25%;">${v.kegiatan.judul}</td>
-                            <td style="width: 30%;">
-                                    ${v.status === 'pending' ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
-                                    <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                    JSON.stringify(v.kegiatan) +
-                                    `'>
-                                    <div class="btn-group">
-                                        <button type="button" value="review" name="${v.kegiatan.id}" id="review${v.kegiatan.id}" class="btn btn-sm btn-warning">Review</button>
-                                        <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
-                                        <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
-                                        </form>
-                                    </div>` 
-                                : v.status === 'review' ? 
-                                    `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
-                                    <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                    JSON.stringify(v.kegiatan) +
-                                    `'>
-                                    <div class="btn-group">
-                                        <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
-                                        <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
-                                        </form>
-                                    </div>` : v.status === 'approve' ? `<a type="button" class="btn btn-outline-success disabled">${v.status}</a>`
-                                    : `<a type="button" class="btn btn-outline-danger disabled">${v.status}</a>`}
+                            <td style="width: 30%;">${v.company.company_name}</td>
+                            <td style="width: 30%;">${v.inventory.barang_name}</td>
+                            <td style="width: 20%;">${v.total}</td>
+                            <td style="width: 20%;">
+                                <div class="btn-group">
+                                    <a href="${SET.__baseURL()}editTransaksiInventory/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                </div>
                             </td>
                         </tr>
                     `
@@ -38,7 +20,7 @@ const PengajuanUI = ((SET) => {
                 })
                 .join("");
 
-            $("#t_pengajuan tbody").html(body);
+            $("#t_transaksi tbody").html(body);
         },
 
         __renderDirectFooter: (
@@ -123,7 +105,7 @@ const PengajuanUI = ((SET) => {
             </tr>
         `;
 
-            $("#t_pengajuan tfoot").html(footer);
+            $("#t_transaksi tfoot").html(footer);
         },
 
         __renderDirectNoData: () => {
@@ -145,7 +127,7 @@ const PengajuanUI = ((SET) => {
             `;
             $("#detail , #form_edit_route").html(nodata);
 
-            $("#t_pengajuan tbody").html(html);
+            $("#t_transaksi tbody").html(html);
         },
 
         __renderDirectOrder: (results) => {
@@ -154,17 +136,17 @@ const PengajuanUI = ((SET) => {
     };
 })(SettingController);
 
-const PengajuanController = ((SET, UI) => {
+const TransaksiController = ((SET, UI) => {
 
-    const __fetchDirectPengajuan = (TOKEN, filter = {}, link = null) => {
+    const __fetchDirectTransaksi = (TOKEN, filter = {}, link = null) => {
         $.ajax({
             url: `${
-                link === null ? SET.__apiURL() + "admin/get_pengajuan" : link
+                link === null ? SET.__apiURL() + "admin/get_transaksi" : link
             }`,
             type: "GET",
             dataType: "JSON",
             data: filter,
-            beforeSend: SET.__tableLoader("#t_pengajuan", 7),
+            beforeSend: SET.__tableLoader("#t_transaksi", 7),
             headers: {
                 Authorization: `Bearer ${TOKEN}`,
             },
@@ -202,106 +184,6 @@ const PengajuanController = ((SET, UI) => {
         });
     };
 
-    const __verifikasiPengajuan = (TOKEN, filter) => {
-        $(document).ready(function () {
-            $('#t_pengajuan').on("click", "button", function (e) {
-                e.preventDefault();
-                var formData = {
-                    data: $("#data_json" + this.id.slice(-1)).val(),
-                    status: this.id,
-                    id: this.name,
-                    value: this.value
-                };
-                $.ajax({
-                    url: `${SET.__apiURL()}admin/verifikasipengajuan`,
-                    type: "POST",
-                    dataType: "JSON",
-                    data: formData,
-                    headers: {
-                        Authorization: `Bearer ${TOKEN}`,
-                    },
-                    success: (res) => {
-                        if(formData.value === 'review'){
-                            location.href = `${SET.__baseURL()}editPengajuanAdmin/${formData.id}`
-                        }else {
-                            __fetchDirectPengajuan(TOKEN, filter);
-                        }
-                    },
-                    error: (err) => {
-                        let error = err.responseJSON;
-                        toastr.error(
-                            "Failed",
-                            error.error,
-                            SET.__bottomNotif()
-                        );
-                    },
-                    complete: () => {
-                        SET.__closeButtonLoader("#btn_submit");
-                    },
-                    statusCode: {
-                        422: function () {
-                            toastr.error(
-                                "Please Check Input Name or Value",
-                                "Failed",
-                                SET.__bottomNotif()
-                            );
-                        },
-                        401: function () {
-                            window.location.href = `${SET.__baseURL()}delete_session`;
-                        },
-                        500: function () {},
-                    },
-                });
-            });
-        });
-    };
-
-    const __pluginDirectInit = (TOKEN) => {
-        $("#direct_filter_kegiatan").select2({
-            placeholder: "-- Select Kegiatan --",
-            ajax: {
-                url: `${SET.__apiURL()}cabang/get_kegiatan`,
-                dataType: "JSON",
-                type: "GET",
-                headers: {
-                    Authorization: `Bearer ${TOKEN}`,
-                },
-                data: function (params) {
-                    let query = {
-                        search: params.term,
-                    };
-
-                    return query;
-                },
-                processResults: function (res) {
-                    let filtered = [];
-
-                    if (res.results.data.length !== 0) {
-                        let group = {
-                            text: "Kegiatan",
-                            children: [],
-                        };
-
-                        res.results.data.map((v) => {
-                            let kegiatan = {
-                                id: v.id,
-                                text: `${v.no_surat} || ${v.judul}`,
-                            };
-
-                            group.children.push(kegiatan);
-                        });
-
-                        filtered.push(group);
-                    }
-                    return {
-                        results: filtered,
-                    };
-                },
-                cache: true,
-            },
-        });
-    };
-
     const __submitAdd = (TOKEN, filter) => {
         $("#form_add").validate({
             errorClass: "is-invalid",
@@ -310,15 +192,10 @@ const PengajuanController = ((SET, UI) => {
                 error.addClass("invalid-feedback");
                 error.insertAfter(element);
             },
-            rules: {
-                kegiatan_id: {
-                    required: true,
-                },
-            },
 
             submitHandler: (form) => {
                 $.ajax({
-                    url: `${SET.__apiURL()}admin/storePengajuan`,
+                    url: `${SET.__apiURL()}admin/storeTransaksi`,
                     type: "POST",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -329,7 +206,7 @@ const PengajuanController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`,
                     },
                     success: (res) => {
-                        __fetchDirectPengajuan(TOKEN, filter);
+                        __fetchDirectTransaksi(TOKEN, filter);
                         $("#modal_add").modal("hide");
                         toastr.success(
                             "Success",
@@ -366,9 +243,101 @@ const PengajuanController = ((SET, UI) => {
         });
     };
 
-    const __fetchDetailPengajuan = (TOKEN, id, callback) => {
+    const __pluginDirectInitCabang = TOKEN => {
+        $("#direct_cabang").select2({
+            placeholder: "-- Select Cabang --",
+            ajax: {
+                url: `${SET.__apiURL()}admin/get_cabang`,
+                dataType: "JSON",
+                type: "GET",
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`
+                },
+                data: function (params) {
+                    let query = {
+                        search: params.term,
+                    };
+
+                    return query;
+                },
+                processResults: function (res) {
+                    let filtered = [];
+
+                    if (res.results.data.length !== 0) {
+                        let group = {
+                            text: "Cabang",
+                            children: []
+                        }
+
+                        res.results.data.map(v => {
+                            let city = {
+                                id: v.id,
+                                text: `${v.company_name}`,
+                            };
+
+                            group.children.push(city);
+                        });
+
+                        filtered.push(group);
+                    }
+                    return {
+                        results: filtered,
+                    };
+                },
+                cache: true
+            }
+        });
+    };
+
+    const __pluginDirectInitInventory = TOKEN => {
+        $("#direct_inventory").select2({
+            placeholder: "-- Select Inventory --",
+            ajax: {
+                url: `${SET.__apiURL()}admin/get_inventory`,
+                dataType: "JSON",
+                type: "GET",
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`
+                },
+                data: function (params) {
+                    let query = {
+                        search: params.term,
+                    };
+
+                    return query;
+                },
+                processResults: function (res) {
+                    let filtered = [];
+
+                    if (res.results.data.length !== 0) {
+                        let group = {
+                            text: "Inventory",
+                            children: []
+                        }
+
+                        res.results.data.map(v => {
+                            let inventory = {
+                                id: v.id,
+                                text: `${v.barang_name}`,
+                            };
+
+                            group.children.push(inventory);
+                        });
+
+                        filtered.push(group);
+                    }
+                    return {
+                        results: filtered,
+                    };
+                },
+                cache: true
+            }
+        });
+    };
+
+    const __fetchDetailTransaksi = (TOKEN, id, callback) => {
         $.ajax({
-            url: `${SET.__apiURL()}admin/get_detailPengajuan/${id}`,
+            url: `${SET.__apiURL()}admin/editTransaksi/${id}`,
             type: 'GET',
             dataType: 'JSON',
             headers: {
@@ -387,9 +356,6 @@ const PengajuanController = ((SET, UI) => {
                 404: function () {
                     toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
                 },
-                422: function () {
-                    toastr.error("Please Check Input Name or Value", "Failed 422", SET.__bottomNotif());
-                },
                 401: function () {
                     window.location.href = `${SET.__baseURL()}delete_session`;
                 },
@@ -400,6 +366,57 @@ const PengajuanController = ((SET, UI) => {
         })
     }
 
+    const __submitInventory = (TOKEN, id) => {
+        var url = window.location.pathname;
+        var id = url.substring(url.lastIndexOf('/') + 1);
+
+        $("#form_edit_transaksi").on('submit', function(e){
+            e.preventDefault()
+        }).validate({
+            errorElement: "div",
+            errorPlacement: function (error, element) {
+                    error.addClass("invalid-feedback");
+                    error.insertAfter(element);
+            },
+            rules: {
+                total: 'required'
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.__apiURL()}admin/updateTransaksi/${id}`,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        SET.__buttonLoader("#btn_update_transaksi");
+                    },
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    },
+                    success: (res) => {
+                        window.location.href = `${SET.__baseURL()}transaksiInventory`;
+                        toastr.success(
+                            "Success",
+                            res.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    error: err => {
+                        let error = err.responseJSON;
+
+                        toastr.error(
+                            "Failed",
+                            error.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                });
+            }
+        });
+    };
+
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
             $("#form_add")[0].reset();
@@ -409,9 +426,9 @@ const PengajuanController = ((SET, UI) => {
     };
 
     const __clickDirectPagination = (TOKEN, filter = {}) => {
-        $("#t_pengajuan").on("click", ".btn-pagination", function () {
+        $("#t_transaksi").on("click", ".btn-pagination", function () {
             let link = $(this).data("url");
-            __fetchDirectPengajuan(TOKEN, filter, link);
+            __fetchDirectTransaksi(TOKEN, filter, link);
         });
     };
 
@@ -435,7 +452,7 @@ const PengajuanController = ((SET, UI) => {
             (filter.sort_by = $("#sort_by").val()),
                 (filter.limit = $("#direct_filter_limit").val()),
                 (filter.sort_by_option = $("#sort_by_option").val()),
-                __fetchDirectPengajuan(TOKEN, filter, null);
+                __fetchDirectTransaksi(TOKEN, filter, null);
         });
     };
 
@@ -443,7 +460,7 @@ const PengajuanController = ((SET, UI) => {
         $("#btn_direct_reset").on("click", function () {
             $("#form_direct_filter")[0].reset();
 
-            __fetchDirectPengajuan(TOKEN, { limit: 10 });
+            __fetchDirectTransaksi(TOKEN, { limit: 10 });
         });
     };
 
@@ -463,24 +480,30 @@ const PengajuanController = ((SET, UI) => {
 
             __openAdd();
             __submitAdd(TOKEN);
-            __verifikasiPengajuan(TOKEN);
 
             __openDirectOption();
             __submitDirectFilter(TOKEN, direct_filter);
             __resetDirectFilter(TOKEN);
-            __fetchDirectPengajuan(TOKEN, direct_filter, null);
+            __fetchDirectTransaksi(TOKEN, direct_filter, null);
             __clickDirectPagination(TOKEN, direct_filter);
             __closeDirectFilter(TOKEN);
-            __pluginDirectInit(TOKEN);
+            __pluginDirectInitCabang(TOKEN)
+            __pluginDirectInitInventory(TOKEN)
+
+            __submitInventory(TOKEN, id);
         },
 
         detail: (TOKEN, id) => {
-            __fetchDetailPengajuan(TOKEN, id, data => {
-                $('#judul').text(data[0].judul);
-                $('#no_surat').text(data[0].no_surat);
-                $('#kegiatan_waktu').text(data[0].kegiatan_waktu);
+            __fetchDetailTransaksi(TOKEN, id, data => {
+                $('#fetch_namaCabang').text(data.company.company_name);
+                $('#fetch_namaBarang').text(data.inventory.barang_name);
+                $('#fetch_total').text(data.total);
+                
+                //edit profile
+                $('#company_id').val(data.company.company_name);
+                $('#inventory_id').val(data.inventory.barang_name);
+                $('#total').val(data.total);
             })
         }
-        
     };
-})(SettingController, PengajuanUI);
+})(SettingController, TransaksiUI);

@@ -1,4 +1,4 @@
-const PengajuanUI = ((SET) => {
+const InventoryUI = ((SET) => {
     return {
         __renderDirectData: ({ results }, {limit}) => {
             let body = results.data
@@ -6,39 +6,23 @@ const PengajuanUI = ((SET) => {
                     return (
                         `
                         <tr>
-                            <td style="width: 25%;">${v.company_name}</td>
-                            <td style="width: 20%;">${v.kegiatan.no_surat}</td>
-                            <td style="width: 25%;">${v.kegiatan.judul}</td>
-                            <td style="width: 30%;">
-                                    ${v.status === 'pending' ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
-                                    <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                    JSON.stringify(v.kegiatan) +
-                                    `'>
-                                    <div class="btn-group">
-                                        <button type="button" value="review" name="${v.kegiatan.id}" id="review${v.kegiatan.id}" class="btn btn-sm btn-warning">Review</button>
-                                        <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
-                                        <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
-                                        </form>
-                                    </div>` 
-                                : v.status === 'review' ? 
-                                    `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
-                                    <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                    JSON.stringify(v.kegiatan) +
-                                    `'>
-                                    <div class="btn-group">
-                                        <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
-                                        <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
-                                        </form>
-                                    </div>` : v.status === 'approve' ? `<a type="button" class="btn btn-outline-success disabled">${v.status}</a>`
-                                    : `<a type="button" class="btn btn-outline-danger disabled">${v.status}</a>`}
+                            <td style="width: 30%;">${v.barang_name}</td>
+                            <td style="width: 20%;">${v.total_awal}</td>
+                            <td style="width: 20%;">${v.terpakai !== null ? `${v.terpakai}` : '-'}</td>
+                            <td style="width: 15%;">${v.total_awal-v.terpakai}</td>
+                            <td style="width: 15%;">
+                                <div class="btn-group">
+                                    <a href="${SET.__baseURL()}editInventoryAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                    <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.barang_name}">Delete</button>
+                                </div>
                             </td>
                         </tr>
                     `
                     );
                 })
-                .join("");
+                .join("");  
 
-            $("#t_pengajuan tbody").html(body);
+            $("#t_inventory tbody").html(body);
         },
 
         __renderDirectFooter: (
@@ -123,7 +107,7 @@ const PengajuanUI = ((SET) => {
             </tr>
         `;
 
-            $("#t_pengajuan tfoot").html(footer);
+            $("#t_inventory tfoot").html(footer);
         },
 
         __renderDirectNoData: () => {
@@ -145,7 +129,7 @@ const PengajuanUI = ((SET) => {
             `;
             $("#detail , #form_edit_route").html(nodata);
 
-            $("#t_pengajuan tbody").html(html);
+            $("#t_inventory tbody").html(html);
         },
 
         __renderDirectOrder: (results) => {
@@ -154,17 +138,17 @@ const PengajuanUI = ((SET) => {
     };
 })(SettingController);
 
-const PengajuanController = ((SET, UI) => {
+const InventoryController = ((SET, UI) => {
 
-    const __fetchDirectPengajuan = (TOKEN, filter = {}, link = null) => {
+    const __fetchDirectInventory = (TOKEN, filter = {}, link = null) => {
         $.ajax({
             url: `${
-                link === null ? SET.__apiURL() + "admin/get_pengajuan" : link
+                link === null ? SET.__apiURL() + "admin/get_inventory" : link
             }`,
             type: "GET",
             dataType: "JSON",
             data: filter,
-            beforeSend: SET.__tableLoader("#t_pengajuan", 7),
+            beforeSend: SET.__tableLoader("#t_inventory", 7),
             headers: {
                 Authorization: `Bearer ${TOKEN}`,
             },
@@ -202,106 +186,6 @@ const PengajuanController = ((SET, UI) => {
         });
     };
 
-    const __verifikasiPengajuan = (TOKEN, filter) => {
-        $(document).ready(function () {
-            $('#t_pengajuan').on("click", "button", function (e) {
-                e.preventDefault();
-                var formData = {
-                    data: $("#data_json" + this.id.slice(-1)).val(),
-                    status: this.id,
-                    id: this.name,
-                    value: this.value
-                };
-                $.ajax({
-                    url: `${SET.__apiURL()}admin/verifikasipengajuan`,
-                    type: "POST",
-                    dataType: "JSON",
-                    data: formData,
-                    headers: {
-                        Authorization: `Bearer ${TOKEN}`,
-                    },
-                    success: (res) => {
-                        if(formData.value === 'review'){
-                            location.href = `${SET.__baseURL()}editPengajuanAdmin/${formData.id}`
-                        }else {
-                            __fetchDirectPengajuan(TOKEN, filter);
-                        }
-                    },
-                    error: (err) => {
-                        let error = err.responseJSON;
-                        toastr.error(
-                            "Failed",
-                            error.error,
-                            SET.__bottomNotif()
-                        );
-                    },
-                    complete: () => {
-                        SET.__closeButtonLoader("#btn_submit");
-                    },
-                    statusCode: {
-                        422: function () {
-                            toastr.error(
-                                "Please Check Input Name or Value",
-                                "Failed",
-                                SET.__bottomNotif()
-                            );
-                        },
-                        401: function () {
-                            window.location.href = `${SET.__baseURL()}delete_session`;
-                        },
-                        500: function () {},
-                    },
-                });
-            });
-        });
-    };
-
-    const __pluginDirectInit = (TOKEN) => {
-        $("#direct_filter_kegiatan").select2({
-            placeholder: "-- Select Kegiatan --",
-            ajax: {
-                url: `${SET.__apiURL()}cabang/get_kegiatan`,
-                dataType: "JSON",
-                type: "GET",
-                headers: {
-                    Authorization: `Bearer ${TOKEN}`,
-                },
-                data: function (params) {
-                    let query = {
-                        search: params.term,
-                    };
-
-                    return query;
-                },
-                processResults: function (res) {
-                    let filtered = [];
-
-                    if (res.results.data.length !== 0) {
-                        let group = {
-                            text: "Kegiatan",
-                            children: [],
-                        };
-
-                        res.results.data.map((v) => {
-                            let kegiatan = {
-                                id: v.id,
-                                text: `${v.no_surat} || ${v.judul}`,
-                            };
-
-                            group.children.push(kegiatan);
-                        });
-
-                        filtered.push(group);
-                    }
-                    return {
-                        results: filtered,
-                    };
-                },
-                cache: true,
-            },
-        });
-    };
-
     const __submitAdd = (TOKEN, filter) => {
         $("#form_add").validate({
             errorClass: "is-invalid",
@@ -318,7 +202,7 @@ const PengajuanController = ((SET, UI) => {
 
             submitHandler: (form) => {
                 $.ajax({
-                    url: `${SET.__apiURL()}admin/storePengajuan`,
+                    url: `${SET.__apiURL()}admin/storeInventory`,
                     type: "POST",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -329,7 +213,7 @@ const PengajuanController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`,
                     },
                     success: (res) => {
-                        __fetchDirectPengajuan(TOKEN, filter);
+                        __fetchDirectInventory(TOKEN, filter);
                         $("#modal_add").modal("hide");
                         toastr.success(
                             "Success",
@@ -366,9 +250,9 @@ const PengajuanController = ((SET, UI) => {
         });
     };
 
-    const __fetchDetailPengajuan = (TOKEN, id, callback) => {
+    const __fetchDetailInventory = (TOKEN, id, callback) => {
         $.ajax({
-            url: `${SET.__apiURL()}admin/get_detailPengajuan/${id}`,
+            url: `${SET.__apiURL()}admin/editInventory/${id}`,
             type: 'GET',
             dataType: 'JSON',
             headers: {
@@ -387,9 +271,6 @@ const PengajuanController = ((SET, UI) => {
                 404: function () {
                     toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
                 },
-                422: function () {
-                    toastr.error("Please Check Input Name or Value", "Failed 422", SET.__bottomNotif());
-                },
                 401: function () {
                     window.location.href = `${SET.__baseURL()}delete_session`;
                 },
@@ -398,6 +279,115 @@ const PengajuanController = ((SET, UI) => {
                 }
             }
         })
+    };
+
+    const __submitInventory = (TOKEN, id) => {
+        var url = window.location.pathname;
+        var id = url.substring(url.lastIndexOf('/') + 1);
+
+        $("#form_edit_inventory").on('submit', function(e){
+            e.preventDefault()
+        }).validate({
+            errorElement: "div",
+            errorPlacement: function (error, element) {
+                    error.addClass("invalid-feedback");
+                    error.insertAfter(element);
+            },
+            rules: {
+                barang_name: 'required',
+                total_terpakai: 'required'
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.__apiURL()}admin/updateInventory/${id}`,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        SET.__buttonLoader("#btn_update_inventory");
+                    },
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    },
+                    success: (res) => {
+                        window.location.href = `${SET.__baseURL()}inventoryAdmin`;
+                        toastr.success(
+                            "Success",
+                            res.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    error: err => {
+                        let error = err.responseJSON;
+
+                        toastr.error(
+                            "Failed",
+                            error.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                });
+            }
+        });
+    };
+
+    const __submitDelete = (TOKEN, filter) => {
+        $("#form_delete").validate({
+            errorClass: "is-invalid",
+            errorElement: "div",
+            errorPlacement: function (error, element) {
+                error.addClass("invalid-feedback");
+                error.insertAfter(element);
+            },
+            rules: {
+                id: "required"
+            },
+            submitHandler: form => {
+                let id = $('#delete_id').val()
+
+                $.ajax({
+                    url: `${SET.__apiURL()}admin/deleteInventory/${id}`,
+                    type: "DELETE",
+                    dataType: "JSON",
+                    data: $(form).serialize(),
+                    beforeSend: xhr => {
+                        SET.__buttonLoader("#btn_submit_delete");
+                    },
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    },
+                    success: res => {
+                        __fetchDirectInventory(TOKEN, filter);
+                        $('#modal_delete').modal('hide');
+                        toastr.success(
+                            "Success",
+                            res.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    error: err => {
+                    },
+                    complete: () => {
+                        SET.__closeButtonLoader("#btn_submit_delete");
+                    },
+
+                    statusCode: {
+                        404: function () {
+                            toastr.error("Cannot find ID Or Endpoint Not Found", "Failed", SET.__bottomNotif());
+                        },
+                        401: function () {
+                            window.location.href = `${SET.__baseURL()}delete_session`;
+                        },
+                        500: function () {
+
+                        }
+                    }
+
+                });
+            }
+        });
     }
 
     const __openAdd = () => {
@@ -408,10 +398,21 @@ const PengajuanController = ((SET, UI) => {
         });
     };
 
+    const __openDelete = () => {
+        $("#t_inventory, #options").on("click", ".btn-delete", function () {
+            let delete_id = $(this).data('id');
+            let delete_name = $(this).data('name');
+
+            $("#delete_id").val(delete_id);
+            $("#delete_name").text(delete_name);
+            $('#modal_delete').modal('show')
+        });
+    }
+
     const __clickDirectPagination = (TOKEN, filter = {}) => {
-        $("#t_pengajuan").on("click", ".btn-pagination", function () {
+        $("#t_inventory").on("click", ".btn-pagination", function () {
             let link = $(this).data("url");
-            __fetchDirectPengajuan(TOKEN, filter, link);
+            __fetchDirectInventory(TOKEN, filter, link);
         });
     };
 
@@ -435,7 +436,7 @@ const PengajuanController = ((SET, UI) => {
             (filter.sort_by = $("#sort_by").val()),
                 (filter.limit = $("#direct_filter_limit").val()),
                 (filter.sort_by_option = $("#sort_by_option").val()),
-                __fetchDirectPengajuan(TOKEN, filter, null);
+                __fetchDirectInventory(TOKEN, filter, null);
         });
     };
 
@@ -443,7 +444,7 @@ const PengajuanController = ((SET, UI) => {
         $("#btn_direct_reset").on("click", function () {
             $("#form_direct_filter")[0].reset();
 
-            __fetchDirectPengajuan(TOKEN, { limit: 10 });
+            __fetchDirectInventory(TOKEN, { limit: 10 });
         });
     };
 
@@ -463,24 +464,31 @@ const PengajuanController = ((SET, UI) => {
 
             __openAdd();
             __submitAdd(TOKEN);
-            __verifikasiPengajuan(TOKEN);
+
+            __openDelete();
+            __submitDelete(TOKEN, direct_filter);
 
             __openDirectOption();
             __submitDirectFilter(TOKEN, direct_filter);
             __resetDirectFilter(TOKEN);
-            __fetchDirectPengajuan(TOKEN, direct_filter, null);
+            __fetchDirectInventory(TOKEN, direct_filter, null);
             __clickDirectPagination(TOKEN, direct_filter);
             __closeDirectFilter(TOKEN);
-            __pluginDirectInit(TOKEN);
+
+            __submitInventory(TOKEN, id);
         },
 
         detail: (TOKEN, id) => {
-            __fetchDetailPengajuan(TOKEN, id, data => {
-                $('#judul').text(data[0].judul);
-                $('#no_surat').text(data[0].no_surat);
-                $('#kegiatan_waktu').text(data[0].kegiatan_waktu);
-            })
+            __fetchDetailInventory(TOKEN, id, data => {
+                $('#fetch_barang_name').text(data.barang_name);
+                $('#fetch_total_awal').text(data.total_awal);
+                $('#fetch_sisa').text(data.total_awal);
+
+                //edit inventory
+                $('#barang_name').val(data.barang_name);
+                $('#total_awal').val(data.total_awal);
+            });
         }
         
     };
-})(SettingController, PengajuanUI);
+})(SettingController, InventoryUI);

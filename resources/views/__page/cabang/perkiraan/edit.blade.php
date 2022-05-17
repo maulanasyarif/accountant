@@ -1,6 +1,6 @@
 @extends('__layout.app')
 
-@section('title', 'Edit Perkiraan')
+@section('title', 'Detail Perkiraan')
 
 @section('css-source')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/select2_new/dist/css/select2.min.css') }}">
@@ -14,7 +14,7 @@
 <div class="page-breadcrumb">
     <div class="row">
         <div class="col-5 align-self-center">
-            <h4 class="page-title">{{ __('Edit Perkiraan') }}</h4>
+            <h4 class="page-title">{{ __('Detail Perkiraan') }}</h4>
         </div>
         <div class="col-7 align-self-center">
             <div class="d-flex align-items-center justify-content-end">
