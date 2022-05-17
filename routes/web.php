@@ -70,7 +70,7 @@ Route::group([
     // Route::get('addDaftarPerkiraanCabang', 'Cabang\DaftarPerkiraanController@add')->name('addDaftarPerkiraanCabang');
 
     Route::get('jurnalUmumCabang', 'Cabang\KasController@index')->name('jurnalUmumCabang');
-
+    Route::get('bukuKas', 'Cabang\BukukasController@index')->name('bukuKas');
 
     Route::get('pengajuanCabang', 'Cabang\KegiatanController@pengajuan')->name('pengajuanCabang');
 });
