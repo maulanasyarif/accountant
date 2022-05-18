@@ -9,30 +9,6 @@ const PengajuanUI = ((SET) => {
                             <td style="width: 20%;">${v.kegiatan.no_surat}</td>
                             <td style="width: 25%;">${v.kegiatan.judul}</td>
                             <td style="width: 30%;">
-<<<<<<< HEAD
-                                ${
-                                    v.status === "pending"
-                                        ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
-                                    <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                          JSON.stringify(v.kegiatan) +
-                                          `'>
-                                        <button type="button" value="review" name="${v.kegiatan.id}" id="review${v.kegiatan.id}" class="btn btn-sm btn-warning">Review</button>
-                                        <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
-                                        <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
-                                    </form>`
-                                        : v.status === "review"
-                                        ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
-                                    <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                          JSON.stringify(v.kegiatan) +
-                                          `'>
-                                        <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
-                                        <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
-                                    </form>`
-                                        : v.status === "approve"
-                                        ? `<a type="button" class="btn btn-outline-success disabled">${v.status}</a>`
-                                        : `<a type="button" class="btn btn-outline-danger disabled">${v.status}</a>`
-                                }
-=======
                                     ${v.status === 'pending' ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
                                     <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
                                     JSON.stringify(v.kegiatan) +
@@ -54,7 +30,6 @@ const PengajuanUI = ((SET) => {
                                         </form>
                                     </div>` : v.status === 'approve' ? `<a type="button" class="btn btn-outline-success disabled">${v.status}</a>`
                                     : `<a type="button" class="btn btn-outline-danger disabled">${v.status}</a>`}
->>>>>>> maul
                             </td>
                         </tr>
                     `;
@@ -226,11 +201,7 @@ const PengajuanController = ((SET, UI) => {
 
     const __verifikasiPengajuan = (TOKEN, filter) => {
         $(document).ready(function () {
-<<<<<<< HEAD
-            $("#t_pengajuan").on("click", "button", function (e) {
-=======
             $('#t_pengajuan').on("click", "button", function (e) {
->>>>>>> maul
                 e.preventDefault();
                 var formData = {
                     data: $("#data_json" + this.id.slice(-1)).val(),
@@ -575,8 +546,8 @@ const PengajuanController = ((SET, UI) => {
                         `${SET.__baseURL()}editPengajuanAdmin/${id}?page=${
                             data.prev_page_url
                                 ? data.prev_page_url.substr(
-                                      data.prev_page_url.length - 1
-                                  )
+                                        data.prev_page_url.length - 1
+                                )
                                 : getParam
                         }`
                     );
@@ -585,8 +556,8 @@ const PengajuanController = ((SET, UI) => {
                         `${SET.__baseURL()}editPengajuanAdmin/${id}?page=${
                             data.next_page_url
                                 ? data.next_page_url.substr(
-                                      data.next_page_url.length - 1
-                                  )
+                                        data.next_page_url.length - 1
+                                    )
                                 : getParam
                         }`
                     );

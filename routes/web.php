@@ -56,17 +56,14 @@ Route::group([
     Route::get('pengajuanAdmin', 'Admin\KegiatanController@pengajuan')->name('pengajuanAdmin');
     Route::get('editPengajuanAdmin/{id}', 'Admin\KegiatanController@edit')->name('editPengajuanAdmin');
 
-<<<<<<< HEAD
     Route::get('jurnalUmumCoorporate', 'Admin\KasCoorporateController@index')->name('jurnalUmumCoorporate');
 
-=======
     Route::get('inventoryAdmin', 'Admin\InventoryController@index');
     Route::get('editInventoryAdmin/{id}', 'Admin\InventoryController@edit');
 
     Route::get('transaksiInventory', 'Admin\InventoryController@transaksi');
     Route::get('editTransaksiInventory/{id}', 'Admin\InventoryController@editTransaksi');
     
->>>>>>> maul
     //CABANG
     Route::get('perkiraanCabang', 'Cabang\PerkiraanController@index')->name('perkiraanCabang');
     Route::get('addperkiraanCabang', 'Cabang\PerkiraanController@add')->name('addperkiraanCabang');
@@ -74,18 +71,12 @@ Route::group([
 
     Route::get('daftarPerkiraanCabang', 'Cabang\DaftarPerkiraanController@index')->name('daftarPerkiraanCabang');
     Route::get('addDaftarPerkiraanCabang', 'Cabang\DaftarPerkiraanController@add')->name('addDaftarPerkiraanCabang');
-<<<<<<< HEAD
-
-=======
     Route::get('editaftarPerkiraanCabang/{id}', 'Cabang\DaftarPerkiraanController@edit')->name('editaftarPerkiraanCabang');
     
->>>>>>> maul
     Route::get('kegiatanCabang', 'Cabang\KegiatanController@index')->name('kegiatanCabang');
     Route::get('addKegiatanCabang', 'Cabang\KegiatanController@add')->name('addKegiatanCabang');
     Route::get('printKegiatanCabang/{id}', 'Cabang\KegiatanController@print')->name('printKegiatanCabang');
     // Route::get('addDaftarPerkiraanCabang', 'Cabang\DaftarPerkiraanController@add')->name('addDaftarPerkiraanCabang');
-<<<<<<< HEAD
-=======
     
     Route::get('jurnalUmumCabang', 'Cabang\KasController@index')->name('jurnalUmumCabang');
     Route::get('editjurnalUmumCabang/{id}', 'Cabang\KasController@edit')->name('editjurnalUmumCabang');
@@ -93,7 +84,6 @@ Route::group([
     Route::get('inventoryCabang', 'Cabang\InventoryController@index')->name('inventoryCabang');
     
     Route::get('pengajuanCabang', 'Cabang\KegiatanController@pengajuan')->name('pengajuanCabang');
->>>>>>> maul
 
     Route::get('jurnalUmumCabang', 'Cabang\KasController@index')->name('jurnalUmumCabang');
     Route::get('bukuKas', 'Cabang\BukukasController@index')->name('bukuKas');

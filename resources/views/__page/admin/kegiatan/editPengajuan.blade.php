@@ -134,6 +134,8 @@
 @endsection
 
 @section('js-source')
+<script src="{{ asset('assets/libs/select2_new/dist/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('assets/libs/select2_new/dist/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/libs/dropify/dist/js/dropify.min.js') }}"></script>
     <script src="{{ asset('src/admin/pengajuan.js') }}"></script>
     <script>

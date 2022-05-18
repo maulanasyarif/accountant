@@ -302,7 +302,7 @@
                             </ul>
                         </li>
 
-                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
+                        <!-- <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                             href="javascript:void(0)" aria-expanded="false"><span
                                 class="hide-menu text-white">Manajemen Keuangan</span></a>
                         <ul aria-expanded="false" class="collapse first-level">
@@ -319,7 +319,9 @@
                                         class="mdi mdi-receipt"></i><span
                                         class="hide-menu text-white">{{ __('Jurnal Umum') }}</span></a></li>
                         </ul>
-                    </li>
+                    </li> -->
+
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                                 href="javascript:void(0)" aria-expanded="false"><span
                                     class="hide-menu text-white">Manajemen Inventory</span></a>
                             <ul aria-expanded="false" class="collapse first-level">

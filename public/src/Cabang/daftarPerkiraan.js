@@ -5,20 +5,6 @@ const daftarPerkiraanUI = ((SET) => {
                 .map((v) => {
                     return `
                         <tr>
-<<<<<<< HEAD
-                            <td style="width: 25%;">${SET.__threedigis(
-                                v.perkiraan.perkiraan_no
-                            )}</td>
-                            <td style="width: 25%;">${
-                                v.perkiraan.perkiraan_name
-                            }</td>
-                            <td style="width: 25%;">${SET.__realCurrency(
-                                v.debit
-                            )}</td>
-                            <td style="width: 25%;">${SET.__realCurrency(
-                                v.kredit
-                            )}</td>
-=======
                             <td style="width: 20%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
                             <td style="width: 30%;">${v.perkiraan.perkiraan_name}</td>
                             <td style="width: 15%;">${SET.__realCurrency(v.debit)}</td>
@@ -29,7 +15,6 @@ const daftarPerkiraanUI = ((SET) => {
                                     <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.perkiraan.perkiraan_name}">Delete</button>
                                 </div>
                             </td>
->>>>>>> maul
                         </tr>
                     `;
                 })
@@ -164,11 +149,7 @@ const DaftarPerkiraanController = ((SET, UI) => {
             data: filter,
             beforeSend: SET.__tableLoader("#t_daftarPerkiraan", 7),
             headers: {
-<<<<<<< HEAD
-                Authorization: `Bearer ${TOKEN}`,
-=======
                 Authorization: `Bearer ${TOKEN}`
->>>>>>> maul
             },
             success: (res) => {
                 $("#count_regencies").text(res.total_all);
@@ -274,9 +255,6 @@ const DaftarPerkiraanController = ((SET, UI) => {
         });
     };
 
-<<<<<<< HEAD
-    const __pluginDirectInit = (TOKEN) => {
-=======
     const __submitDelete = (TOKEN, filter) => {
         $("#form_delete").validate({
             errorClass: "is-invalid",
@@ -420,7 +398,6 @@ const DaftarPerkiraanController = ((SET, UI) => {
     }
 
     const __pluginDirectInit = TOKEN => {
->>>>>>> maul
         $("#direct_filter_arrival").select2({
             placeholder: "-- Select Perkiraan --",
             ajax: {
@@ -541,18 +518,6 @@ const DaftarPerkiraanController = ((SET, UI) => {
             __openAdd();
             __submitAdd(TOKEN);
 
-<<<<<<< HEAD
-            __openDirectOption();
-            __submitDirectFilter(TOKEN, direct_filter);
-            __resetDirectFilter(TOKEN);
-            __fetchDirectPerkiraan(TOKEN, direct_filter, null);
-            __clickDirectPagination(TOKEN, direct_filter);
-            __closeDirectFilter(TOKEN);
-            __pluginDirectInit(TOKEN);
-        },
-    };
-})(SettingController, daftarPerkiraanUI);
-=======
             __openDelete();
             __submitDelete(TOKEN, direct_filter);
 
@@ -581,4 +546,3 @@ const DaftarPerkiraanController = ((SET, UI) => {
         }
     }
 })(SettingController, daftarPerkiraanUI)
->>>>>>> maul
