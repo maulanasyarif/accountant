@@ -14,6 +14,9 @@ const KasUI = ((SET) => {
                         <td style="width: 15%;">${
                             v.perkiraan.perkiraan_name
                         }</td>
+                        <td style="width: 15%;">${
+                            v.keterangan
+                        }</td>
                         <td style="width: 30%;">${v.created_at}</td>
                         <td style="width: 10%;">${SET.__realCurrency(
                             v.debet
@@ -200,56 +203,8 @@ const KasController = ((SET, UI) => {
         });
     };
 
-    const __pluginDirectInitDebit = (TOKEN) => {
-        $("#direct_debit").select2({
-            placeholder: "-- Select Perkiraan --",
-            ajax: {
-                url: `${SET.__apiURL()}cabang/get_perkiraan`,
-                dataType: "JSON",
-                type: "GET",
-                headers: {
-                    Authorization: `Bearer ${TOKEN}`,
-                },
-                data: function (params) {
-                    let query = {
-                        search: params.term,
-                    };
-
-                    return query;
-                },
-                processResults: function (res) {
-                    let filtered = [];
-
-                    if (res.results.data.length !== 0) {
-                        let group = {
-                            text: "Perkiraan",
-                            children: [],
-                        };
-
-                        res.results.data.map((v) => {
-                            let perkiraan = {
-                                id: v.id,
-                                text: `${SET.__threedigis(v.perkiraan_no)} | ${
-                                    v.perkiraan_name
-                                }`,
-                            };
-
-                            group.children.push(perkiraan);
-                        });
-
-                        filtered.push(group);
-                    }
-                    return {
-                        results: filtered,
-                    };
-                },
-                cache: true,
-            },
-        });
-    };
-
-    const __pluginDirectInitkredit = (TOKEN) => {
-        $("#direct_kredit").select2({
+    const __pluginDirectInitPerkiraan = (TOKEN) => {
+        $("#direct_perkiraan").select2({
             placeholder: "-- Select Perkiraan --",
             ajax: {
                 url: `${SET.__apiURL()}cabang/get_perkiraan`,
@@ -312,7 +267,7 @@ const KasController = ((SET, UI) => {
 
             submitHandler: (form) => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/storeKas`,
+                    url: `${SET.__apiURL()}cabang/storeBukukas`,
                     type: "POST",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -375,7 +330,7 @@ const KasController = ((SET, UI) => {
                 let id = $("#delete_id").val();
 
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/deleteKas/${id}`,
+                    url: `${SET.__apiURL()}cabang/deleteBukukas/${id}`,
                     type: "DELETE",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -529,8 +484,7 @@ const KasController = ((SET, UI) => {
             __fetchDirectKas(TOKEN, direct_filter, null);
             __clickDirectPagination(TOKEN, direct_filter);
             __closeDirectFilter(TOKEN);
-            __pluginDirectInitDebit(TOKEN);
-            __pluginDirectInitkredit(TOKEN);
+            __pluginDirectInitPerkiraan(TOKEN);
         },
     };
 })(SettingController, KasUI);

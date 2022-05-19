@@ -154,6 +154,9 @@
                                                 <td style="width: 30;" id="id">
                                                     <strong>{{ __('Nama Perkiraan') }}</strong>
                                                 </td>
+                                                <td style="width: 30;" id="id">
+                                                    <strong>{{ __('Keterangan') }}</strong>
+                                                </td>
                                                 <td style="width: 10%;" id="id">
                                                     <strong>{{ __('Tanggal') }}</strong>
                                                 </td>
@@ -206,8 +209,10 @@
                 <div class="modal-body">
 
                     <div class="form-group">
-                        <label for="">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control"/>
+                        <label for="">{{ __('Nomor Perkiraan') }}</label>
+                        <select name="perkiraan_id" id="direct_perkiraan" class="form-control" style="width: 100%;">
+                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -217,21 +222,11 @@
 
                     <div class="form-group">
                         <label for="">{{ __('Debit') }}</label>
-                        <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
-                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
-                        </select>
+                        <input type="text" name="debit" id="debit" class="form-control">
                     </div>
-
                     <div class="form-group">
-                        <label for="">{{ __('Kredit') }}</label>
-                        <select name="kredit_id" id="direct_kredit" class="form-control" style="width: 100%;">
-                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Jumlah') }}</label>
-                        <input type="text" name="jumlah" id="jumlah" class="form-control">
+                        <label for="">{{ __('kredit') }}</label>
+                        <input type="text" name="kredit" id="kredit" class="form-control">
                     </div>
 
                 </div>
