@@ -12,8 +12,12 @@ const KasUI = ((SET) => {
                         <td style="width: 20%;">${v.jumlah !== null ? `IDR ${SET.__realCurrency(v.jumlah)}` : '-'}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <a href="${SET.__baseURL()}editjurnalUmumCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
-                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
+                                <a href="${SET.__baseURL()}editjurnalUmumCabang/${
+                        v.id
+                    }" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                <button class="btn btn-sm btn-danger btn-delete" data-id="${
+                                    v.id
+                                }" data-name="${v.keterangan}">Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -104,8 +108,8 @@ const KasUI = ((SET) => {
         </tr>
     `;
 
-        $("#t_jurnalUmum tfoot").html(footer);
-    },
+            $("#t_jurnalUmum tfoot").html(footer);
+        },
 
         __renderDirectNoData: () => {
             let html = `
@@ -407,88 +411,88 @@ const KasController = ((SET, UI) => {
     const __fetchDetailKas = (TOKEN, id, callback) => {
         $.ajax({
             url: `${SET.__apiURL()}cabang/detailKas/${id}`,
-            type: 'GET',
-            dataType: 'JSON',
+            type: "GET",
+            dataType: "JSON",
             headers: {
-                'Authorization': `Bearer ${TOKEN}`
+                Authorization: `Bearer ${TOKEN}`,
             },
             success: (res) => {
                 callback(res.results);
             },
-            error: err => {
-
-            },
-            complete: () => {
-
-            },
+            error: (err) => {},
+            complete: () => {},
             statusCode: {
                 404: function () {
-                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                    toastr.error(
+                        "Endpoint Not Found",
+                        "Failed 404",
+                        SET.__bottomNotif()
+                    );
                 },
                 401: function () {
                     window.location.href = `${SET.__baseURL()}delete_session`;
                 },
-                500: function () {
-
-                }
-            }
-        })
-    }
+                500: function () {},
+            },
+        });
+    };
 
     const __submitUpdateKas = (TOKEN, id) => {
         var url = window.location.pathname;
-        var id = url.substring(url.lastIndexOf('/') + 1);
+        var id = url.substring(url.lastIndexOf("/") + 1);
 
-        $("#form_edit_kas").on('submit', function(e){
-            e.preventDefault()
-        }).validate({
-            errorElement: "div",
-            errorPlacement: function (error, element) {
-                error.addClass("invalid-feedback");
-                error.insertAfter(element);
-            },
-            rules: {
-                tanggal: 'required',
-                keterangan: 'required',
-                debet_id: 'required',
-                kredit_id: 'required',
-                jumlah: 'required'
-            },
-            submitHandler: form => {
-                $.ajax({
-                    url: `${SET.__apiURL()}cabang/updateKas/${id}`,
-                    type: "POST",
-                    dataType: "JSON",
-                    data: new FormData(form),
-                    contentType: false,
-                    processData: false,
-                    beforeSend: xhr => {
-                        SET.__buttonLoader("#btn_update_kas");
-                    },
-                    headers: {
-                        Authorization: `Bearer ${TOKEN}`
-                    },
-                    success: (res) => {
-                        window.location.href = `${SET.__baseURL()}jurnalUmumCabang`;
-                        toastr.success(
-                            "Success",
-                            res.message,
-                            SET.__bottomNotif()
-                        );
-                    },
-                    error: err => {
-                        let error = err.responseJSON;
+        $("#form_edit_kas")
+            .on("submit", function (e) {
+                e.preventDefault();
+            })
+            .validate({
+                errorElement: "div",
+                errorPlacement: function (error, element) {
+                    error.addClass("invalid-feedback");
+                    error.insertAfter(element);
+                },
+                rules: {
+                    tanggal: "required",
+                    keterangan: "required",
+                    debet_id: "required",
+                    kredit_id: "required",
+                    jumlah: "required",
+                },
+                submitHandler: (form) => {
+                    $.ajax({
+                        url: `${SET.__apiURL()}cabang/updateKas/${id}`,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: new FormData(form),
+                        contentType: false,
+                        processData: false,
+                        beforeSend: (xhr) => {
+                            SET.__buttonLoader("#btn_update_kas");
+                        },
+                        headers: {
+                            Authorization: `Bearer ${TOKEN}`,
+                        },
+                        success: (res) => {
+                            window.location.href = `${SET.__baseURL()}jurnalUmumCabang`;
+                            toastr.success(
+                                "Success",
+                                res.message,
+                                SET.__bottomNotif()
+                            );
+                        },
+                        error: (err) => {
+                            let error = err.responseJSON;
 
-                        toastr.error(
-                            "Failed",
-                            error.message,
-                            SET.__bottomNotif()
-                        );
-                    },
-                });
-            }
-        });
-    }
+                            toastr.error(
+                                "Failed",
+                                error.message,
+                                SET.__bottomNotif()
+                            );
+                        },
+                    });
+                },
+            });
+    };
 
     const __openDelete = () => {
         $("#t_jurnalUmum, #options").on("click", ".btn-delete", function () {
@@ -508,7 +512,7 @@ const KasController = ((SET, UI) => {
     //         $("#edit_id").val(edit_id);
     //         $('#modal_edit').modal('show');
     //     });
-    // }    
+    // }
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -583,10 +587,10 @@ const KasController = ((SET, UI) => {
 
             __openAdd();
             __submitAdd(TOKEN);
-            
+
             // __openEdit(TOKEN);
             // __getDetail(TOKEN, id);
-            
+
             __openDelete();
             __submitDelete(TOKEN, direct_filter);
 
@@ -594,32 +598,49 @@ const KasController = ((SET, UI) => {
             __submitDirectFilter(TOKEN, direct_filter);
             __resetDirectFilter(TOKEN);
             __fetchDirectKas(TOKEN, direct_filter, null);
-            __clickDirectPagination(TOKEN, direct_filter)
-            __closeDirectFilter(TOKEN)
-            __pluginDirectInitDebet(TOKEN)
-            __pluginDirectInitkredit(TOKEN)
+            __clickDirectPagination(TOKEN, direct_filter);
+            __closeDirectFilter(TOKEN);
+            __pluginDirectInitDebit(TOKEN);
+            __pluginDirectInitkredit(TOKEN);
 
             __submitUpdateKas(TOKEN, id);
-
         },
 
         detail: (TOKEN, id) => {
-            __fetchDetailKas(TOKEN, id, data => {
-                $('#fetch_tanggal').text(data.tanggal);
-                $('#fetch_keterangan').text(data.keterangan);
-                $('#fetch_debet').text(data.debet !== null ? `${SET.__threedigis(data.debet[0].perkiraan_no)}` : '-');
-                $('#fetch_kredit').text(data.kredit !== null ? `${SET.__threedigis(data.kredit[0].perkiraan_no)}` : '-');
-                $('#fetch_jumlah').text(data.jumlah !== null ? `IDR ${SET.__realCurrency(data.jumlah)}` : '-');
+            __fetchDetailKas(TOKEN, id, (data) => {
+                $("#fetch_tanggal").text(data.tanggal);
+                $("#fetch_keterangan").text(data.keterangan);
+                $("#fetch_debet").text(
+                    data.debet !== null
+                        ? `${SET.__threedigis(data.debet[0].perkiraan_no)}`
+                        : "-"
+                );
+                $("#fetch_kredit").text(
+                    data.kredit !== null
+                        ? `${SET.__threedigis(data.kredit[0].perkiraan_no)}`
+                        : "-"
+                );
+                $("#fetch_jumlah").text(
+                    data.jumlah !== null
+                        ? `IDR ${SET.__realCurrency(data.jumlah)}`
+                        : "-"
+                );
 
                 //edit jurnal
-                $('#tanggal').val(data.tanggal);
-                $('#keterangan').val(data.keterangan);
-                $('#debet').val(data.debet !== null ? `${SET.__threedigis(data.debet[0].perkiraan_no)}` : '-');
-                $('#kredit').val(data.kredit !== null ? `${SET.__threedigis(data.kredit[0].perkiraan_no)}` : '-');
-                $('#jumlah').val(data.jumlah);
-            })
-        }
-        
+                $("#tanggal").val(data.tanggal);
+                $("#keterangan").val(data.keterangan);
+                $("#debet").val(
+                    data.debet !== null
+                        ? `${SET.__threedigis(data.debet[0].perkiraan_no)}`
+                        : "-"
+                );
+                $("#kredit").val(
+                    data.kredit !== null
+                        ? `${SET.__threedigis(data.kredit[0].perkiraan_no)}`
+                        : "-"
+                );
+                $("#jumlah").val(data.jumlah);
+            });
+        },
     };
-
-})(SettingController, KasUI)
+})(SettingController, KasUI);
