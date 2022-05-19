@@ -263,6 +263,15 @@
                                         href="{{ url('Account') }}" aria-expanded="false"><i
                                             class="mdi mdi-receipt"></i><span
                                             class="hide-menu text-white">{{ __('Account') }}</span></a></li>
+                                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('pengajuan') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Pengajuan') }}</span></a></li>
+
+                                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('activityLog') }}" aria-expanded="false">
+                                            <i class="mdi mdi-clock"></i><span
+                                                class="hide-menu text-white">{{ __('Aktivitas Pengguna') }}</span></a></li>
                             </ul>
                         </li>
 

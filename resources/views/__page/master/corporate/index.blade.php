@@ -68,8 +68,10 @@
                                                 <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
                                             </div>
                                             <div class="btn-group">
-                                                <button class="btn btn-info btn-md" id="btn_add"><i class="fas fa-plus"></i>
-                                                    {{ __('Tambah') }}</button>
+                                                <!-- <button class="btn btn-info btn-md" id="btn_add"><i class="fas fa-plus"></i>
+                                                    {{ __('Tambah') }}</button> -->
+                                                    <a href="{{ url('addCorporate')}}" class="btn btn-info btn-md"><i class="fas fa-plus"></i>
+                                                        {{ __('Tambah') }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -157,7 +159,7 @@
                                                 <td style="width: 15%;" id="id">
                                                     <strong>{{ __('Phone') }}</strong>
                                                 </td>
-                                                <td style="width: 20%">
+                                                <td style="width: 20%" class="noExl noImport">
                                                     <strong>Action</strong>
                                                 </td>
                                             </tr>

@@ -9,9 +9,10 @@ const CorporateUI = ((SET) => {
                             <td style="width: 20%;">${v.address}</td>
                             <td style="width: 15%;">${v.email}</td>
                             <td style="width: 15%;">${v.phone}</td>
-                            <td style="width: 20%">
-                                <a href="${SET.__baseURL()}" type="button" class="btn btn-sm btn-primary waves-effect" id="btn_detail">Detail</a>
-                                <a href="${SET.__baseURL()}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_edit">Edit</a>
+                            <td style="width: 20%" class="noExl noImport">
+                                <div class="btn-group">
+                                    <a href="${SET.__baseURL()}editCorporate/${v.id}" type="button" class="btn btn-sm btn-primary waves-effect" id="btn_detail">Detail</a>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -174,7 +175,7 @@ const CorporateController = ((SET, UI) => {
 
 
     const __submitAdd = (TOKEN, filter) => {
-        $("#form_add").validate({
+        $("#formAdd").validate({
             errorClass: "is-invalid",
             errorElement: "div",
             errorPlacement: function (error, element) {
@@ -182,12 +183,18 @@ const CorporateController = ((SET, UI) => {
                 error.insertAfter(element);
             },
             rules: {
-                regency_id: {
-                    required: true
-                },
-                total: {
-                    required: true
-                }
+                company_name: 'required',
+                address: 'required',
+                phone: 'required',
+                email: 'required',
+                fax: 'required',
+                npwp: 'required',
+
+                username: 'required',
+                name: 'required',
+                account_email: 'required',
+                password: 'required',
+                account_phone: 'required',
             },
 
             submitHandler: (form) => {
@@ -195,7 +202,9 @@ const CorporateController = ((SET, UI) => {
                     url: `${SET.__apiURL()}master/storeCompany`,
                     type: "POST",
                     dataType: "JSON",
-                    data: $(form).serialize(),
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
                     beforeSend: (xhr) => {
                         SET.__buttonLoader("#btn_submit");
                     },
@@ -203,8 +212,7 @@ const CorporateController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`,
                     },
                     success: (res) => {
-                        __fetchDirectCompany(TOKEN, filter);
-                        $("#modal_add").modal("hide");
+                        window.location.href = `${SET.__baseURL()}Corporate`;
                         toastr.success(
                             "Success",
                             res.message,
@@ -240,6 +248,107 @@ const CorporateController = ((SET, UI) => {
         });
     };
 
+    const __fetchDetailCorporate = (TOKEN, id, callback) => {
+        $.ajax({
+            url: `${SET.__apiURL()}master/getCompany/${id}`,
+            type: 'GET',
+            dataType: 'JSON',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            success: (res) => {
+                callback(res.results);
+            },
+            error: err => {
+
+            },
+            complete: () => {
+
+            },
+            statusCode: {
+                404: function () {
+                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                },
+                422: function () {
+                    toastr.error("Please Check Input Name or Value", "Failed 422", SET.__bottomNotif());
+                },
+                401: function () {
+                    window.location.href = `${SET.__baseURL()}delete_session`;
+                },
+                500: function () {
+
+                }
+            }
+        })
+    };
+
+    const __submitProfile = (TOKEN, id) => {
+        var url = window.location.pathname;
+        var id = url.substring(url.lastIndexOf('/') + 1);
+
+        $("#form_profile").on('submit', function(e){
+            e.preventDefault()
+        }).validate({
+            errorElement: "div",
+            errorPlacement: function (error, element) {
+                    error.addClass("invalid-feedback");
+                    error.insertAfter(element);
+            },
+            rules: {
+                company_name: 'required',
+                address: 'required',
+                phone: 'required',
+                email: 'required',
+                fax: 'required',
+                npwp: 'required',
+                alias: 'required',
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.__apiURL()}master/updateCompany/${id}`,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        SET.__buttonLoader("#btn_submit_profile");
+                    },
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    },
+                    success: (res) => {
+                        $('#form_profile')[0].reset()
+                        window.location.reload();
+                        toastr.success(
+                            "Success",
+                            res.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    error: err => {
+                        let error = err.responseJSON;
+
+                        toastr.error(
+                            "Failed",
+                            error.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                });
+            }
+        });
+    }
+
+    const __showPassword = () => {
+        $(".show-password").on("click", function() {
+            if ($(this).is(":checked")) {
+                $("#password").attr("type", "text");
+            } else {
+                $("#password").attr("type", "password");
+            }
+        });
+    };
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -305,12 +414,39 @@ const CorporateController = ((SET, UI) => {
             __openAdd();
             __submitAdd(TOKEN);
 
+            __showPassword();
+
             __openDirectOption()
             __submitDirectFilter(TOKEN, direct_filter)
             __resetDirectFilter(TOKEN)
             __fetchDirectCompany(TOKEN, direct_filter, null)
             __clickDirectPagination(TOKEN, direct_filter)
             __closeDirectFilter(TOKEN)
+
+            //edit profile corporate
+            __submitProfile(TOKEN, id)
+        },
+
+        detail: (TOKEN, id) => {
+            __fetchDetailCorporate(TOKEN, id, data => {
+                $('#profile_email').text(data.email);
+                $('#profile_phone').text(data.phone);
+                $('#profile_address').text(data.address);
+                $('#profile_company_name').text(data.company_name);
+                $('#profile_company_phone').text(data.phone);
+                $('#profile_company_fax').text(data.fax);
+                $('#profile_company_npwp').text(data.npwp);
+                $('#profile_company_address').text(data.address);
+
+                //edit profile
+                $('#company_name').val(data.company_name);
+                $('#address').val(data.address);
+                $('#phone').val(data.phone);
+                $('#email').val(data.email);
+                $('#fax').val(data.fax);
+                $('#npwp').val(data.npwp);
+                $('#alias').val(data.alias);
+            })
         }
     }
 })(SettingController, CorporateUI)

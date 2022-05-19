@@ -9,12 +9,12 @@ const PengajuanUI = ((SET) => {
                             <td style="width: 30%;">${v.kegiatan.judul}</td>
                             <td style="width: 10%;" class="noExl noImport">
                                 ${v.status === 'pending' ? 
-                                    `<button type="button" class="btn btn-outline-warning">${v.status}</button>` :
-                                    v.status === 'review' ? 
-                                        `<button type="button" class="btn btn-outline-primary">${v.status}</button>` :
-                                    v.status === 'approve' ? 
-                                        `<button type="button" class="btn btn-outline-success">${v.status}</button>` :
-                                `<button type="button" class="btn btn-outline-danger">${v.status}</button>`}
+                                `<button type="button" class="btn btn-sm btn-warning">${v.status}</button>` :
+                                v.status === 'review' ? 
+                                    `<button type="button" class="btn btn-sm btn-primary">${v.status}</button>` :
+                                v.status === 'approve' ? 
+                                    `<button type="button" class="btn btn-sm btn-success">${v.status}</button>` :
+                                `<button type="button" class="btn btn-sm btn-danger">${v.status}</button>`}
                             </td>
                         </tr>
                     `;
