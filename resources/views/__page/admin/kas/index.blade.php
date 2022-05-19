@@ -162,8 +162,9 @@
                                                 </td>
                                                 <td style="width: 20%;" id="id">
                                                     <strong>{{ __('Jumlah') }}</strong>
+                                                    <p>(IDR)</p>
                                                 </td>
-                                                <td style="width: 15%;" id="id">
+                                                <td style="width: 15%;" id="id" class="noExl noImport">
                                                     <strong>{{ __('Action') }}</strong>
                                                 </td>
                                             </tr>
@@ -213,7 +214,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="">{{ __('Debit') }}</label>
+                        <label for="">{{ __('Debet') }}</label>
                         <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
                             <option value="">-- {{ __('Select Perkiraan') }} --</option>
                         </select>
@@ -236,60 +237,6 @@
                     <button type="button" class="btn btn-danger waves-effect"
                         data-dismiss="modal">{{ __('Tutup') }}</button>
                     <button type="submit" class="btn btn-info waves-effect" id="btn_submit">{{ __('Simpan') }}</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</form>
-
-<!-- modal edit -->
-<form id="form_edit">
-    <div id="modal_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">{{ __('Edit Jurnal') }}</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <label for="">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control"/>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="">{{ __('Keterangan') }}</label>
-                        <input type="text" name="keterangan" id="keterangan" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Debit') }}</label>
-                        <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
-                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Kredit') }}</label>
-                        <select name="kredit_id" id="direct_kredit" class="form-control" style="width: 100%;">
-                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Jumlah') }}</label>
-                        <input type="text" name="jumlah" id="jumlah" class="form-control">
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger waves-effect"
-                        data-dismiss="modal">{{ __('Tutup') }}</button>
-                    <button type="submit" class="btn btn-info waves-effect" id="btn_edit">{{ __('Update') }}</button>
                 </div>
             </div>
             <!-- /.modal-content -->

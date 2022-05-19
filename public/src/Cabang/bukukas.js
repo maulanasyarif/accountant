@@ -14,7 +14,7 @@ const KasUI = ((SET) => {
                         <td style="width: 15%;">${
                             v.perkiraan.perkiraan_name
                         }</td>
-                        <td style="width: 30%;">${v.created_at}</td>
+                        <td style="width: 30%;">${v.tanggal}</td>
                         <td style="width: 10%;">${SET.__realCurrency(
                             v.debet
                         )}</td>
@@ -24,7 +24,7 @@ const KasUI = ((SET) => {
                         <td style="width: 20%;">${SET.__realCurrency(
                             v.jmlh
                         )}</td>
-                        <td style="width: 15%;">
+                        <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
                                 <button class="btn btn-sm btn-warning btn-edit" data-id="${
                                     v.id

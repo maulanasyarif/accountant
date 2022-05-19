@@ -1,18 +1,26 @@
-const KasUI = ((SET) => {
+const BukuKasUI = ((SET) => {
     return {
         __renderDirectData: ({ results }, { limit }) => {
             let body = results.data
                 .map((v) => {
                     return `
                     <tr>
-                        <td style="width: 15%;">${v.tanggal}</td>
-                        <td style="width: 30%;">${v.keterangan}</td>
-                        <td style="width: 10%;">${SET.__threedigis(v.debet[0].perkiraan_no)}</td>
-                        <td style="width: 10%;">${SET.__threedigis(v.kredit[0].perkiraan_no)}</td>
-                        <td style="width: 20%;">${v.jumlah !== null ? `IDR ${SET.__realCurrency(v.jumlah)}` : '-'}</td>
+                        <td style="width: 10%;">${v.tanggal}</td>
+                        <td style="width: 15%;">${v.keterangan}</td>
+                        <td style="width: 15%;">${v.perkiraan.perkiraan_name}</td>
+                        <td style="width: 10%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
+                        <td style="width: 10%;">
+                            ${v.debet !== null ? `${SET.__realCurrency(v.debet)}` : '-'}
+                        </td>
+                        <td style="width: 10%;">
+                            ${v.kredit !== null ? `${SET.__realCurrency(v.kredit)}` : '-'}
+                        </td>
+                        <td style="width: 15%;">
+                            ${v.jmlh !== null ? `${SET.__realCurrency(v.jmlh)}` : '-'}
+                        </td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <a href="${SET.__baseURL()}editjurnalUmumCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                <a href="${SET.__baseURL()}editBukuKasAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
                                 <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
                             </div>
                         </td>
@@ -21,7 +29,7 @@ const KasUI = ((SET) => {
                 })
                 .join("");
 
-            $("#t_jurnalUmum tbody").html(body);
+            $("#t_bukuKas tbody").html(body);
         },
 
         __renderDirectFooter: (
@@ -104,7 +112,7 @@ const KasUI = ((SET) => {
         </tr>
     `;
 
-        $("#t_jurnalUmum tfoot").html(footer);
+        $("#t_bukuKas tfoot").html(footer);
     },
 
         __renderDirectNoData: () => {
@@ -126,7 +134,7 @@ const KasUI = ((SET) => {
         `;
             $("#detail , #form_edit_route").html(nodata);
 
-            $("#t_jurnalUmum tbody").html(html);
+            $("#t_bukuKas tbody").html(html);
         },
 
         __renderDirectOrder: (results) => {
@@ -135,14 +143,14 @@ const KasUI = ((SET) => {
     };
 })(SettingController);
 
-const KasController = ((SET, UI) => {
-    const __fetchDirectKas = (TOKEN, filter = {}, link = null) => {
+const BukuKasController = ((SET, UI) => {
+    const __fetchDirectBukuKas = (TOKEN, filter = {}, link = null) => {
         $.ajax({
-            url: `${link === null ? SET.__apiURL() + "cabang/get_kas" : link}`,
+            url: `${link === null ? SET.__apiURL() + "admin/get_bukuKas" : link}`,
             type: "GET",
             dataType: "JSON",
             data: filter,
-            beforeSend: SET.__tableLoader("#t_jurnalUmum", 7),
+            beforeSend: SET.__tableLoader("#t_bukuKas", 7),
             headers: {
                 Authorization: `Bearer ${TOKEN}`,
             },
@@ -180,59 +188,11 @@ const KasController = ((SET, UI) => {
         });
     };
 
-    const __pluginDirectInitDebet = (TOKEN) => {
-        $("#direct_debit").select2({
+    const __pluginDirectInitPerkiraan = (TOKEN) => {
+        $("#direct_perkiraan").select2({
             placeholder: "-- Select Perkiraan --",
             ajax: {
-                url: `${SET.__apiURL()}cabang/get_perkiraan`,
-                dataType: "JSON",
-                type: "GET",
-                headers: {
-                    Authorization: `Bearer ${TOKEN}`,
-                },
-                data: function (params) {
-                    let query = {
-                        search: params.term,
-                    };
-
-                    return query;
-                },
-                processResults: function (res) {
-                    let filtered = [];
-
-                    if (res.results.data.length !== 0) {
-                        let group = {
-                            text: "Perkiraan",
-                            children: [],
-                        };
-
-                        res.results.data.map((v) => {
-                            let perkiraan = {
-                                id: v.id,
-                                text: `${SET.__threedigis(v.perkiraan_no)} | ${
-                                    v.perkiraan_name
-                                }`,
-                            };
-
-                            group.children.push(perkiraan);
-                        });
-
-                        filtered.push(group);
-                    }
-                    return {
-                        results: filtered,
-                    };
-                },
-                cache: true,
-            },
-        });
-    };
-
-    const __pluginDirectInitkredit = (TOKEN) => {
-        $("#direct_kredit").select2({
-            placeholder: "-- Select Perkiraan --",
-            ajax: {
-                url: `${SET.__apiURL()}cabang/get_perkiraan`,
+                url: `${SET.__apiURL()}admin/get_perkiraan`,
                 dataType: "JSON",
                 type: "GET",
                 headers: {
@@ -292,7 +252,7 @@ const KasController = ((SET, UI) => {
 
             submitHandler: (form) => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/storeKas`,
+                    url: `${SET.__apiURL()}admin/storebukuKas`,
                     type: "POST",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -303,7 +263,7 @@ const KasController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`,
                     },
                     success: (res) => {
-                        __fetchDirectKas(TOKEN, filter);
+                        __fetchDirectBukuKas(TOKEN, filter);
                         $("#modal_add").modal("hide");
                         toastr.success(
                             "Success",
@@ -355,7 +315,7 @@ const KasController = ((SET, UI) => {
                 let id = $("#delete_id").val();
 
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/deleteKas/${id}`,
+                    url: `${SET.__apiURL()}admin/deletebukuKas/${id}`,
                     type: "DELETE",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -366,7 +326,7 @@ const KasController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`,
                     },
                     success: (res) => {
-                        __fetchDirectKas(TOKEN, filter);
+                        __fetchDirectBukuKas(TOKEN, filter);
                         $("#modal_delete").modal("hide");
                         toastr.success(
                             "Success",
@@ -404,9 +364,9 @@ const KasController = ((SET, UI) => {
         });
     };
 
-    const __fetchDetailKas = (TOKEN, id, callback) => {
+    const __fetchDetailBukuKas = (TOKEN, id, callback) => {
         $.ajax({
-            url: `${SET.__apiURL()}cabang/detailKas/${id}`,
+            url: `${SET.__apiURL()}admin/detailbukuKas/${id}`,
             type: 'GET',
             dataType: 'JSON',
             headers: {
@@ -435,7 +395,7 @@ const KasController = ((SET, UI) => {
         })
     }
 
-    const __submitUpdateKas = (TOKEN, id) => {
+    const __submitUpdateBukuKas = (TOKEN, id) => {
         var url = window.location.pathname;
         var id = url.substring(url.lastIndexOf('/') + 1);
 
@@ -456,7 +416,7 @@ const KasController = ((SET, UI) => {
             },
             submitHandler: form => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/updateKas/${id}`,
+                    url: `${SET.__apiURL()}admin/updatebukuKas/${id}`,
                     type: "POST",
                     dataType: "JSON",
                     data: new FormData(form),
@@ -469,7 +429,7 @@ const KasController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`
                     },
                     success: (res) => {
-                        window.location.href = `${SET.__baseURL()}jurnalUmumCabang`;
+                        window.location.href = `${SET.__baseURL()}bukuKasAdmin`;
                         toastr.success(
                             "Success",
                             res.message,
@@ -491,7 +451,7 @@ const KasController = ((SET, UI) => {
     }
 
     const __openDelete = () => {
-        $("#t_jurnalUmum, #options").on("click", ".btn-delete", function () {
+        $("#t_bukuKas, #options").on("click", ".btn-delete", function () {
             let delete_id = $(this).data("id");
             let delete_name = $(this).data("name");
 
@@ -502,7 +462,7 @@ const KasController = ((SET, UI) => {
     };
 
     // const __openEdit = () => {
-    //     $("#t_jurnalUmum, #options").on("click", ".btn-edit", function () {
+    //     $("#t_bukuKas, #options").on("click", ".btn-edit", function () {
     //         let edit_id = $(this).data('id');
 
     //         $("#edit_id").val(edit_id);
@@ -519,9 +479,9 @@ const KasController = ((SET, UI) => {
     };
 
     const __clickDirectPagination = (TOKEN, filter = {}) => {
-        $("#t_jurnalUmum").on("click", ".btn-pagination", function () {
+        $("#t_bukuKas").on("click", ".btn-pagination", function () {
             let link = $(this).data("url");
-            __fetchDirectKas(TOKEN, filter, link);
+            __fetchDirectBukuKas(TOKEN, filter, link);
         });
     };
 
@@ -545,7 +505,7 @@ const KasController = ((SET, UI) => {
             (filter.sort_by = $("#sort_by").val()),
                 (filter.limit = $("#direct_filter_limit").val()),
                 (filter.sort_by_option = $("#sort_by_option").val()),
-                __fetchDirectKas(TOKEN, filter, null);
+                __fetchDirectBukuKas(TOKEN, filter, null);
         });
     };
 
@@ -593,33 +553,32 @@ const KasController = ((SET, UI) => {
             __openDirectOption();
             __submitDirectFilter(TOKEN, direct_filter);
             __resetDirectFilter(TOKEN);
-            __fetchDirectKas(TOKEN, direct_filter, null);
+            __fetchDirectBukuKas(TOKEN, direct_filter, null);
             __clickDirectPagination(TOKEN, direct_filter)
             __closeDirectFilter(TOKEN)
-            __pluginDirectInitDebet(TOKEN)
-            __pluginDirectInitkredit(TOKEN)
+            __pluginDirectInitPerkiraan(TOKEN)
 
-            __submitUpdateKas(TOKEN, id);
+            __submitUpdateBukuKas(TOKEN, id);
 
         },
 
         detail: (TOKEN, id) => {
-            __fetchDetailKas(TOKEN, id, data => {
+            __fetchDetailBukuKas(TOKEN, id, data => {
                 $('#fetch_tanggal').text(data.tanggal);
                 $('#fetch_keterangan').text(data.keterangan);
-                $('#fetch_debet').text(data.debet !== null ? `${SET.__threedigis(data.debet[0].perkiraan_no)}` : '-');
-                $('#fetch_kredit').text(data.kredit !== null ? `${SET.__threedigis(data.kredit[0].perkiraan_no)}` : '-');
-                $('#fetch_jumlah').text(data.jumlah !== null ? `IDR ${SET.__realCurrency(data.jumlah)}` : '-');
+                $('#fetch_noPerkiraan').text(data.perkiraan.perkiraan_no);
+                $('#fetch_namaPerkiraan').text(data.perkiraan.perkiraan_name);
+                $('#fetch_debet').text(data.debet !== null ? `${SET.__threedigis(data.debet)}` : '-');
+                $('#fetch_kredit').text(data.kredit !== null ? `${SET.__threedigis(data.kredit)}` : '-');
 
-                //edit jurnal
+                //edit kas
                 $('#tanggal').val(data.tanggal);
                 $('#keterangan').val(data.keterangan);
-                $('#debet').val(data.debet !== null ? `${SET.__threedigis(data.debet[0].perkiraan_no)}` : '-');
-                $('#kredit').val(data.kredit !== null ? `${SET.__threedigis(data.kredit[0].perkiraan_no)}` : '-');
-                $('#jumlah').val(data.jumlah);
+                $('#debet').val(data.debet !== null ? `${data.debet}` : '-');
+                $('#kredit').val(data.kredit !== null ? `${data.kredit}` : '-');
             })
         }
         
     };
 
-})(SettingController, KasUI)
+})(SettingController, BukuKasUI)

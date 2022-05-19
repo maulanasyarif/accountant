@@ -159,7 +159,7 @@
                                                 <td style="width: 15%;" id="id">
                                                     <strong>{{ __('Phone') }}</strong>
                                                 </td>
-                                                <td style="width: 20%">
+                                                <td style="width: 20%" class="noExl noImport">
                                                     <strong>Action</strong>
                                                 </td>
                                             </tr>

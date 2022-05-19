@@ -9,7 +9,7 @@ const CabangUI = ((SET) => {
                             <td style="width: 20%;">${v.address}</td>
                             <td style="width: 15%;">${v.email}</td>
                             <td style="width: 15%;">${v.phone}</td>
-                            <td style="width: 20%">
+                            <td style="width: 20%" class="noExl noImport">
                                 <a href="${SET.__baseURL()}cabang/${v.id}" type="button" class="btn btn-sm btn-primary waves-effect" id="btn_detail">Detail</a>
                             </td>
                         </tr>

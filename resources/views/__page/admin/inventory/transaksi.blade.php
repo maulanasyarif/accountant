@@ -156,7 +156,7 @@
                                                 <td style="width: 20%;" id="id">
                                                     <strong>{{ __('Jumlah') }}</strong>
                                                 </td>
-                                                <td style="width: 20%">
+                                                <td style="width: 20%" class="noExl noImport">
                                                     <strong>Action</strong>
                                                 </td>
                                             </tr>

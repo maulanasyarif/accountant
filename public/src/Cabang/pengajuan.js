@@ -7,7 +7,7 @@ const PengajuanUI = ((SET) => {
                         <tr>
                             <td style="width: 25%;">${v.kegiatan.no_surat}</td>
                             <td style="width: 30%;">${v.kegiatan.judul}</td>
-                            <td style="width: 10%;">
+                            <td style="width: 10%;" class="noExl noImport">
                                 ${v.status === 'pending' ? 
                                     `<button type="button" class="btn btn-outline-warning">${v.status}</button>` :
                                     v.status === 'review' ? 

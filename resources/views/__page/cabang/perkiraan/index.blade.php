@@ -154,7 +154,7 @@
                                                 <td style="width: 40%;" id="id">
                                                     <strong>{{ __('Nama Perkiraan') }}</strong>
                                                 </td>
-                                                <td style="width: 20%;">
+                                                <td style="width: 20%;" class="noExl noImport">
                                                     <strong>{{__('Action')}}</strong>
                                                 </td>
                                             </tr>
@@ -292,6 +292,6 @@ $("#export_pdf").click(function() {
 
 <script src="{{ asset('src/cabang/perkiraan.js') }}"></script>
 <script>
-PerkiraanController.init('{{ Session::get('admin-auth.token')}}');
+    PerkiraanController.init('{{ Session::get('admin-auth.token')}}');
 </script>
 @endsection

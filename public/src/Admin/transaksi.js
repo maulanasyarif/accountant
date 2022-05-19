@@ -9,7 +9,7 @@ const TransaksiUI = ((SET) => {
                             <td style="width: 30%;">${v.company.company_name}</td>
                             <td style="width: 30%;">${v.inventory.barang_name}</td>
                             <td style="width: 20%;">${v.total}</td>
-                            <td style="width: 20%;">
+                            <td style="width: 20%;" class="noExl noImport">
                                 <div class="btn-group">
                                     <a href="${SET.__baseURL()}editTransaksiInventory/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
                                 </div>

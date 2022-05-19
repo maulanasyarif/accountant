@@ -157,7 +157,7 @@
                                                 <td style="width: 25%;" id="id">
                                                     <strong>{{ __('Judul') }}</strong>
                                                 </td>
-                                                <td style="width: 30%;" id="id">
+                                                <td style="width: 30%;" id="id" class="noExl noImport">
                                                     <strong>{{ __('Action') }}</strong>
                                                 </td>
                                             </tr>

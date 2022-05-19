@@ -1,26 +1,32 @@
-const PerkiraanUI = ((SET) => {
-    return{
+const daftarPerkiraanUI = ((SET) => {
+    return {
         __renderDirectData: ({ results }, { limit }) => {
             let body = results.data
-                .map(v => {
+                .map((v) => {
                     return `
                         <tr>
-                            <td style="width: 40%;">${SET.__threedigis(v.perkiraan_no)}</td>
-                            <td style="width: 40%;">${v.perkiraan_name}</td>
+                            <td style="width: 20%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
+                            <td style="width: 30%;">${v.perkiraan.perkiraan_name}</td>
+                            <td style="width: 15%;">${SET.__realCurrency(v.debit)}</td>
+                            <td style="width: 15%;">${SET.__realCurrency(v.kredit)}</td>
                             <td style="width: 20%;" class="noExl noImport">
                                 <div class="btn-group">
-                                    <a href="${SET.__baseURL()}editperkiraanCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
-                                    <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.perkiraan_name}">Delete</button>
+                                    <a href="${SET.__baseURL()}editaftarPerkiraanAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                    <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.perkiraan.perkiraan_name}">Delete</button>
                                 </div>
                             </td>
                         </tr>
                     `;
-                }).join("");
+                })
+                .join("");
 
-            $("#t_perkiraan tbody").html(body);
+            $("#t_daftarPerkiraan tbody").html(body);
         },
 
-        __renderDirectFooter: ({ results }, { search, sort_by, limit, sort_by_option }) => {
+        __renderDirectFooter: (
+            { results },
+            { search, sort_by, limit, sort_by_option }
+        ) => {
             let max_page = 10;
             let start = results.current_page - 5;
             let end = results.current_page + 5;
@@ -35,66 +41,71 @@ const PerkiraanUI = ((SET) => {
             <tr class="noExl noImport">
                 <td colspan="7" class="text-center">
                     <div class="btn-group mr-2" role="group" aria-label="First group">
-                        <button type="button" class="btn btn-secondary btn-pagination" ${results.prev_page_url === null ? "disabled" : ""
-            } data-url="${results.first_page_url}"> << </button>
-                        <button type="button" class="btn btn-secondary btn-pagination" ${results.prev_page_url === null ? "disabled" : ""
-            } data-url="${results.prev_page_url}"> < </button>
+                        <button type="button" class="btn btn-secondary btn-pagination" ${
+                            results.prev_page_url === null ? "disabled" : ""
+                        } data-url="${results.first_page_url}"> << </button>
+                        <button type="button" class="btn btn-secondary btn-pagination" ${
+                            results.prev_page_url === null ? "disabled" : ""
+                        } data-url="${results.prev_page_url}"> < </button>
                     </div>
         `;
 
-        footer += `
+            footer += `
             <div class="btn-group mr-2" role="group" aria-label="Third group">
-                <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === 1 ? "disabled" : ""
-            } data-url="${results.first_page_url}">1</button>`;
+                <button type="button" class="btn btn-secondary btn-pagination" ${
+                    results.current_page === 1 ? "disabled" : ""
+                } data-url="${results.first_page_url}">1</button>`;
 
-        if (results.current_page != 1) {
-            footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
-        }
-
-        for (let i = start; i <= end /* && ($i<=$max_pages)*/; i++) {
-            if (i === results.current_page) {
-                footer += `<button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === i ? "disabled" : ""
-                    } data-url="${results.path
-                    }?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
-            } else {
-                footer += `<button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === i ? "disabled" : ""
-                    } data-url="${results.path
-                    }?limit=${limit}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
+            if (results.current_page != 1) {
+                footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
             }
-        }
 
-        if (results.current_page != results.last_page) {
-            footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
-        }
+            for (let i = start; i <= end /* && ($i<=$max_pages)*/; i++) {
+                if (i === results.current_page) {
+                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${
+                        results.current_page === i ? "disabled" : ""
+                    } data-url="${
+                        results.path
+                    }?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
+                } else {
+                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${
+                        results.current_page === i ? "disabled" : ""
+                    } data-url="${
+                        results.path
+                    }?limit=${limit}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
+                }
+            }
 
-        footer += `    
-                <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === results.last_page
-                ? "disabled"
-                : ""
-            } data-url="${results.last_page_url}">${results.last_page
+            if (results.current_page != results.last_page) {
+                footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
+            }
+
+            footer += `    
+                <button type="button" class="btn btn-secondary btn-pagination" ${
+                    results.current_page === results.last_page ? "disabled" : ""
+                } data-url="${results.last_page_url}">${
+                results.last_page
             }</button>
             </div>
         `;
 
-        footer += `
+            footer += `
                     <div class="btn-group" role="group" aria-label="Third group">
-                            <button type="button" class="btn btn-secondary btn-pagination" ${results.next_page_url === null
-                ? "disabled"
-                : ""
-            } data-url="${results.next_page_url
-            }"> > </button>
-                            <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === results.last_page
-                ? "disabled"
-                : ""
-            } data-url="${results.last_page_url
-            }"> >> </button>
+                            <button type="button" class="btn btn-secondary btn-pagination" ${
+                                results.next_page_url === null ? "disabled" : ""
+                            } data-url="${results.next_page_url}"> > </button>
+                            <button type="button" class="btn btn-secondary btn-pagination" ${
+                                results.current_page === results.last_page
+                                    ? "disabled"
+                                    : ""
+                            } data-url="${results.last_page_url}"> >> </button>
                         </div>
                     </div>
                 </td>
             </tr>
         `;
 
-            $("#t_perkiraan tfoot").html(footer);
+            $("#t_daftarPerkiraan tfoot").html(footer);
         },
 
         __renderDirectNoData: () => {
@@ -113,32 +124,32 @@ const PerkiraanUI = ((SET) => {
                     <img class="img-fluid" src="${SET.__baseURL()}assets/images/no_data-svg.png" alt="" style="height: 450px;">
                 </div>
 
-            `
+            `;
             $("#detail , #form_edit_route").html(nodata);
 
-            $("#t_perkiraan tbody").html(html);
+            $("#t_daftarPerkiraan tbody").html(html);
         },
-
 
         __renderDirectOrder: (results) => {
-
-            let html
+            let html;
         },
-        
-    }
-})(SettingController)
+    };
+})(SettingController);
 
-const PerkiraanController = ((SET, UI) => {
-
+const DaftarPerkiraanController = ((SET, UI) => {
     const __fetchDirectPerkiraan = (TOKEN, filter = {}, link = null) => {
         $.ajax({
-            url: `${link === null ? SET.__apiURL() + 'cabang/get_perkiraan' : link}`,
-            type: 'GET',
-            dataType: 'JSON',
+            url: `${
+                link === null
+                    ? SET.__apiURL() + "admin/get_daftarPerkiraan"
+                    : link
+            }`,
+            type: "GET",
+            dataType: "JSON",
             data: filter,
-            beforeSend: SET.__tableLoader('#t_perkiraan', 7),
+            beforeSend: SET.__tableLoader("#t_daftarPerkiraan", 7),
             headers: {
-                'Authorization': `Bearer ${TOKEN}`
+                Authorization: `Bearer ${TOKEN}`
             },
             success: (res) => {
                 $("#count_regencies").text(res.total_all);
@@ -149,29 +160,30 @@ const PerkiraanController = ((SET, UI) => {
                     UI.__renderDirectNoData();
                 }
             },
-            error: err => {
-
-            },
-            complete: () => {
-
-            },
+            error: (err) => {},
+            complete: () => {},
             statusCode: {
                 404: function () {
-                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                    toastr.error(
+                        "Endpoint Not Found",
+                        "Failed 404",
+                        SET.__bottomNotif()
+                    );
                 },
                 422: function () {
-                    toastr.error("Please Check Input Name or Value", "Failed 422", SET.__bottomNotif());
+                    toastr.error(
+                        "Please Check Input Name or Value",
+                        "Failed 422",
+                        SET.__bottomNotif()
+                    );
                 },
                 401: function () {
                     window.location.href = `${SET.__baseURL()}delete_session`;
                 },
-                500: function () {
-
-                }
-            }
-        })
-    }
-
+                500: function () {},
+            },
+        });
+    };
 
     const __submitAdd = (TOKEN, filter) => {
         $("#form_add").validate({
@@ -182,17 +194,20 @@ const PerkiraanController = ((SET, UI) => {
                 error.insertAfter(element);
             },
             rules: {
-                regency_id: {
-                    required: true
+                perkiraan_id: {
+                    required: true,
                 },
-                total: {
-                    required: true
-                }
+                debit: {
+                    required: true,
+                },
+                kredit: {
+                    required: true,
+                },
             },
 
             submitHandler: (form) => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/storePerkiraan`,
+                    url: `${SET.__apiURL()}admin/storeDaftarPerkiraan`,
                     type: "POST",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -255,7 +270,7 @@ const PerkiraanController = ((SET, UI) => {
                 let id = $('#delete_id').val()
 
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/deletePerkiraan/${id}`,
+                    url: `${SET.__apiURL()}admin/deleteDaftarPerkiraan/${id}`,
                     type: "DELETE",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -295,11 +310,12 @@ const PerkiraanController = ((SET, UI) => {
                 });
             }
         });
-    }
+    };
+    
 
-    const __fetchDetailPerkiraan = (TOKEN, id, callback) => {
+    const __fetchDetailDaftarPerkiraan = (TOKEN, id, callback) => {
         $.ajax({
-            url: `${SET.__apiURL()}cabang/editPerkiraan/${id}`,
+            url: `${SET.__apiURL()}admin/editDaftarPerkiraan/${id}`,
             type: 'GET',
             dataType: 'JSON',
             headers: {
@@ -326,13 +342,13 @@ const PerkiraanController = ((SET, UI) => {
                 }
             }
         })
-    }
+    };
 
     const __submitUpdatePerkiraan = (TOKEN, id) => {
         var url = window.location.pathname;
         var id = url.substring(url.lastIndexOf('/') + 1);
 
-        $("#form_edit_perkiraan").on('submit', function(e){
+        $("#form_edit_daftarPerkiraan").on('submit', function(e){
             e.preventDefault()
         }).validate({
             errorElement: "div",
@@ -341,25 +357,26 @@ const PerkiraanController = ((SET, UI) => {
                 error.insertAfter(element);
             },
             rules: {
-                perkiraan_no: 'required',
-                perkiraan_name: 'required'
+                perkiraan_id: 'required',
+                debet: 'required',
+                kredit: 'required',
             },
             submitHandler: form => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/updatePerkiraan/${id}`,
+                    url: `${SET.__apiURL()}admin/updateDaftarPerkiraan/${id}`,
                     type: "POST",
                     dataType: "JSON",
                     data: new FormData(form),
                     contentType: false,
                     processData: false,
                     beforeSend: xhr => {
-                        SET.__buttonLoader("#btn_update_perkiraan");
+                        SET.__buttonLoader("#btn_update_daftarPerkiraan");
                     },
                     headers: {
                         Authorization: `Bearer ${TOKEN}`
                     },
                     success: (res) => {
-                        window.location.href = `${SET.__baseURL()}perkiraanCabang`;
+                        window.location.href = `${SET.__baseURL()}daftarPerkiraanAdmin`;
                         toastr.success(
                             "Success",
                             res.message,
@@ -380,16 +397,51 @@ const PerkiraanController = ((SET, UI) => {
         });
     }
 
-    const __openDelete = () => {
-        $("#t_perkiraan, #options").on("click", ".btn-delete", function () {
-            let delete_id = $(this).data('id');
-            let delete_name = $(this).data('name');
+    const __pluginDirectInit = TOKEN => {
+        $("#direct_filter_arrival").select2({
+            placeholder: "-- Select Perkiraan --",
+            ajax: {
+                url: `${SET.__apiURL()}admin/get_perkiraan`,
+                dataType: "JSON",
+                type: "GET",
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`,
+                },
+                data: function (params) {
+                    let query = {
+                        search: params.term,
+                    };
 
-            $("#delete_id").val(delete_id);
-            $("#delete_name").text(delete_name);
-            $('#modal_delete').modal('show')
+                    return query;
+                },
+                processResults: function (res) {
+                    let filtered = [];
+
+                    if (res.results.data.length !== 0) {
+                        let group = {
+                            text: "Perkiraan",
+                            children: [],
+                        };
+
+                        res.results.data.map((v) => {
+                            let perkiraan = {
+                                id: v.id,
+                                text: `${SET.__threedigis(v.perkiraan_no)} | ${v.perkiraan_name}`,
+                            };
+
+                            group.children.push(perkiraan);
+                        });
+
+                        filtered.push(group);
+                    }
+                    return {
+                        results: filtered,
+                    };
+                },
+                cache: true,
+            },
         });
-    }
+    };
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -399,47 +451,58 @@ const PerkiraanController = ((SET, UI) => {
         });
     };
 
-    const __clickDirectPagination = (TOKEN, filter = {}) => {
-        $('#t_perkiraan').on('click', '.btn-pagination', function () {
-            let link = $(this).data('url');
-            __fetchDirectPerkiraan(TOKEN, filter, link)
-        })
+    const __openDelete = () => {
+        $("#t_daftarPerkiraan, #options").on("click", ".btn-delete", function () {
+            let delete_id = $(this).data('id');
+            let delete_name = $(this).data('name');
+
+            $("#delete_id").val(delete_id);
+            $("#delete_name").text(delete_name);
+            $('#modal_delete').modal('show')
+        });
     }
 
+    const __clickDirectPagination = (TOKEN, filter = {}) => {
+        $("#t_daftarPerkiraan").on("click", ".btn-pagination", function () {
+            let link = $(this).data("url");
+            __fetchDirectPerkiraan(TOKEN, filter, link);
+        });
+    };
+
     const __closeDirectFilter = () => {
-        $('#btn_direct_close').on('click', function () {
+        $("#btn_direct_close").on("click", function () {
             $("#option_direct_container").hide();
-        })
-    }
+        });
+    };
 
     const __openDirectOption = () => {
         $("#btn_direct_option").on("click", function () {
             $("#option_direct_container").toggle();
         });
-    }
+    };
 
     const __submitDirectFilter = (TOKEN, filter) => {
-        $('#form_direct_filter').on('submit', function (e) {
+        $("#form_direct_filter").on("submit", function (e) {
             e.preventDefault();
 
-            filter.name = $('#direct_filter_name').val();
-                (filter.sort_by = $('#sort_by').val()),
-                (filter.limit = $('#direct_filter_limit').val()),
-                (filter.sort_by_option = $('#sort_by_option').val()),            
-            __fetchDirectPerkiraan(TOKEN, filter, null)
+            filter.name = $("#direct_filter_name").val();
+            (filter.sort_by = $("#sort_by").val()),
+                (filter.limit = $("#direct_filter_limit").val()),
+                (filter.sort_by_option = $("#sort_by_option").val()),
+                __fetchDirectPerkiraan(TOKEN, filter, null);
         });
-    }
+    };
 
-    const __resetDirectFilter = TOKEN => {
-        $('#btn_direct_reset').on('click', function () {
-            $('#form_direct_filter')[0].reset()
+    const __resetDirectFilter = (TOKEN) => {
+        $("#btn_direct_reset").on("click", function () {
+            $("#form_direct_filter")[0].reset();
 
-            __fetchDirectPerkiraan(TOKEN, { limit: 10 })
-        })
-    }
+            __fetchDirectPerkiraan(TOKEN, { limit: 10 });
+        });
+    };
 
     return {
-        init : (TOKEN) => {
+        init: (TOKEN) => {
             let direct_filter = {
                 sort_by: $("#sort_by").val(),
                 sort_by_option: $("#sort_by_option").val(),
@@ -450,7 +513,7 @@ const PerkiraanController = ((SET, UI) => {
                 disabled: true,
             });
 
-            SET.__closeGlobalLoader()
+            SET.__closeGlobalLoader();
 
             __openAdd();
             __submitAdd(TOKEN);
@@ -464,19 +527,22 @@ const PerkiraanController = ((SET, UI) => {
             __fetchDirectPerkiraan(TOKEN, direct_filter, null)
             __clickDirectPagination(TOKEN, direct_filter)
             __closeDirectFilter(TOKEN)
+            __pluginDirectInit(TOKEN)
 
             __submitUpdatePerkiraan(TOKEN, id);
         },
 
         detail: (TOKEN, id) => {
-            __fetchDetailPerkiraan(TOKEN, id, data => {
-                $('#fetch_noPerkiraan').text(data.perkiraan_no !== null ? `${SET.__threedigis(data.perkiraan_no)}` : '-');
-                $('#fetch_perkiraanNama').text(data.perkiraan_name);
+            __fetchDetailDaftarPerkiraan(TOKEN, id, data => {
+                $('#fetch_noPerkiraan').text(data.perkiraan.perkiraan_no !== null ? `${SET.__threedigis(data.perkiraan.perkiraan_no)}` : '-');
+                $('#fetch_perkiraanNama').text(data.perkiraan.perkiraan_name);
+                $('#fetch_debet').text(data.debit);
+                $('#fetch_kredit').text(data.kredit);
 
-                //edit perkiraan
-                $('#perkiraan_no').val(data.perkiraan_no);
-                $('#perkiraan_name').val(data.perkiraan_name);
-            })
+                //edit daftar perkiraan
+                $('#debet').val(data.debit);
+                $('#kredit').val(data.kredit);
+            });
         }
     }
-})(SettingController, PerkiraanUI)
+})(SettingController, daftarPerkiraanUI)

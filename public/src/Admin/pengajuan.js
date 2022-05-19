@@ -8,7 +8,7 @@ const PengajuanUI = ((SET) => {
                             <td style="width: 25%;">${v.company_name}</td>
                             <td style="width: 20%;">${v.kegiatan.no_surat}</td>
                             <td style="width: 25%;">${v.kegiatan.judul}</td>
-                            <td style="width: 30%;">
+                            <td style="width: 30%;" class="noExl noImport">
                                     ${v.status === 'pending' ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
                                     <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
                                     JSON.stringify(v.kegiatan) +

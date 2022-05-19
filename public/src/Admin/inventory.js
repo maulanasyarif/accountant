@@ -10,7 +10,7 @@ const InventoryUI = ((SET) => {
                             <td style="width: 20%;">${v.total_awal}</td>
                             <td style="width: 20%;">${v.terpakai !== null ? `${v.terpakai}` : '-'}</td>
                             <td style="width: 15%;">${v.total_awal-v.terpakai}</td>
-                            <td style="width: 15%;">
+                            <td style="width: 15%;" class="noExl noImport">
                                 <div class="btn-group">
                                     <a href="${SET.__baseURL()}editInventoryAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
                                     <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.barang_name}">Delete</button>

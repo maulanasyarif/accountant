@@ -9,7 +9,7 @@ const daftarPerkiraanUI = ((SET) => {
                             <td style="width: 30%;">${v.perkiraan.perkiraan_name}</td>
                             <td style="width: 15%;">${SET.__realCurrency(v.debit)}</td>
                             <td style="width: 15%;">${SET.__realCurrency(v.kredit)}</td>
-                            <td style="width: 20%;">
+                            <td style="width: 20%;" class="noExl noImport">
                                 <div class="btn-group">
                                     <a href="${SET.__baseURL()}editaftarPerkiraanCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
                                     <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.perkiraan.perkiraan_name}">Delete</button>

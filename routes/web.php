@@ -49,6 +49,19 @@ Route::group([
 
 
     //ADMIN/CORPORATE
+    Route::get('perkiraanAdmin', 'Admin\PerkiraanController@index')->name('perkiraanAdmin');
+    Route::get('editperkiraanAdmin/{id}', 'Admin\PerkiraanController@edit')->name('editperkiraanAdmin');
+
+    Route::get('daftarPerkiraanAdmin', 'Admin\DaftarPerkiraanController@index')->name('daftarPerkiraanAdmin');
+    Route::get('addDaftarPerkiraanAdmin', 'Admin\DaftarPerkiraanController@add')->name('addDaftarPerkiraanAdmin');
+    Route::get('editaftarPerkiraanAdmin/{id}', 'Admin\DaftarPerkiraanController@edit')->name('editaftarPerkiraanAdmin');
+    
+    Route::get('jurnalUmumAdmin', 'Admin\KasController@index')->name('jurnalUmumAdmin');
+    Route::get('editjurnalUmumAdmin/{id}', 'Admin\KasController@edit')->name('editjurnalUmumAdmin');
+    
+    Route::get('bukuKasAdmin', 'Admin\BukuKasController@index')->name('bukuKasAdmin');
+    Route::get('editBukuKasAdmin/{id}', 'Admin\BukuKasController@edit')->name('editBukuKasAdmin');
+    
     Route::get('cabang', 'Admin\CabangController@index')->name('cabang');
     Route::get('addCabang', 'Admin\CabangController@add')->name('addCabang');
     Route::get('cabang/{id}', 'Admin\CabangController@detail')->name('detailCabang');
@@ -88,5 +101,5 @@ Route::group([
     Route::get('jurnalUmumCabang', 'Cabang\KasController@index')->name('jurnalUmumCabang');
     Route::get('bukuKas', 'Cabang\BukukasController@index')->name('bukuKas');
 
-    Route::get('pengajuanCabang', 'Cabang\KegiatanController@pengajuan')->name('pengajuanCabang');
+    // Route::get('pengajuanCabang', 'Cabang\KegiatanController@pengajuan')->name('pengajuanCabang');
 });

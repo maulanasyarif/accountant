@@ -5,11 +5,11 @@ const PerkiraanUI = ((SET) => {
                 .map(v => {
                     return `
                         <tr>
-                            <td style="width: 40%;">${SET.__threedigis(v.perkiraan_no)}</td>
-                            <td style="width: 40%;">${v.perkiraan_name}</td>
+                            <td style="width: 25%;">${SET.__threedigis(v.perkiraan_no)}</td>
+                            <td style="width: 55%;">${v.perkiraan_name}</td>
                             <td style="width: 20%;" class="noExl noImport">
                                 <div class="btn-group">
-                                    <a href="${SET.__baseURL()}editperkiraanCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                    <a href="${SET.__baseURL()}editperkiraanAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
                                     <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.perkiraan_name}">Delete</button>
                                 </div>
                             </td>
@@ -132,7 +132,7 @@ const PerkiraanController = ((SET, UI) => {
 
     const __fetchDirectPerkiraan = (TOKEN, filter = {}, link = null) => {
         $.ajax({
-            url: `${link === null ? SET.__apiURL() + 'cabang/get_perkiraan' : link}`,
+            url: `${link === null ? SET.__apiURL() + 'admin/get_perkiraan' : link}`,
             type: 'GET',
             dataType: 'JSON',
             data: filter,
@@ -192,7 +192,7 @@ const PerkiraanController = ((SET, UI) => {
 
             submitHandler: (form) => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/storePerkiraan`,
+                    url: `${SET.__apiURL()}admin/storePerkiraan`,
                     type: "POST",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -255,7 +255,7 @@ const PerkiraanController = ((SET, UI) => {
                 let id = $('#delete_id').val()
 
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/deletePerkiraan/${id}`,
+                    url: `${SET.__apiURL()}admin/deletePerkiraan/${id}`,
                     type: "DELETE",
                     dataType: "JSON",
                     data: $(form).serialize(),
@@ -299,7 +299,7 @@ const PerkiraanController = ((SET, UI) => {
 
     const __fetchDetailPerkiraan = (TOKEN, id, callback) => {
         $.ajax({
-            url: `${SET.__apiURL()}cabang/editPerkiraan/${id}`,
+            url: `${SET.__apiURL()}admin/editPerkiraan/${id}`,
             type: 'GET',
             dataType: 'JSON',
             headers: {
@@ -346,7 +346,7 @@ const PerkiraanController = ((SET, UI) => {
             },
             submitHandler: form => {
                 $.ajax({
-                    url: `${SET.__apiURL()}cabang/updatePerkiraan/${id}`,
+                    url: `${SET.__apiURL()}admin/updatePerkiraan/${id}`,
                     type: "POST",
                     dataType: "JSON",
                     data: new FormData(form),
@@ -359,7 +359,7 @@ const PerkiraanController = ((SET, UI) => {
                         Authorization: `Bearer ${TOKEN}`
                     },
                     success: (res) => {
-                        window.location.href = `${SET.__baseURL()}perkiraanCabang`;
+                        window.location.href = `${SET.__baseURL()}perkiraanAdmin`;
                         toastr.success(
                             "Success",
                             res.message,
