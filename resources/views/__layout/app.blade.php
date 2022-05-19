@@ -253,7 +253,7 @@
                         @if(Session::get('admin-auth.user')->role == 'MASTER')
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                                 href="javascript:void(0)" aria-expanded="false"><span
-                                    class="hide-menu text-white">Manajemen Perkiraan</span></a>
+                                    class="hide-menu text-white">Manajemen Perusahaan</span></a>
                             <ul aria-expanded="false" class="collapse first-level">
                                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('Corporate') }}" aria-expanded="false"><i
@@ -268,12 +268,12 @@
                                             class="mdi mdi-receipt"></i><span
                                             class="hide-menu text-white">{{ __('Pengajuan') }}</span></a></li>
 
-                                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
-                                        href="{{ url('activityLog') }}" aria-expanded="false">
-                                            <i class="mdi mdi-clock"></i><span
-                                                class="hide-menu text-white">{{ __('Aktivitas Pengguna') }}</span></a></li>
-                            </ul>
-                        </li>
+                                        </ul>
+                                    </li>
+                                    <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                            href="{{ url('activityLog') }}" aria-expanded="false">
+                                                <i class="mdi mdi-clock"></i><span
+                                                    class="hide-menu text-white">{{ __('Aktivitas Pengguna') }}</span></a></li>
 
                         @elseif(Session::get('admin-auth.user')->role == 'ADMIN')
                         
