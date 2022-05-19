@@ -9,7 +9,7 @@ const KasUI = ((SET) => {
                         <td style="width: 30%;">${v.keterangan}</td>
                         <td style="width: 10%;">${SET.__threedigis(v.debet[0].perkiraan_no)}</td>
                         <td style="width: 10%;">${SET.__threedigis(v.kredit[0].perkiraan_no)}</td>
-                        <td style="width: 20%;">${v.jumlah !== null ? `IDR ${SET.__realCurrency(v.jumlah)}` : '-'}</td>
+                        <td style="width: 20%;">${v.jumlah !== null ? `${SET.__realCurrency(v.jumlah)}` : '-'}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
                                 <a href="${SET.__baseURL()}editjurnalUmumCabang/${

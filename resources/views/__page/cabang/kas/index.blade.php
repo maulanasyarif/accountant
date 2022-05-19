@@ -162,6 +162,7 @@
                                                 </td>
                                                 <td style="width: 20%;" id="id">
                                                     <strong>{{ __('Jumlah') }}</strong>
+                                                    <p>(IDR)</p>
                                                 </td>
                                                 <td style="width: 15%;" id="id" class="noExl noImport">
                                                     <strong>{{ __('Action') }}</strong>

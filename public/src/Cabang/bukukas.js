@@ -8,22 +8,19 @@ const KasUI = ((SET) => {
                 .map((v) => {
                     return `
                     <tr>
-                        <td style="width: 15%;">${SET.__threedigis(
-                            v.perkiraan.perkiraan_no
-                        )}</td>
-                        <td style="width: 15%;">${
-                            v.perkiraan.perkiraan_name
-                        }</td>
-                        <td style="width: 30%;">${v.tanggal}</td>
-                        <td style="width: 10%;">${SET.__realCurrency(
-                            v.debet
-                        )}</td>
-                        <td style="width: 10%;">${SET.__realCurrency(
-                            v.kredit
-                        )}</td>
-                        <td style="width: 20%;">${SET.__realCurrency(
-                            v.jmlh
-                        )}</td>
+                    <td style="width: 10%;">${v.tanggal}</td>
+                    <td style="width: 15%;">${v.keterangan}</td>
+                    <td style="width: 15%;">${v.perkiraan.perkiraan_name}</td>
+                    <td style="width: 10%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
+                    <td style="width: 10%;">
+                        ${v.debet !== null ? `${SET.__realCurrency(v.debet)}` : '-'}
+                    </td>
+                    <td style="width: 10%;">
+                        ${v.kredit !== null ? `${SET.__realCurrency(v.kredit)}` : '-'}
+                    </td>
+                    <td style="width: 15%;">
+                        ${v.jmlh !== null ? `${SET.__realCurrency(v.jmlh)}` : '-'}
+                    </td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
                                 <button class="btn btn-sm btn-warning btn-edit" data-id="${

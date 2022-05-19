@@ -356,13 +356,13 @@
                                         href="{{ url('perkiraanCabang') }}" aria-expanded="false"><i
                                             class="mdi mdi-receipt"></i><span
                                             class="hide-menu text-white">{{ __('Perkiraan') }}</span></a></li>
-                                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                <!-- <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('daftarPerkiraanCabang') }}" aria-expanded="false"><i
                                             class="mdi mdi-receipt"></i><span
-                                            class="hide-menu text-white">{{ __('Daftar Perkiraan') }}</span></a></li>
-                                <!-- <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                            class="hide-menu text-white">{{ __('Daftar Perkiraan') }}</span></a></li> -->
+                                <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('jurnalUmumCabang') }}" aria-expanded="false"><i
-                                            class="mdi mdi-receipt"></i><span> -->
+                                            class="mdi mdi-receipt"></i><span
                                             class="hide-menu text-white">{{ __('Jurnal Umum') }}</span></a></li>
                                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('bukuKas') }}" aria-expanded="false"><i

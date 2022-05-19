@@ -162,12 +162,15 @@
                                                 </td>
                                                 <td style="width: 10%;" id="id">
                                                     <strong>{{ __('Debit') }}</strong>
+                                                    <p>(IDR)</p>
                                                 </td>
                                                 <td style="width: 10%;" id="id">
                                                     <strong>{{ __('Kredit') }}</strong>
+                                                    <p>(IDR)</p>
                                                 </td>
                                                 <td style="width: 20%;" id="id">
                                                     <strong>{{ __('Saldo') }}</strong>
+                                                    <p>(IDR)</p>
                                                 </td>
                                                 <td style="width: 15%;" id="id" class="noExl noImport">
                                                     <strong>{{ __('Action') }}</strong>

@@ -7,8 +7,8 @@ const daftarPerkiraanUI = ((SET) => {
                         <tr>
                             <td style="width: 20%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
                             <td style="width: 30%;">${v.perkiraan.perkiraan_name}</td>
-                            <td style="width: 15%;">${SET.__realCurrency(v.debit)}</td>
-                            <td style="width: 15%;">${SET.__realCurrency(v.kredit)}</td>
+                            <td style="width: 15%;">${v.debit !== null ? `${SET.__realCurrency(v.debit)}` : '-'}</td>
+                            <td style="width: 15%;">${v.kredit !== null ? `${SET.__realCurrency(v.kredit)}` : '-'}</td>
                             <td style="width: 20%;" class="noExl noImport">
                                 <div class="btn-group">
                                     <a href="${SET.__baseURL()}editaftarPerkiraanAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
