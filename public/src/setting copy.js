@@ -14,18 +14,18 @@ const SettingController = (() => {
 
     const __selfPublicURL = () => {
         if (ENV === "DEVELOPMENT") {
-            return "https://prototipe-project78484.herokuapp.com/";
+            return "http://user-mika.test/";
         } else {
-            return "https://prototipe-project78484.herokuapp.com/public/";
+            return "http://user-mika/public/";
         }
     };
 
     return {
         __publicURL: () => {
             if (ENV === "DEVELOPMENT") {
-                return "https://prototipe-project78484.herokuapp.com/";
+                return "http://user-mika.test/";
             } else {
-                return "https://prototipe-project78484.herokuapp.com/public/";
+                return "http://user-mika/public/";
             }
         },
 
@@ -36,23 +36,23 @@ const SettingController = (() => {
             if (ENV === "DEVELOPMENT") {
                 return `${PROTOCOL}//${HOST}/`;
             } else {
-                return `${PROTOCOL}//${HOST}/public/`;
+                return `${PROTOCOL}//${HOST}/user-mika/public/`;
             }
         },
 
         __apiURL: () => {
             if (ENV === "DEVELOPMENT") {
-                return "https://api-prototipe-project78484.herokuapp.com/api/";
+                return "http://api-mika.test/api/";
             } else {
-                return "https://api-prototipe-project78484.herokuapp.com/public/";
+                return "http://api-mika/public/";
             }
         },
 
         __fileURL: () => {
             if (ENV === "DEVELOPMENT") {
-                return "https://api-prototipe-project78484.herokuapp.com/file/";
+                return "http://api-mika.test/api/file/";
             } else {
-                return "https://api-prototipe-project78484.herokuapp.com/public/file/";
+                return "http://api-mika/public/file/";
             }
         },
 
