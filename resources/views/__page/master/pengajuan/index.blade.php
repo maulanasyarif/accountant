@@ -1,6 +1,6 @@
 @extends('__layout.app')
 
-@section('title', 'Account')
+@section('title', 'Pengajuan')
 
 @section('css-source')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/select2_new/dist/css/select2.min.css') }}">
@@ -14,7 +14,7 @@
 <div class="page-breadcrumb">
     <div class="row">
         <div class="col-5 align-self-center">
-            <h4 class="page-title">{{ __('Account') }}</h4>
+            <h4 class="page-title">{{ __('Pengajuan') }}</h4>
         </div>
         <div class="col-7 align-self-center">
             <div class="d-flex align-items-center justify-content-end">
@@ -23,7 +23,7 @@
                         <li class="breadcrumb-item" aria-current="page">
                             <a href="{{ url('dashboard') }}">{{ __('Dasbor') }}</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Account') }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">{{ __('Pengajuan') }}</li>
                     </ol>
                 </nav>
             </div>
@@ -39,7 +39,7 @@
                 <div class="card-body text-white">
                     <div class="d-flex flex-row">
                         <div class="p-10 align-self-center">
-                            <h4 class="m-b-0">Total Account</h4>
+                            <h4 class="m-b-0">Total Data Pengajuan</h4>
                             <span>{{ __('Semua') }}</span>
                         </div>
                         <div class="ml-auto align-self-center">
@@ -68,14 +68,15 @@
                                                 <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
                                             </div>
                                             <!-- <div class="btn-group">
-                                                <button class="btn btn-info btn-md" id="btn_add"><i class="fas fa-plus"></i>
-                                                    {{ __('Tambah') }}</button>
+                                                <button class="btn btn-info btn-md" id="btn_add"><i
+                                                        class="fas fa-plus"></i>
+                                                    {{ __('Tambah') }}</button> 
                                             </div> -->
                                         </div>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover data-table" id="t_Account">
+                                    <table class="table table-hover data-table" id="t_pengajuan">
                                         <thead class="thead-light">
                                             <tr id="option_direct_container" style="display: none;" class="noExl">
                                                 <th scope="col" colspan="7">
@@ -84,12 +85,12 @@
 
                                                             <div class="col-lg-6 col-12">
                                                                 <div class="form-group">
-                                                                    <label for="">{{ __('Name') }}</label>
+                                                                    <label for="">{{ __('Judul') }}</label>
                                                                     <input type="text" id="direct_filter_name"
                                                                         autocomplete="off" name="name"
                                                                         class="form-control"
-                                                                        placeholder="{{ __('Search Name') }}"
-                                                                        aria-label="{{ __('Search Name') }}"
+                                                                        placeholder="{{ __('Search Judul') }}"
+                                                                        aria-label="{{ __('Search Judul') }}"
                                                                         aria-describedby="basic-addon1">
                                                                 </div>
                                                             </div>
@@ -97,8 +98,9 @@
                                                             <div class="col-lg-6 col-12">
                                                                 <label>Show</label>
                                                                 <div class="input-group mb-3">
-                                                                    <input type="number" name="limit" id="direct_filter_limit"
-                                                                        class="form-control" value="10">
+                                                                    <input type="number" name="limit"
+                                                                        id="direct_filter_limit" class="form-control"
+                                                                        value="10">
                                                                     <div class="input-group-append">
                                                                         <span class="input-group-text">/page</span>
                                                                     </div>
@@ -108,9 +110,10 @@
                                                             <div class="col-lg-6 col-12">
                                                                 <label>Sort By</label>
                                                                 <div class="input-group mb-3">
-                                                                    <select name="sort_by" id="direct_filter_name" class="form-control">
+                                                                    <select name="sort_by" id="direct_filter_name"
+                                                                        class="form-control">
                                                                         <option value="name" selected>
-                                                                            {{ __('Name') }}</option>
+                                                                            {{ __('Judul') }}</option>
                                                                         <!-- <option value="type">Type</option> -->
                                                                     </select>
                                                                     <select name="sort_by_option" id="sort_by_option"
@@ -127,14 +130,14 @@
                                                                         <div class="col-md-6 col-6 text-left">
                                                                             <button class="btn btn-filter btn-danger"
                                                                                 id="btn_direct_close"
-                                                                                type="button">{{ __('Close') }}</button>
+                                                                                type="button">{{ __('Tutup') }}</button>
                                                                         </div>
                                                                         <div class="col-md-6 col-6 text-right">
                                                                             <button class="btn btn-filter btn-warning"
                                                                                 type="button"
                                                                                 id="btn_direct_reset">Reset</button>
                                                                             <button class="btn btn-filter btn-info"
-                                                                                type="submit">{{ __('Search') }}</button>
+                                                                                type="submit">{{ __('Cari') }}</button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -145,11 +148,18 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="width: 25%;" id="id"><strong>{{ __('Corporate/Cabang') }}</strong></td>
-                                                <td style="width: 25%;" id="id"><strong>{{ __('Name') }}</strong></td>
-                                                <td style="width: 25%;" id="id"><strong>{{ __('Email') }}</strong></td>
-                                                <td style="width: 25%;" id="id"><strong>{{ __('Role') }}</strong></td>
-                                                <!-- <td style="width: 30%;"><strong>Status</strong></td> -->
+                                                <td style="width: 25%;" id="id">
+                                                    <strong>{{ __('No Surat') }}</strong>
+                                                </td>
+                                                <td style="width: 30%;" id="id">
+                                                    <strong>{{ __('Judul') }}</strong>
+                                                </td>
+                                                <td style="width: 10%;" id="id">
+                                                    <strong>{{ __('Status') }}</strong>
+                                                </td>
+                                                <td style="width: 10%;" id="id">
+                                                    <strong>{{ __('Action') }}</strong>
+                                                </td>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -174,59 +184,35 @@
 </div>
 
 
-<!-- modal add perkiraan -->
+<!-- modal add pengajuan -->
 <form id="form_add">
     <div id="modal_add" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">{{ __('Tambah Account') }}</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{ __('Tambah Pengajuan') }}</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 </div>
                 <div class="modal-body">
+
                     <div class="form-group">
-                        <label for="">{{ __('Username') }}</label>
-                        <input type="text" name="username" id="username" class="form-control">
+                        <label for="">{{ __('Kegiatan') }}</label>
+                        <select name="kegiatan_id" id="direct_filter_kegiatan" class="form-control" style="width: 100%;">
+                            <option value="">-- {{ __('Kegiatan') }} --</option>
+                        </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="">{{ __('Name') }}</label>
-                        <input type="text" name="name" id="name" class="form-control">
+                        <label for="">{{ __('Keterangan\Pesan') }}</label>
+                        <textarea type="text" name="keterangan" id="keterangan" class="form-control"></textarea>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="">{{ __('Phone') }}</label>
-                        <input type="text" name="phone" id="phone" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Email') }}</label>
-                        <input type="email" name="email" id="email" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Password') }}</label>
-                        <input type="password" name="password" id="password" class="form-control">
-                    </div>
-
-                    <!-- <div class="col-md-6 col-sm-12 text-center"> -->
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox"
-                                class="custom-control-input show-password"
-                                id="customCheck1">
-                            <label class="custom-control-label"
-                                for="customCheck1">{{ __('Show Password')}}</label>
-
-                        </div>
-                    <!-- </div> -->
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger waves-effect"
-                        data-dismiss="modal">{{ __('Close') }}</button>
-                    <button type="submit" class="btn btn-info waves-effect"
-                        id="btn_submit">{{ __('Save') }}</button>
+                        data-dismiss="modal">{{ __('Tutup') }}</button>
+                    <button type="submit" class="btn btn-info waves-effect" id="btn_submit">{{ __('Simpan') }}</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -242,8 +228,8 @@
 <script src="{{ asset('assets/libs/select2_new/dist/js/select2.full.min.js') }}"></script>
 <script src="{{ asset('assets/libs/select2_new/dist/js/select2.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
-    integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
-    crossorigin="anonymous"></script>
+        integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ=="
+        crossorigin="anonymous"></script>
 
 <script src="https://cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
@@ -252,10 +238,10 @@
 
 <script>
 $("#export_excel").click(function() {
-    $("#t_Account").table2excel({
+    $("#t_pengajuan").table2excel({
         exclude: ".noExl",
         fileext: ".xlsx",
-        filename: "Account",
+        filename: "Pengajuan",
         exclude_links: true,
         preserveColors: false,
     });
@@ -266,7 +252,7 @@ $("#export_pdf").click(function() {
 
     $(".noImport").hide();
 
-    html2canvas($('#t_Account')[0], {
+    html2canvas($('#t_pengajuan')[0], {
         onrendered: function(canvas) {
             var data = canvas.toDataURL();
             var docDefinition = {
@@ -275,7 +261,7 @@ $("#export_pdf").click(function() {
                     width: 500
                 }],
             };
-            pdfMake.createPdf(docDefinition).download("Account.pdf");
+            pdfMake.createPdf(docDefinition).download("Pengajuan.pdf");
         }
     });
 
@@ -285,8 +271,8 @@ $("#export_pdf").click(function() {
 })
 </script>
 
-<script src="{{ asset('src/Master/Account.js') }}"></script>
+<script src="{{ asset('src/master/pengajuan.js') }}"></script>
 <script>
-    AccountController.init('{{ Session::get('admin-auth.token') }}');
+    PengajuanController.init('{{ Session::get('admin-auth.token')}}');
 </script>
 @endsection

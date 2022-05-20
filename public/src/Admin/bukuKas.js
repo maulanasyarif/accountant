@@ -574,8 +574,8 @@ const BukuKasController = ((SET, UI) => {
                 //edit kas
                 $('#tanggal').val(data.tanggal);
                 $('#keterangan').val(data.keterangan);
-                $('#debet').val(data.debet !== null ? `${data.debet}` : '-');
-                $('#kredit').val(data.kredit !== null ? `${data.kredit}` : '-');
+                $('#debet').val(data.debet);
+                $('#kredit').val(data.kredit);
             })
         }
         

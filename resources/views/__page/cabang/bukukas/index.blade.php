@@ -148,27 +148,27 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="width:15%;" id="id">
-                                                    <strong>{{ __('Nomor Perkiraan') }}</strong>
-                                                </td>
-                                                <td style="width: 30;" id="id">
-                                                    <strong>{{ __('Nama Perkiraan') }}</strong>
-                                                </td>
-                                                <td style="width: 30;" id="id">
-                                                    <strong>{{ __('Keterangan') }}</strong>
-                                                </td>
-                                                <td style="width: 10%;" id="id">
+                                                <td style="width:10%;" id="id">
                                                     <strong>{{ __('Tanggal') }}</strong>
                                                 </td>
+                                                <td style="width: 15;" id="id">
+                                                    <strong>{{ __('Keterangan') }}</strong>
+                                                </td>
+                                                <td style="width: 15;" id="id">
+                                                    <strong>{{ __('Nama Perkiraan') }}</strong>
+                                                </td>
+                                                <td style="width: 10;" id="id">
+                                                    <strong>{{ __('No Perkiraan') }}</strong>
+                                                </td>
                                                 <td style="width: 10%;" id="id">
-                                                    <strong>{{ __('Debit') }}</strong>
+                                                    <strong>{{ __('Debet') }}</strong>
                                                     <p>(IDR)</p>
                                                 </td>
                                                 <td style="width: 10%;" id="id">
                                                     <strong>{{ __('Kredit') }}</strong>
                                                     <p>(IDR)</p>
                                                 </td>
-                                                <td style="width: 20%;" id="id">
+                                                <td style="width: 15%;" id="id">
                                                     <strong>{{ __('Saldo') }}</strong>
                                                     <p>(IDR)</p>
                                                 </td>

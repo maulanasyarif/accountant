@@ -184,7 +184,7 @@ const KasController = ((SET, UI) => {
         });
     };
 
-    const __pluginDirectInitDebet = (TOKEN) => {
+    const __pluginDirectInitDebit = (TOKEN) => {
         $("#direct_debit").select2({
             placeholder: "-- Select Perkiraan --",
             ajax: {

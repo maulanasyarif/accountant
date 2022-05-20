@@ -8,27 +8,23 @@ const KasUI = ((SET) => {
                 .map((v) => {
                     return `
                     <tr>
-                    <td style="width: 10%;">${v.tanggal}</td>
-                    <td style="width: 15%;">${v.keterangan}</td>
-                    <td style="width: 15%;">${v.perkiraan.perkiraan_name}</td>
-                    <td style="width: 10%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
-                    <td style="width: 10%;">
-                        ${v.debet !== null ? `${SET.__realCurrency(v.debet)}` : '-'}
-                    </td>
-                    <td style="width: 10%;">
-                        ${v.kredit !== null ? `${SET.__realCurrency(v.kredit)}` : '-'}
-                    </td>
-                    <td style="width: 15%;">
-                        ${v.jmlh !== null ? `${SET.__realCurrency(v.jmlh)}` : '-'}
-                    </td>
+                        <td style="width: 10%;">${v.tanggal}</td>
+                        <td style="width: 15%;">${v.keterangan}</td>
+                        <td style="width: 15%;">${v.perkiraan.perkiraan_name}</td>
+                        <td style="width: 10%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
+                        <td style="width: 10%;">
+                            ${v.debet !== null ? `${SET.__realCurrency(v.debet)}` : '-'}
+                        </td>
+                        <td style="width: 10%;">
+                            ${v.kredit !== null ? `${SET.__realCurrency(v.kredit)}` : '-'}
+                        </td>
+                        <td style="width: 15%;">
+                            ${v.jmlh !== null ? `${SET.__realCurrency(v.jmlh)}` : '-'}
+                        </td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-warning btn-edit" data-id="${
-                                    v.id
-                                }">Edit</button>
-                                <button class="btn btn-sm btn-danger btn-delete" data-id="${
-                                    v.id
-                                }" data-name="${v.keterangan}">Delete</button>
+                                <a href="${SET.__baseURL()}editBukuKasCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -373,6 +369,92 @@ const KasController = ((SET, UI) => {
         });
     };
 
+    const __fetchDetailBukuKas = (TOKEN, id, callback) => {
+        $.ajax({
+            url: `${SET.__apiURL()}cabang/detailbukuKas/${id}`,
+            type: 'GET',
+            dataType: 'JSON',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`
+            },
+            success: (res) => {
+                callback(res.results);
+            },
+            error: err => {
+
+            },
+            complete: () => {
+
+            },
+            statusCode: {
+                404: function () {
+                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                },
+                401: function () {
+                    window.location.href = `${SET.__baseURL()}delete_session`;
+                },
+                500: function () {
+
+                }
+            }
+        })
+    }
+
+    const __submitUpdateBukuKas = (TOKEN, id) => {
+        var url = window.location.pathname;
+        var id = url.substring(url.lastIndexOf('/') + 1);
+
+        $("#form_edit_kas").on('submit', function(e){
+            e.preventDefault()
+        }).validate({
+            errorElement: "div",
+            errorPlacement: function (error, element) {
+                error.addClass("invalid-feedback");
+                error.insertAfter(element);
+            },
+            rules: {
+                tanggal: 'required',
+                keterangan: 'required',
+                debet_id: 'required',
+                kredit_id: 'required',
+                jumlah: 'required'
+            },
+            submitHandler: form => {
+                $.ajax({
+                    url: `${SET.__apiURL()}cabang/updatebukuKas/${id}`,
+                    type: "POST",
+                    dataType: "JSON",
+                    data: new FormData(form),
+                    contentType: false,
+                    processData: false,
+                    beforeSend: xhr => {
+                        SET.__buttonLoader("#btn_update_kas");
+                    },
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`
+                    },
+                    success: (res) => {
+                        window.location.href = `${SET.__baseURL()}bukuKas`;
+                        toastr.success(
+                            "Success",
+                            res.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    error: err => {
+                        let error = err.responseJSON;
+
+                        toastr.error(
+                            "Failed",
+                            error.message,
+                            SET.__bottomNotif()
+                        );
+                    },
+                });
+            }
+        });
+    }
+
     const __openDelete = () => {
         $("#t_bukuKas, #options").on("click", ".btn-delete", function () {
             let delete_id = $(this).data("id");
@@ -384,14 +466,14 @@ const KasController = ((SET, UI) => {
         });
     };
 
-    const __openEdit = () => {
-        $("#t_bukuKas, #options").on("click", ".btn-edit", function () {
-            let edit_id = $(this).data("id");
+    // const __openEdit = () => {
+    //     $("#t_bukuKas, #options").on("click", ".btn-edit", function () {
+    //         let edit_id = $(this).data("id");
 
-            $("#edit_id").val(edit_id);
-            $("#modal_edit").modal("show");
-        });
-    };
+    //         $("#edit_id").val(edit_id);
+    //         $("#modal_edit").modal("show");
+    //     });
+    // };
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -467,7 +549,7 @@ const KasController = ((SET, UI) => {
             __openAdd();
             __submitAdd(TOKEN);
 
-            __openEdit();
+            // __openEdit();
 
             __openDelete();
             __submitDelete(TOKEN, direct_filter);
@@ -479,6 +561,25 @@ const KasController = ((SET, UI) => {
             __clickDirectPagination(TOKEN, direct_filter);
             __closeDirectFilter(TOKEN);
             __pluginDirectInitPerkiraan(TOKEN);
+
+            __submitUpdateBukuKas(TOKEN, id);
         },
+
+        detail: (TOKEN, id) => {
+            __fetchDetailBukuKas(TOKEN, id, data => {
+                $('#fetch_tanggal').text(data.tanggal);
+                $('#fetch_keterangan').text(data.keterangan);
+                $('#fetch_noPerkiraan').text(data.perkiraan.perkiraan_no);
+                $('#fetch_namaPerkiraan').text(data.perkiraan.perkiraan_name);
+                $('#fetch_debet').text(data.debet !== null ? `${SET.__threedigis(data.debet)}` : '-');
+                $('#fetch_kredit').text(data.kredit !== null ? `${SET.__threedigis(data.kredit)}` : '-');
+
+                //edit kas
+                $('#tanggal').val(data.tanggal);
+                $('#keterangan').val(data.keterangan);
+                $('#debet').val(data.debet);
+                $('#kredit').val(data.kredit);
+            })
+        }
     };
 })(SettingController, KasUI);

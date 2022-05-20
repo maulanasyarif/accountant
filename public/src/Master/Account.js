@@ -5,7 +5,7 @@ const CorporateUI = ((SET) => {
                 .map(v => {
                     return `
                         <tr>
-                            <td style="width: 50%;">${v.username}</td>
+                            <td style="width: 50%;">${v.company_name}</td>
                             <td style="width: 20%;">${v.name}</td>
                             <td style="width: 20%;">${v.email}</td>
                             <td style="width: 20%;">${v.role}</td>

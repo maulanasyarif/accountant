@@ -11,4 +11,9 @@ class BukukasController extends Controller
     {
         return view('__page.cabang.bukukas.index');
     }
+
+    public function edit($id)
+    {
+        return view('__page.cabang.bukuKas.edit', ['id' => $id]);
+    }
 }
