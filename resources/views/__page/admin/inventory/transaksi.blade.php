@@ -78,15 +78,27 @@
                                     <table class="table table-hover data-table" id="t_transaksi">
                                         <thead class="thead-light">
                                             <tr id="option_direct_container" style="display: none;" class="noExl">
-                                                <th scope="col" colspan="7">
+                                                <th scope="col" colspan="4">
                                                     <form id="form_direct_filter">
                                                         <div class="row">
 
                                                             <div class="col-lg-6 col-12">
                                                                 <div class="form-group">
+                                                                    <label for="">{{ __('Nama Cabang') }}</label>
+                                                                    <input type="text" id="search_namacabang"
+                                                                        autocomplete="off" name="company_name"
+                                                                        class="form-control"
+                                                                        placeholder="{{ __('Search Nama Cabang') }}"
+                                                                        aria-label="{{ __('Search Nama Cabang') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <div class="form-group">
                                                                     <label for="">{{ __('Nama Barang') }}</label>
-                                                                    <input type="text" id="direct_filter_name"
-                                                                        autocomplete="off" name="name"
+                                                                    <input type="text" id="search_namabarang"
+                                                                        autocomplete="off" name="barang_name"
                                                                         class="form-control"
                                                                         placeholder="{{ __('Search Nama Barang') }}"
                                                                         aria-label="{{ __('Search Nama Barang') }}"
@@ -95,25 +107,14 @@
                                                             </div>
 
                                                             <div class="col-lg-6 col-12">
-                                                                <label>Show</label>
+                                                                <label>{{ __('Sortir Berdasarkan') }}</label>
                                                                 <div class="input-group mb-3">
-                                                                    <input type="number" name="limit"
-                                                                        id="direct_filter_limit" class="form-control"
-                                                                        value="10">
-                                                                    <div class="input-group-append">
-                                                                        <span class="input-group-text">/page</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <label>Sort By</label>
-                                                                <div class="input-group mb-3">
-                                                                    <select name="sort_by" id="direct_filter_name"
+                                                                    <select name="sort_by" id="sort_by"
                                                                         class="form-control">
-                                                                        <option value="name" selected>
-                                                                            {{ __('Nama Barang') }}</option>
-                                                                        <!-- <option value="cabang_name">{{__('Nama Cabang')}}</option> -->
+                                                                        <option value="created_at" selected>
+                                                                            {{ __('Tanggal') }}</option>
+                                                                        <option value="total">
+                                                                            {{ __('Jumlah') }}</option>
                                                                     </select>
                                                                     <select name="sort_by_option" id="sort_by_option"
                                                                         class="form-control">
@@ -123,13 +124,45 @@
                                                                 </div>
                                                             </div>
 
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>Tampilkan</label>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="number" name="limit" id="limit"
+                                                                        class="form-control" value="10">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">/page</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Rentang Waktu') }}</label>
+                                                                    <div class="input-daterange input-group"
+                                                                        id="date-range">
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="start_date" id="start_date"
+                                                                            placeholder="{{ __('Start Date') }}" />
+                                                                        <div class="input-group-append">
+                                                                            <span
+                                                                                class="input-group-text bg-info b-0 text-white">TO</span>
+                                                                        </div>
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="end_date" id="end_date"
+                                                                            placeholder="{{ __('End Date') }}" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="col-md-12 col-12">
                                                                 <div class="form-group">
                                                                     <div class="row">
                                                                         <div class="col-md-6 col-6 text-left">
                                                                             <button class="btn btn-filter btn-danger"
                                                                                 id="btn_direct_close"
-                                                                                type="button">{{ __('Close') }}</button>
+                                                                                type="button">{{ __('Tutup') }}</button>
                                                                         </div>
                                                                         <div class="col-md-6 col-6 text-right">
                                                                             <button class="btn btn-filter btn-warning"
@@ -163,7 +196,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="7" class="text-center">LOADING...</td>
+                                                <td colspan="4" class="text-center">LOADING...</td>
                                             </tr>
                                         </tbody>
                                         <tfoot>

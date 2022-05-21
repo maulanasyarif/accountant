@@ -70,7 +70,7 @@
                                             <div class="btn-group">
                                                 <button class="btn btn-info btn-md" id="btn_add"><i
                                                         class="fas fa-plus"></i>
-                                                    {{ __('Tambah') }}</button> 
+                                                    {{ __('Tambah') }}</button>
                                             </div>
                                         </div>
                                     </div>
@@ -86,8 +86,8 @@
                                                             <div class="col-lg-6 col-12">
                                                                 <div class="form-group">
                                                                     <label for="">{{ __('Keterangan') }}</label>
-                                                                    <input type="text" id="direct_filter_name"
-                                                                        autocomplete="off" name="name"
+                                                                    <input type="text" id="search_keterangan"
+                                                                        autocomplete="off" name="keterangan"
                                                                         class="form-control"
                                                                         placeholder="{{ __('Search Keterangan') }}"
                                                                         aria-label="{{ __('Search Keterangan') }}"
@@ -96,31 +96,87 @@
                                                             </div>
 
                                                             <div class="col-lg-6 col-12">
-                                                                <label>Show</label>
-                                                                <div class="input-group mb-3">
-                                                                    <input type="number" name="limit"
-                                                                        id="direct_filter_limit" class="form-control"
-                                                                        value="10">
-                                                                    <div class="input-group-append">
-                                                                        <span class="input-group-text">/page</span>
-                                                                    </div>
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Jumlah') }}</label>
+                                                                    <input type="text" id="search_jumlah" autocomplete="off"
+                                                                        name="jumlah" class="form-control"
+                                                                        placeholder="{{ __('Example: 5000000') }}"
+                                                                        aria-label="{{ __('Search Jumlah') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <!-- <div class="col-lg-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Debet') }}</label>
+                                                                    <input type="text" id="search_debet" autocomplete="off"
+                                                                        name="debet" class="form-control"
+                                                                        placeholder="{{ __('Search No Perkiraan') }}"
+                                                                        aria-label="{{ __('Search No Perkiraan') }}"
+                                                                        aria-describedby="basic-addon1">
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-lg-6 col-12">
-                                                                <label>Sort By</label>
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Kredit') }}</label>
+                                                                    <input type="text" id="search_kredit" autocomplete="off"
+                                                                        name="kredit" class="form-control"
+                                                                        placeholder="{{ __('Search No Perkiraan') }}"
+                                                                        aria-label="{{ __('Search No Perkiraan') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div> -->
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>{{ __('Sortir Berdasarkan') }}</label>
                                                                 <div class="input-group mb-3">
-                                                                    <select name="sort_by" id="direct_filter_name"
+                                                                    <select name="sort_by" id="sort_by"
                                                                         class="form-control">
-                                                                        <option value="keterangan" selected>
+                                                                        <option value="tanggal" selected>
+                                                                            {{ __('Tanggal') }}</option>
+                                                                        <option value="keterangan">
                                                                             {{ __('Keterangan') }}</option>
-                                                                        <!-- <option value="type">Type</option> -->
+                                                                        <option value="jumlah">
+                                                                            {{ __('Jumlah') }}</option>
                                                                     </select>
                                                                     <select name="sort_by_option" id="sort_by_option"
                                                                         class="form-control">
                                                                         <option value="asc" selected>Ascending</option>
                                                                         <option value="desc">Descending</option>
                                                                     </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>Tampilkan</label>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="number" name="limit" id="limit"
+                                                                        class="form-control" value="10">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">/page</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Rentang Waktu') }}</label>
+                                                                    <div class="input-daterange input-group"
+                                                                        id="date-range">
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="start_date" id="start_date"
+                                                                            placeholder="{{ __('Start Date') }}" />
+                                                                        <div class="input-group-append">
+                                                                            <span
+                                                                                class="input-group-text bg-info b-0 text-white">TO</span>
+                                                                        </div>
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="end_date" id="end_date"
+                                                                            placeholder="{{ __('End Date') }}" />
+                                                                    </div>
                                                                 </div>
                                                             </div>
 
@@ -205,9 +261,9 @@
 
                     <div class="form-group">
                         <label for="">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control"/>
+                        <input type="text" name="tanggal" id="date" class="form-control" />
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="">{{ __('Keterangan') }}</label>
                         <input type="text" name="keterangan" id="keterangan" class="form-control">
@@ -247,7 +303,8 @@
 
 <!-- modal delete -->
 <form id="form_delete">
-    <div id="modal_delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div id="modal_delete" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -260,7 +317,8 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="id" id="delete_id">
-                    <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">{{ __('Tutup') }}</button>
+                    <button type="button" class="btn btn-danger waves-effect"
+                        data-dismiss="modal">{{ __('Tutup') }}</button>
                     <button type="submit" class="btn btn-info waves-effect" id="btn_submit_delete">Ya</button>
                 </div>
             </div>
@@ -322,5 +380,5 @@ $("#export_pdf").click(function() {
 <script src="{{ asset('src/admin/kas.js') }}"></script>
 <script>
     KasController.init('{{ Session::get('admin-auth.token')}}');
-</script> 
+</script>
 @endsection

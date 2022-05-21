@@ -85,7 +85,7 @@
                                                             <div class="col-lg-6 col-12">
                                                                 <div class="form-group">
                                                                     <label for="">{{ __('Name') }}</label>
-                                                                    <input type="text" id="direct_filter_name"
+                                                                    <input type="text" id="search_name"
                                                                         autocomplete="off" name="name"
                                                                         class="form-control"
                                                                         placeholder="{{ __('Search Name') }}"
@@ -95,23 +95,28 @@
                                                             </div>
 
                                                             <div class="col-lg-6 col-12">
-                                                                <label>Show</label>
-                                                                <div class="input-group mb-3">
-                                                                    <input type="number" name="limit" id="direct_filter_limit"
-                                                                        class="form-control" value="10">
-                                                                    <div class="input-group-append">
-                                                                        <span class="input-group-text">/page</span>
-                                                                    </div>
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Name') }}</label>
+                                                                    <input type="text" id="search_email"
+                                                                        autocomplete="off" name="email"
+                                                                        class="form-control"
+                                                                        placeholder="{{ __('Search Email') }}"
+                                                                        aria-label="{{ __('Search Email') }}"
+                                                                        aria-describedby="basic-addon1">
                                                                 </div>
                                                             </div>
 
                                                             <div class="col-lg-6 col-12">
-                                                                <label>Sort By</label>
+                                                                <label>{{ __('Sortir Berdasarkan') }}</label>
                                                                 <div class="input-group mb-3">
-                                                                    <select name="sort_by" id="direct_filter_name" class="form-control">
-                                                                        <option value="name" selected>
-                                                                            {{ __('Name') }}</option>
-                                                                        <!-- <option value="type">Type</option> -->
+                                                                    <select name="sort_by" id="sort_by"
+                                                                        class="form-control">
+                                                                        <option value="created_at" selected>
+                                                                            {{ __('Tanggal') }}</option>
+                                                                        <option value="name">
+                                                                            {{ __('Nama') }}</option>
+                                                                        <option value="phone">
+                                                                            {{ __('Phone') }}</option>
                                                                     </select>
                                                                     <select name="sort_by_option" id="sort_by_option"
                                                                         class="form-control">
@@ -121,13 +126,45 @@
                                                                 </div>
                                                             </div>
 
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>Tampilkan</label>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="number" name="limit" id="limit"
+                                                                        class="form-control" value="10">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">/page</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Rentang Waktu') }}</label>
+                                                                    <div class="input-daterange input-group"
+                                                                        id="date-range">
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="start_date" id="start_date"
+                                                                            placeholder="{{ __('Start Date') }}" />
+                                                                        <div class="input-group-append">
+                                                                            <span
+                                                                                class="input-group-text bg-info b-0 text-white">TO</span>
+                                                                        </div>
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="end_date" id="end_date"
+                                                                            placeholder="{{ __('End Date') }}" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                             <div class="col-md-12 col-12">
                                                                 <div class="form-group">
                                                                     <div class="row">
                                                                         <div class="col-md-6 col-6 text-left">
                                                                             <button class="btn btn-filter btn-danger"
                                                                                 id="btn_direct_close"
-                                                                                type="button">{{ __('Close') }}</button>
+                                                                                type="button">{{ __('Tutup') }}</button>
                                                                         </div>
                                                                         <div class="col-md-6 col-6 text-right">
                                                                             <button class="btn btn-filter btn-warning"
@@ -145,16 +182,27 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="width: 25%;" id="id"><strong>{{ __('Corporate/Cabang') }}</strong></td>
-                                                <td style="width: 25%;" id="id"><strong>{{ __('Name') }}</strong></td>
-                                                <td style="width: 25%;" id="id"><strong>{{ __('Email') }}</strong></td>
-                                                <td style="width: 25%;" id="id"><strong>{{ __('Role') }}</strong></td>
+                                                <td style="width: 25%;" id="id">
+                                                    <strong>{{ __('Corporate/Cabang') }}</strong>
+                                                </td>
+                                                <td style="width: 25%;" id="id">
+                                                    <strong>{{ __('Name') }}</strong>
+                                                </td>
+                                                <td style="width: 25%;" id="id">
+                                                    <strong>{{ __('Email') }}</strong>
+                                                </td>
+                                                <td style="width: 10%;" id="id">
+                                                    <strong>{{ __('Phone') }}</strong>
+                                                </td>
+                                                <td style="width: 15%;" id="id">
+                                                    <strong>{{ __('Role') }}</strong>
+                                                </td>
                                                 <!-- <td style="width: 30%;"><strong>Status</strong></td> -->
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="7" class="text-center">LOADING...</td>
+                                                <td colspan="5" class="text-center">LOADING...</td>
                                             </tr>
                                         </tbody>
                                         <tfoot>

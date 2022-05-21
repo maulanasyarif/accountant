@@ -356,6 +356,34 @@
                             </ul>
                         </li>
 
+                        <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
+                                href="javascript:void(0)" aria-expanded="false"><span
+                                    class="hide-menu text-white">Manajemen Laporan</span></a>
+                            <ul aria-expanded="false" class="collapse first-level">
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('neraca') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Neraca') }}</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('saldo') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Neraca Saldo') }}</span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                                        href="{{ url('labaRugi') }}" aria-expanded="false"><i
+                                            class="mdi mdi-receipt"></i><span
+                                            class="hide-menu text-white">{{ __('Laba Rugi') }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+
                         @elseif(Session::get('admin-auth.user')->role == 'CABANG')
                         <li class="sidebar-item"> <a class="sidebar-link has-arrow waves-effect waves-dark"
                                 href="javascript:void(0)" aria-expanded="false"><span

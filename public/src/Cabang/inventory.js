@@ -1,6 +1,6 @@
 const InventoryUI = ((SET) => {
     return {
-        __renderDirectData: ({ results }, {limit}) => {
+        __renderDirectData: ({ results },{ search, limit, sort_by, sort_by_option }) => {
             let body = results.data
                 .map((v) => {
                     return (
@@ -19,7 +19,7 @@ const InventoryUI = ((SET) => {
 
         __renderDirectFooter: (
             { results },
-            { search, sort_by, limit, sort_by_option }
+            { search, limit, sort_by, sort_by_option }
         ) => {
             let max_page = 10;
             let start = results.current_page - 5;
@@ -31,73 +31,68 @@ const InventoryUI = ((SET) => {
             if (end > results.last_page) {
                 end = results.last_page - 1;
             }
+
             let footer = `
-            <tr class="noExl noImport">
-                <td colspan="7" class="text-center">
-                    <div class="btn-group mr-2" role="group" aria-label="First group">
-                        <button type="button" class="btn btn-secondary btn-pagination" ${
-                            results.prev_page_url === null ? "disabled" : ""
-                        } data-url="${results.first_page_url}"> << </button>
-                        <button type="button" class="btn btn-secondary btn-pagination" ${
-                            results.prev_page_url === null ? "disabled" : ""
-                        } data-url="${results.prev_page_url}"> < </button>
-                    </div>
-        `;
+                <tr class="noExl noImport">
+                    <td colspan="2" class="text-center">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-secondary btn-pagination" ${
+                                results.prev_page_url === null
+                                    ? "disabled"
+                                    : ""
+                                } data-url="${results.first_page_url}"> << </button>
+                            <button type="button" class="btn btn-secondary btn-pagination" ${
+                                results.prev_page_url === null
+                                    ? "disabled"
+                                    : ""
+                            } data-url="${results.prev_page_url}"> < </button>
+                        </div>
+            `;
 
             footer += `
-            <div class="btn-group mr-2" role="group" aria-label="Third group">
-                <button type="button" class="btn btn-secondary btn-pagination" ${
-                    results.current_page === 1 ? "disabled" : ""
-                } data-url="${results.first_page_url}">1</button>`;
-
+                <div class="btn-group mr-2" role="group" aria-label="Third group">
+                    <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === 1 ? 'disabled' : ''} data-url="${results.first_page_url}">1</button>`
+            
             if (results.current_page != 1) {
-                footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
+                footer +=  `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
             }
 
-            for (let i = start; i <= end /* && ($i<=$max_pages)*/; i++) {
-                if (i === results.current_page) {
-                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${
-                        results.current_page === i ? "disabled" : ""
-                    } data-url="${
-                        results.path
-                    }?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
+            for(let i = start; (i <= end)/* && ($i<=$max_pages)*/; i++)
+            {
+                if(i === results.current_page){
+                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === i ? 'disabled' : ''} data-url="${results.path}?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
                 } else {
-                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${
-                        results.current_page === i ? "disabled" : ""
-                    } data-url="${
-                        results.path
-                    }?limit=${limit}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
+                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === i ? 'disabled' : ''} data-url="${results.path}?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
                 }
             }
 
-            if (results.current_page != results.last_page) {
-                footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
+            if ((results.current_page != results.last_page))
+            {
+                footer +=  `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
             }
 
             footer += `    
-                <button type="button" class="btn btn-secondary btn-pagination" ${
-                    results.current_page === results.last_page ? "disabled" : ""
-                } data-url="${results.last_page_url}">${
-                results.last_page
-            }</button>
-            </div>
-        `;
+                    <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === results.last_page ? 'disabled' : ''} data-url="${results.last_page_url}">${results.last_page}</button>
+                </div>
+            `;
 
             footer += `
-                    <div class="btn-group" role="group" aria-label="Third group">
-                            <button type="button" class="btn btn-secondary btn-pagination" ${
-                                results.next_page_url === null ? "disabled" : ""
-                            } data-url="${results.next_page_url}"> > </button>
-                            <button type="button" class="btn btn-secondary btn-pagination" ${
-                                results.current_page === results.last_page
+                        <div class="btn-group" role="group" aria-label="Third group">
+                                <button type="button" class="btn btn-secondary btn-pagination" ${
+                                    results.next_page_url === null
                                     ? "disabled"
                                     : ""
-                            } data-url="${results.last_page_url}"> >> </button>
+                                } data-url="${results.next_page_url}"> > </button>
+                                <button type="button" class="btn btn-secondary btn-pagination" ${
+                                    results.current_page === results.last_page
+                                    ? "disabled"
+                                    : ""
+                                } data-url="${results.last_page_url}"> >> </button>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        `;
+                    </td>
+                </tr>
+            `;
 
             $("#t_inventory tfoot").html(footer);
         },
@@ -105,7 +100,7 @@ const InventoryUI = ((SET) => {
         __renderDirectNoData: () => {
             let html = `
                 <tr>
-                    <td class="text-center" colspan="7">
+                    <td class="text-center" colspan="2">
                         <img class="img-fluid" src="${SET.__baseURL()}assets/images/no_data_table.png" alt="" style="height: 200px; margin-bottom: 35px;"><br>
                         <span class="font-weight-bold">No Data Available to show , Please add more data .</span><br>
                         
@@ -140,7 +135,7 @@ const InventoryController = ((SET, UI) => {
             type: "GET",
             dataType: "JSON",
             data: filter,
-            beforeSend: SET.__tableLoader("#t_inventory", 7),
+            beforeSend: SET.__tableLoader("#t_inventory", 2),
             headers: {
                 Authorization: `Bearer ${TOKEN}`,
             },
@@ -178,6 +173,23 @@ const InventoryController = ((SET, UI) => {
         });
     };
 
+    const __pluginInit = TOKEN => {
+        $(".datepicker").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        });
+
+        $("#start_date").on('changeDate', function (selected) {
+            let startDate = new Date(selected.date.valueOf());
+
+            $("#end_date").datepicker('setStartDate', startDate);
+            if ($("#start_date").val() > $("#end_date").val()) {
+                $("#end_date").val($("#start_date").val());
+            }
+        });
+    }
+
     const __clickDirectPagination = (TOKEN, filter = {}) => {
         $("#t_inventory").on("click", ".btn-pagination", function () {
             let link = $(this).data("url");
@@ -201,10 +213,14 @@ const InventoryController = ((SET, UI) => {
         $("#form_direct_filter").on("submit", function (e) {
             e.preventDefault();
 
-            filter.name = $("#direct_filter_name").val();
-            (filter.sort_by = $("#sort_by").val()),
-                (filter.limit = $("#direct_filter_limit").val()),
-                (filter.sort_by_option = $("#sort_by_option").val()),
+                filter.name = $('#search_name').val()
+                filter.start_date = $('#start_date').val()
+                filter.end_date = $('#end_date').val()
+
+                filter.sort_by = $("#sort_by").val()
+                filter.sort_by_option = $("#sort_by_option").val()
+                filter.limit = $("#limit").val()
+
                 __fetchDirectInventory(TOKEN, filter, null);
         });
     };
@@ -230,6 +246,8 @@ const InventoryController = ((SET, UI) => {
             });
 
             SET.__closeGlobalLoader();
+
+            __pluginInit(TOKEN);
 
             __openDirectOption();
             __submitDirectFilter(TOKEN, direct_filter);

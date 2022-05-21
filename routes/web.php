@@ -84,6 +84,10 @@ Route::group([
     Route::get('transaksiInventory', 'Admin\InventoryController@transaksi');
     Route::get('editTransaksiInventory/{id}', 'Admin\InventoryController@editTransaksi');
     
+    Route::get('neraca', 'Admin\NeracaController@neraca');
+    Route::get('saldo', 'Admin\NeracaController@saldo');
+    Route::get('labaRugi', 'Admin\NeracaController@labaRugi');
+    
     
     //CABANG
     Route::get('perkiraanCabang', 'Cabang\PerkiraanController@index')->name('perkiraanCabang');
