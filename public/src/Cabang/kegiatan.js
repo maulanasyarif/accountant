@@ -1,6 +1,6 @@
 const KegiatanUI = ((SET) => {
     return {
-        __renderDirectData: ({ results }, { limit }) => {
+        __renderDirectData: ({ results }, { search, limit, sort_by, sort_by_option }) => {
             let body = results.data
                 .map((v) => {
                     return `
@@ -22,7 +22,7 @@ const KegiatanUI = ((SET) => {
 
         __renderDirectFooter: (
             { results },
-            { search, sort_by, limit, sort_by_option }
+            { search, limit, sort_by, sort_by_option }
         ) => {
             let max_page = 10;
             let start = results.current_page - 5;
@@ -36,65 +36,59 @@ const KegiatanUI = ((SET) => {
             }
             let footer = `
             <tr class="noExl noImport">
-                <td colspan="7" class="text-center">
+                <td colspan="4" class="text-center">
                     <div class="btn-group mr-2" role="group" aria-label="First group">
                         <button type="button" class="btn btn-secondary btn-pagination" ${
-                            results.prev_page_url === null ? "disabled" : ""
-                        } data-url="${results.first_page_url}"> << </button>
+                            results.prev_page_url === null
+                                ? "disabled"
+                                : ""
+                            } data-url="${results.first_page_url}"> << </button>
                         <button type="button" class="btn btn-secondary btn-pagination" ${
-                            results.prev_page_url === null ? "disabled" : ""
+                            results.prev_page_url === null
+                                ? "disabled"
+                                : ""
                         } data-url="${results.prev_page_url}"> < </button>
                     </div>
         `;
 
-            footer += `
+        footer += `
             <div class="btn-group mr-2" role="group" aria-label="Third group">
-                <button type="button" class="btn btn-secondary btn-pagination" ${
-                    results.current_page === 1 ? "disabled" : ""
-                } data-url="${results.first_page_url}">1</button>`;
+                <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === 1 ? 'disabled' : ''} data-url="${results.first_page_url}">1</button>`
+        
+        if (results.current_page != 1) {
+            footer +=  `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
+        }
 
-            if (results.current_page != 1) {
-                footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
+        for(let i = start; (i <= end)/* && ($i<=$max_pages)*/; i++)
+        {
+            if(i === results.current_page){
+                footer += `<button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === i ? 'disabled' : ''} data-url="${results.path}?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
+            } else {
+                footer += `<button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === i ? 'disabled' : ''} data-url="${results.path}?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
             }
+        }
 
-            for (let i = start; i <= end /* && ($i<=$max_pages)*/; i++) {
-                if (i === results.current_page) {
-                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${
-                        results.current_page === i ? "disabled" : ""
-                    } data-url="${
-                        results.path
-                    }?search=${search}&limit=${limit}&sort_by=${sort_by}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
-                } else {
-                    footer += `<button type="button" class="btn btn-secondary btn-pagination" ${
-                        results.current_page === i ? "disabled" : ""
-                    } data-url="${
-                        results.path
-                    }?limit=${limit}&sort_by_option=${sort_by_option}&page=${i}">${i}</button>`;
-                }
-            }
+        if ((results.current_page != results.last_page))
+        {
+            footer +=  `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
+        }
 
-            if (results.current_page != results.last_page) {
-                footer += `<button type="button" class="btn btn-secondary btn-pagination" disabled data-url="">...</button>`;
-            }
-
-            footer += `    
-                <button type="button" class="btn btn-secondary btn-pagination" ${
-                    results.current_page === results.last_page ? "disabled" : ""
-                } data-url="${results.last_page_url}">${
-                results.last_page
-            }</button>
+        footer += `    
+                <button type="button" class="btn btn-secondary btn-pagination" ${results.current_page === results.last_page ? 'disabled' : ''} data-url="${results.last_page_url}">${results.last_page}</button>
             </div>
         `;
 
-            footer += `
+        footer += `
                     <div class="btn-group" role="group" aria-label="Third group">
                             <button type="button" class="btn btn-secondary btn-pagination" ${
-                                results.next_page_url === null ? "disabled" : ""
+                                results.next_page_url === null
+                                ? "disabled"
+                                : ""
                             } data-url="${results.next_page_url}"> > </button>
                             <button type="button" class="btn btn-secondary btn-pagination" ${
                                 results.current_page === results.last_page
-                                    ? "disabled"
-                                    : ""
+                                ? "disabled"
+                                : ""
                             } data-url="${results.last_page_url}"> >> </button>
                         </div>
                     </div>
@@ -108,7 +102,7 @@ const KegiatanUI = ((SET) => {
         __renderDirectNoData: () => {
             let html = `
                 <tr>
-                    <td class="text-center" colspan="7">
+                    <td class="text-center" colspan="4">
                         <img class="img-fluid" src="${SET.__baseURL()}assets/images/no_data_table.png" alt="" style="height: 200px; margin-bottom: 35px;"><br>
                         <span class="font-weight-bold">No Data Available to show , Please add more data .</span><br>
                         
@@ -142,7 +136,7 @@ const KegiatanController = ((SET, UI) => {
             type: "GET",
             dataType: "JSON",
             data: filter,
-            beforeSend: SET.__tableLoader("#t_kegiatan", 7),
+            beforeSend: SET.__tableLoader("#t_kegiatan", 4),
             headers: {
                 Authorization: `Bearer ${TOKEN}`,
             },
@@ -280,12 +274,10 @@ const KegiatanController = ((SET, UI) => {
             url: `${SET.__apiURL()}cabang/printKegiatan/${id}`,
             type: 'GET',
             dataType: 'JSON',
-            // beforeSend: SET.__tableLoader('#t_printKegiatan', 7),
             headers: {
                 'Authorization': `Bearer ${TOKEN}`
             },
             success: (res) => {
-                // console.log(res.results);
                 callback(res.results);
             },
             error: err => {
@@ -309,6 +301,23 @@ const KegiatanController = ((SET, UI) => {
                 }
             }
         })
+    }
+    
+    const __pluginInit = TOKEN => {
+        $(".datepicker").datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        });
+
+        $("#start_date").on('changeDate', function (selected) {
+            let startDate = new Date(selected.date.valueOf());
+
+            $("#end_date").datepicker('setStartDate', startDate);
+            if ($("#start_date").val() > $("#end_date").val()) {
+                $("#end_date").val($("#start_date").val());
+            }
+        });
     }
 
     const __openAdd = () => {
@@ -439,10 +448,15 @@ const KegiatanController = ((SET, UI) => {
         $("#form_direct_filter").on("submit", function (e) {
             e.preventDefault();
 
-            filter.name = $("#direct_filter_name").val();
-            (filter.sort_by = $("#sort_by").val()),
-                (filter.limit = $("#direct_filter_limit").val()),
-                (filter.sort_by_option = $("#sort_by_option").val()),
+                filter.judul = $('#search_judul').val()
+                filter.surat = $('#search_surat').val()
+                filter.start_date = $('#start_date').val()
+                filter.end_date = $('#end_date').val()
+
+                filter.sort_by = $("#sort_by").val()
+                filter.sort_by_option = $("#sort_by_option").val()
+                filter.limit = $("#limit").val()
+
                 __fetchDirectKegiatan(TOKEN, filter, null);
         });
     };
@@ -469,6 +483,8 @@ const KegiatanController = ((SET, UI) => {
 
             SET.__closeGlobalLoader();
 
+            __pluginInit(TOKEN)
+
             __openAdd();
             __submitAdd(TOKEN);
 
@@ -476,7 +492,7 @@ const KegiatanController = ((SET, UI) => {
             __submitDirectFilter(TOKEN, direct_filter)
             __resetDirectFilter(TOKEN)
             __fetchDirectKegiatan(TOKEN, direct_filter, null)
-            __fetchPrintKegiatan(TOKEN);
+            // __fetchPrintKegiatan(TOKEN);
             __clickDirectPagination(TOKEN, direct_filter)
             __closeDirectFilter(TOKEN)
         },

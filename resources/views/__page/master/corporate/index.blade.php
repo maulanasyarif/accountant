@@ -80,15 +80,15 @@
                                     <table class="table table-hover data-table" id="t_Corporate">
                                         <thead class="thead-light">
                                             <tr id="option_direct_container" style="display: none;" class="noExl">
-                                                <th scope="col" colspan="7">
+                                                <th scope="col" colspan="5">
                                                     <form id="form_direct_filter">
                                                         <div class="row">
 
                                                             <div class="col-lg-6 col-12">
                                                                 <div class="form-group">
                                                                     <label for="">{{ __('Corporate Name') }}</label>
-                                                                    <input type="text" id="direct_filter_name"
-                                                                        autocomplete="off" name="name"
+                                                                    <input type="text" id="search_name"
+                                                                        autocomplete="off" name="company_name"
                                                                         class="form-control"
                                                                         placeholder="{{ __('Search Corporate Name') }}"
                                                                         aria-label="{{ __('Search Corporate Name') }}"
@@ -97,9 +97,45 @@
                                                             </div>
 
                                                             <div class="col-lg-6 col-12">
-                                                                <label>Show</label>
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Address') }}</label>
+                                                                    <input type="text" id="search_address"
+                                                                        autocomplete="off" name="address"
+                                                                        class="form-control"
+                                                                        placeholder="{{ __('Search Address') }}"
+                                                                        aria-label="{{ __('Search Address') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>{{ __('Sortir Berdasarkan') }}</label>
                                                                 <div class="input-group mb-3">
-                                                                    <input type="number" name="limit" id="direct_filter_limit"
+                                                                    <select name="sort_by" id="sort_by"
+                                                                        class="form-control">
+                                                                        <option value="company_name" selected>
+                                                                            {{ __('Nama') }}</option>
+                                                                        <option value="address">
+                                                                            {{ __('Address') }}</option>
+                                                                        <option value="email">
+                                                                            {{ __('Email') }}</option>
+                                                                        <option value="phone">
+                                                                            {{ __('Phone') }}</option>
+                                                                        <option value="created_at">
+                                                                            {{ __('Waktu') }}</option>
+                                                                    </select>
+                                                                    <select name="sort_by_option" id="sort_by_option"
+                                                                        class="form-control">
+                                                                        <option value="asc" selected>Ascending</option>
+                                                                        <option value="desc">Descending</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>Tampilkan</label>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="number" name="limit" id="limit"
                                                                         class="form-control" value="10">
                                                                     <div class="input-group-append">
                                                                         <span class="input-group-text">/page</span>
@@ -107,19 +143,24 @@
                                                                 </div>
                                                             </div>
 
-                                                            <div class="col-lg-6 col-12">
-                                                                <label>Sort By</label>
-                                                                <div class="input-group mb-3">
-                                                                    <select name="sort_by" id="direct_filter_name" class="form-control">
-                                                                        <option value="name" selected>
-                                                                            {{ __('Corporate Name') }}</option>
-                                                                        <!-- <option value="type">Type</option> -->
-                                                                    </select>
-                                                                    <select name="sort_by_option" id="sort_by_option"
-                                                                        class="form-control">
-                                                                        <option value="asc" selected>Ascending</option>
-                                                                        <option value="desc">Descending</option>
-                                                                    </select>
+                                                            <div class="col-lg-12 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Rentang Waktu') }}</label>
+                                                                    <div class="input-daterange input-group"
+                                                                        id="date-range">
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="start_date" id="start_date"
+                                                                            placeholder="{{ __('Start Date') }}" />
+                                                                        <div class="input-group-append">
+                                                                            <span
+                                                                                class="input-group-text bg-info b-0 text-white">TO</span>
+                                                                        </div>
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="end_date" id="end_date"
+                                                                            placeholder="{{ __('End Date') }}" />
+                                                                    </div>
                                                                 </div>
                                                             </div>
 
@@ -166,7 +207,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="7" class="text-center">LOADING...</td>
+                                                <td colspan="5" class="text-center">LOADING...</td>
                                             </tr>
                                         </tbody>
                                         <tfoot>
