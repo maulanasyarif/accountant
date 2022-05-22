@@ -1,18 +1,14 @@
 const KasUI = ((SET) => {
     return {
         __renderDirectData: ({ results }, { search, limit, sort_by, sort_by_option }) => {
-            let body = results.data
+            let body = results
                 .map((v) => {
                     return `
                     <tr>
-                        <td style="width: 15%;">${v.tanggal}</td>
-                        <td style="width: 30%;">${v.keterangan}</td>
-                        <td style="width: 10%;">${SET.__threedigis(v.debet[0].perkiraan_no)}</td>
-                        <td style="width: 10%;">${SET.__threedigis(v.kredit[0].perkiraan_no)}</td>
-                        <td style="width: 20%;">${v.jumlah !== null ? `${SET.__realCurrency(v.jumlah)}` : '-'}</td>
+                        <td style="width: 15%;">${Date(v.waktu).getMonth()}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <a href="${SET.__baseURL()}editjurnalUmumAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                <a href="${SET.__baseURL()}editjurnalUmumAdmin/${v.id}" type="button" class="btn btn-sm btn-primary waves-effect" id="btn_detail">Detail</a>
                                 <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
                             </div>
                         </td>
@@ -40,7 +36,7 @@ const KasUI = ((SET) => {
             }
             let footer = `
         <tr class="noExl noImport">
-            <td colspan="6" class="text-center">
+            <td colspan="2" class="text-center">
                 <div class="btn-group mr-2" role="group" aria-label="First group">
                     <button type="button" class="btn btn-secondary btn-pagination" ${
                         results.prev_page_url === null ? "disabled" : ""
@@ -110,7 +106,7 @@ const KasUI = ((SET) => {
         __renderDirectNoData: () => {
             let html = `
             <tr>
-                <td class="text-center" colspan="6">
+                <td class="text-center" colspan="2">
                     <img class="img-fluid" src="${SET.__baseURL()}assets/images/no_data_table.png" alt="" style="height: 200px; margin-bottom: 35px;"><br>
                     <span class="font-weight-bold">No Data Available to show , Please add more data .</span><br>
                     
@@ -138,7 +134,7 @@ const KasUI = ((SET) => {
 const KasController = ((SET, UI) => {
     const __fetchDirectKas = (TOKEN, filter = {}, link = null) => {
         $.ajax({
-            url: `${link === null ? SET.__apiURL() + "admin/get_kas" : link}`,
+            url: `${link === null ? SET.__apiURL() + "admin/get_showJurnalUmum" : link}`,
             type: "GET",
             dataType: "JSON",
             data: filter,
@@ -148,9 +144,9 @@ const KasController = ((SET, UI) => {
             },
             success: (res) => {
                 $("#count_regencies").text(res.total_all);
-                if (res.results.data.length !== 0) {
+                if (res.results.length !== 0) {
                     UI.__renderDirectData(res, filter);
-                    UI.__renderDirectFooter(res, filter);
+                    // UI.__renderDirectFooter(res, filter);
                 } else {
                     UI.__renderDirectNoData();
                 }
@@ -488,6 +484,22 @@ const KasController = ((SET, UI) => {
                 });
             }
         });
+    }
+
+    $("#s_order_month").on("change", function() {
+        __fetchOrder();
+    });
+    $("#s_order_year").on("change", function() {
+        __fetchOrder();
+    });
+
+    var start_year = new Date().getFullYear();
+    var nowMonth = new Date().getMonth();
+
+    for (var i = start_year; i >= 2020; i--) {
+        $("#s_order_year").append(
+            `<option value="${i}" ${i == start_year ? "selected" : ""}>${i}</option> `
+        );
     }
 
     const __pluginInit = TOKEN => {

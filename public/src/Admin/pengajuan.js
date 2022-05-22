@@ -9,7 +9,7 @@ const PengajuanUI = ((SET) => {
                             <td style="width: 20%;">${v.kegiatan.no_surat}</td>
                             <td style="width: 25%;">${v.kegiatan.judul}</td>
                             <td id="action" style="width: 30%;" class="noExl noImport text-white">
-                                    ${v.status === 'pending' ? `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
+                                    ${v.status === 'pending' ? `<form method="post" id="vpengajuan${v.kegiatan.id}">
                                     <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
                                     JSON.stringify(v.kegiatan) +
                                     `'>
@@ -20,7 +20,7 @@ const PengajuanUI = ((SET) => {
                                         </form>
                                     </div>` 
                                 : v.status === 'review' ? 
-                                    `<form method="post" action="#" id="vpengajuan${v.kegiatan.id}">
+                                    `<form method="post" id="vpengajuan${v.kegiatan.id}">
                                     <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
                                     JSON.stringify(v.kegiatan) +
                                     `'>
@@ -201,7 +201,7 @@ const PengajuanController = ((SET, UI) => {
 
     const __verifikasiPengajuan = (TOKEN, filter) => {
         $(document).ready(function () {
-            $('#action').on("click", "button", function (e) {
+            $('#t_pengajuan tbody').on("click", "button", function (e) {
                 e.preventDefault();
                 var formData = {
                     data: $("#data_json" + this.id.slice(-1)).val(),
@@ -209,6 +209,7 @@ const PengajuanController = ((SET, UI) => {
                     id: this.name,
                     value: this.value,
                 };
+                console.log(formData);
                 $.ajax({
                     url: `${SET.__apiURL()}admin/verifikasipengajuan`,
                     type: "POST",
@@ -219,9 +220,7 @@ const PengajuanController = ((SET, UI) => {
                     },
                     success: (res) => {
                         if (formData.value === "review") {
-                            location.href = `${SET.__baseURL()}editPengajuanAdmin/${
-                                formData.id
-                            }`;
+                            location.href = `${SET.__baseURL()}editPengajuanAdmin/${formData.id}`;
                         } else {
                             __fetchDirectPengajuan(TOKEN, filter);
                         }

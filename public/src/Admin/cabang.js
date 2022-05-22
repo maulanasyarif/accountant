@@ -432,9 +432,9 @@ const CabangController = ((SET, UI) => {
                 limit: $("#direct_filter_limit").val(),
             };
 
-            $("input[type=text]").autocomplete({
-                disabled: true,
-            });
+            // $("input[type=text]").autocomplete({
+            //     disabled: true,
+            // });
 
             SET.__closeGlobalLoader()
 
