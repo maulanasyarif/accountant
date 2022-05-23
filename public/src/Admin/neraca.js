@@ -220,6 +220,22 @@ const NeracaController = ( (SET , UI ) => {
         })
     }
 
+    $("#s_order_month").on("change", function() {
+        __fetchOrder();
+    });
+    $("#s_order_year").on("change", function() {
+        __fetchOrder();
+    });
+
+    var start_year = new Date().getFullYear();
+    var nowMonth = new Date().getMonth();
+
+    for (var i = start_year; i >= 2020; i--) {
+        $("#s_order_year").append(
+            `<option value="${i}" ${i == start_year ? "selected" : ""}>${i}</option> `
+        );
+    }
+
     return {
 
         init: TOKEN => {

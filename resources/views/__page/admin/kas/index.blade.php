@@ -58,11 +58,40 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-lg-6 col-6">
-                                            <button class="btn btn-warning btn-md"
-                                                id="btn_direct_option">{{ __('Pencarian') }}</button>
+                                        <div class="col-md-4" style="text-align-last: center;">
+                                            <select class="custom-select border-1 text-muted mt-2" id="s_order_month">
+                                                <option value="1" {{ strftime('%B') == 'January' ? 'selected' : '' }}>
+                                                    {{ __('Januari') }}</option>
+                                                <option value="2" {{ strftime('%B') == 'February' ? 'selected' : '' }}>
+                                                    {{ __('Febuari') }}</option>
+                                                <option value="3" {{ strftime('%B') == 'March' ? 'selected' : '' }}>
+                                                    {{ __('Maret') }}</option>
+                                                <option value="4" {{ strftime('%B') == 'April' ? 'selected' : '' }}>
+                                                    {{ __('April') }}</option>
+                                                <option value="5" {{ strftime('%B') == 'May' ? 'selected' : '' }}>
+                                                    {{ __('Mei') }}</option>
+                                                <option value="6" {{ strftime('%B') == 'June' ? 'selected' : '' }}>
+                                                    {{ __('Juni') }}</option>
+                                                <option value="7" {{ strftime('%B') == 'July' ? 'selected' : '' }}>
+                                                    {{ __('Juli') }}</option>
+                                                <option value="8" {{ strftime('%B') == 'August' ? 'selected' : '' }}>
+                                                    {{ __('Agustus') }}</option>
+                                                <option value="9" {{ strftime('%B') == 'September' ? 'selected' : '' }}>
+                                                    {{ __('September') }}</option>
+                                                <option value="10" {{ strftime('%B') == 'October' ? 'selected' : '' }}>
+                                                    {{ __('Oktober') }}</option>
+                                                <option value="11" {{ strftime('%B') == 'November' ? 'selected' : '' }}>
+                                                    {{ __('November') }}</option>
+                                                <option value="12" {{ strftime('%B') == 'December' ? 'selected' : '' }}>
+                                                    {{ __('Desember') }}</option>
+                                            </select>
                                         </div>
-                                        <div class="col-lg-6 col-6 text-right">
+                                        <div class="col-md-4" style="text-align-last: center;">
+                                            <select class="custom-select border-1 text-muted mt-2" id="s_order_year">
+                                                <option value="">--{{ __('Tahun') }}--</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4 col-6 text-right">
                                             <div class="btn-group">
                                                 <button class="btn btn-success btn-md" id="export_excel">Excel</button>
                                                 <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
@@ -79,7 +108,7 @@
                                     <table class="table table-hover data-table" id="t_jurnalUmum">
                                         <thead class="thead-light">
                                             <tr id="option_direct_container" style="display: none;" class="noExl">
-                                                <th scope="col" colspan="7">
+                                                <th scope="col" colspan="2">
                                                     <form id="form_direct_filter">
                                                         <div class="row">
 
@@ -207,7 +236,7 @@
                                                 <td style="width:15%;" id="id">
                                                     <strong>{{ __('Tanggal') }}</strong>
                                                 </td>
-                                                <td style="width: 30;" id="id">
+                                                <!-- <td style="width: 30;" id="id">
                                                     <strong>{{ __('Keterangan') }}</strong>
                                                 </td>
                                                 <td style="width: 10%;" id="id">
@@ -219,7 +248,7 @@
                                                 <td style="width: 20%;" id="id">
                                                     <strong>{{ __('Jumlah') }}</strong>
                                                     <p>(IDR)</p>
-                                                </td>
+                                                </td> -->
                                                 <td style="width: 15%;" id="id" class="noExl noImport">
                                                     <strong>{{ __('Action') }}</strong>
                                                 </td>
@@ -227,7 +256,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="7" class="text-center">LOADING...</td>
+                                                <td colspan="2" class="text-center">LOADING...</td>
                                             </tr>
                                         </tbody>
                                         <tfoot>

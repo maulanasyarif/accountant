@@ -52,96 +52,47 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-6">
-                                <button class="btn btn-warning btn-md" id="btn_option">{{ __('Pencarian') }}</button>
+                            <div class="col-md-12">
+                                <h4 class="card-title text-white text-center ">{{ __('Jumlah Pesanan') }}</h4>
                             </div>
-                            <div class="col-lg-6 text-right">
-                                <div class="btn-group">
-                                    <button class="btn btn-success btn-md" id="export_excel">Excel</button>
-                                    <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
-                                </div>
-
+                            <div class="col-md-6" style="text-align-last: center;">
+                                <select class="custom-select border-1 text-muted mt-2" id="s_order_month">
+                                    <option value="1" {{ strftime('%B') == 'January' ? 'selected' : '' }}>
+                                        {{ __('Januari') }}</option>
+                                    <option value="2" {{ strftime('%B') == 'February' ? 'selected' : '' }}>
+                                        {{ __('Febuari') }}</option>
+                                    <option value="3" {{ strftime('%B') == 'March' ? 'selected' : '' }}>
+                                        {{ __('Maret') }}</option>
+                                    <option value="4" {{ strftime('%B') == 'April' ? 'selected' : '' }}>
+                                        {{ __('April') }}</option>
+                                    <option value="5" {{ strftime('%B') == 'May' ? 'selected' : '' }}>
+                                        {{ __('Mei') }}</option>
+                                    <option value="6" {{ strftime('%B') == 'June' ? 'selected' : '' }}>
+                                        {{ __('Juni') }}</option>
+                                    <option value="7" {{ strftime('%B') == 'July' ? 'selected' : '' }}>
+                                        {{ __('Juli') }}</option>
+                                    <option value="8" {{ strftime('%B') == 'August' ? 'selected' : '' }}>
+                                        {{ __('Agustus') }}</option>
+                                    <option value="9" {{ strftime('%B') == 'September' ? 'selected' : '' }}>
+                                        {{ __('September') }}</option>
+                                    <option value="10" {{ strftime('%B') == 'October' ? 'selected' : '' }}>
+                                        {{ __('Oktober') }}</option>
+                                    <option value="11" {{ strftime('%B') == 'November' ? 'selected' : '' }}>
+                                        {{ __('November') }}</option>
+                                    <option value="12" {{ strftime('%B') == 'December' ? 'selected' : '' }}>
+                                        {{ __('Desember') }}</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6" style="text-align-last: center;">
+                                <select class="custom-select border-1 text-muted mt-2" id="s_order_year">
+                                    <option value="">--{{ __('Tahun') }}--</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover data-table" id="t_neraca">
                             <thead class="thead-light">
-                                
-                                <tr id="option_container" style="display: none;" class="noExl">
-                                    <th scope="col" colspan="3">
-                                        <form id="form_filter">
-                                            <div class="row">
-                                                <div class="col-lg-6 col-12">
-                                                    <div class="form-group">
-                                                        <label>{{ __('Uraian') }}</label>
-                                                        <input type="text" id="search_name" autocomplete="off" name="name" 
-                                                            class="form-control" placeholder="{{ __('Search Uraian') }}" 
-                                                                aria-label="{{ __('Search Uraian') }}" aria-describedby="basic-addon1">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-12">
-                                                    <div class="form-group">
-                                                        <label>{{ __('No Perkiraan') }}</label>
-                                                        <input type="text" id="search_description" autocomplete="off" name="description"
-                                                            class="form-control" placeholder="{{ __('Search No Perkiraan') }}"
-                                                                aria-label="{{ __('Search No Perkiraan') }}" aria-describedby="basic-addon1">
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-12">
-                                                    <label>{{ __('Sortir Berdasarkan') }}</label>
-                                                    <div class="input-group mb-3">
-                                                        <select name="sort_by" id="sort_by" class="form-control">
-                                                            <!-- <option value="datetime" selected>{{ __('Tanggal') }}</option>
-                                                            <option value="description">{{ __('Aktivitas') }}</option>
-                                                            <option value="user.name">{{ __('Akun') }}</option> -->
-                                                        </select>
-                                                        <select name="sort_by_option" id="sort_by_option" class="form-control">
-                                                            <option value="asc" selected>Ascending</option>
-                                                            <option value="desc">Descending</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-6 col-12">
-                                                    <label>{{ __('Tampilkan') }}</label>
-                                                    <div class="input-group mb-3">
-                                                        <input type="number" name="limit" id="limit" class="form-control" value="15">
-                                                        <div class="input-group-append">
-                                                            <span class="input-group-text">/{{ __('Halaman') }}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-12 col-12">
-                                                    <div class="form-group">
-                                                        <label for="">{{ __('Rentang Waktu') }}</label>
-                                                        <div class="input-daterange input-group" id="date-range">
-                                                            <input type="text" autocomplete="off" class="form-control datepicker" name="start_date" id="start_date" placeholder="{{ __('Start Date') }}" />
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text bg-info b-0 text-white">TO</span>
-                                                            </div>
-                                                            <input type="text" autocomplete="off" class="form-control datepicker" name="end_date" id="end_date" placeholder="{{ __('End Date') }}" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-md-12 col-12">
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <div class="col-md-6 col-6 text-left">
-                                                                <button class="btn btn-filter btn-danger" id="btn_close" type="button">{{ __('Tutup') }}</button>
-                                                            </div>
-                                                            <div class="col-md-6 col-6 text-right">
-                                                                <button class="btn btn-filter btn-warning" type="button" id="btn_reset">Reset</button>
-                                                                <button class="btn btn-filter btn-info" type="submit">{{ __('Cari') }}</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </form>
-                                    </th>
-                                </tr>
                                 <tr class="text-center">
                                     <td style="width:40%;">
                                         <strong>{{ __('Uraian') }}</strong>
