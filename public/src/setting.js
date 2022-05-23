@@ -206,6 +206,24 @@ const SettingController = (() => {
             $(button).unblock();
         },
 
+        __getMonth: (date) => {
+            // let all = ("0" + date);
+            const d = new Date(date);
+            // const d = new Date(date).toLocaleDateString('en-US', {year: 'numeric', month: 'short'});
+            const ye = new Intl.DateTimeFormat("en", {
+                year: "numeric",
+            }).format(d);
+            const mo = new Intl.DateTimeFormat("en", { month: "long" }).format(
+                d
+            );
+            return `${mo} ${ye}`;
+            // return new Date(date).toLocaleDateString('en-ZA');
+            // const year = all.getFullYeart();
+            // const month = all.getMonth();
+
+            // return [month, year].join(' ');
+        },
+
         __closePageLoader: () => {
             $.unblockUI();
         },

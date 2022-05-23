@@ -46,6 +46,8 @@ const BukuKasUI = ((SET) => {
             $("#kode_akun").html(results.perkiraan.perkiraan_no);
 
             let i = 1;
+            let jumlahSaldo = results.perkiraan.perkiraan_no;
+
             $("#jumlahDebit").html(
                 `Rp. ${SET.__threedigis(results.total_debit)},-`
             );
@@ -54,7 +56,10 @@ const BukuKasUI = ((SET) => {
             );
             $("#totalSaldo").html(
                 `Rp. ${SET.__threedigis(
-                    results.total_debit - results.total_kredit
+                    jumlahSaldo.toString().substr(0, 1) === "1" ||
+                        jumlahSaldo.toString().substr(0, 1) === "4"
+                        ? results.total_debit - results.total_kredit
+                        : results.total_kredit - results.total_debit
                 )},-`
             );
             let body = results.daftar_buku
