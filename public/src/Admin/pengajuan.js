@@ -209,7 +209,7 @@ const PengajuanController = ((SET, UI) => {
                     id: this.name,
                     value: this.value,
                 };
-                console.log(formData);
+                // console.log(formData);  
                 $.ajax({
                     url: `${SET.__apiURL()}admin/verifikasipengajuan`,
                     type: "POST",

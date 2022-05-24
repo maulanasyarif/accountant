@@ -23,7 +23,9 @@
                         <li class="breadcrumb-item" aria-current="page">
                             <a href="{{ url('dashboard') }}">{{ __('Dasbor') }}</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Jurnal Umum') }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <a href="{{ url('jurnalUmumCabang') }}">{{ __('Jurnal Umum') }}</a>
+                        </li>
                     </ol>
                 </nav>
             </div>
@@ -35,20 +37,6 @@
     <div class="row">
         <div class="col-md-12">
 
-            <!-- <div class="card bg-blue round-card">
-                <div class="card-body text-white">
-                    <div class="d-flex flex-row">
-                        <div class="p-10 align-self-center">
-                            <h4 class="m-b-0">Total Daftar Perkiraan</h4>
-                            <span>{{ __('Semua') }}</span>
-                        </div>
-                        <div class="ml-auto align-self-center">
-                            <h2 class="font-medium m-b-0" id="count_regencies">0</h2>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
             <div class="tab-content tabcontent-border">
 
                 <div class="tab-pane active" id="direct" role="tabpanel">
@@ -57,24 +45,71 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-body">
+                                    <form id="direct_filter">
                                     <div class="row">
-                                        <div class="col-lg-6 col-6">
-                                            <button class="btn btn-warning btn-md"
-                                                id="btn_direct_option">{{ __('Pencarian') }}</button>
+                                        <div class="col-md-4" style="text-align-last: center;">
+                                            <select class="custom-select border-1 text-muted mt-2" id="month">
+                                                <option value="1" {{ strftime('%B') == 'January' ? 'selected' : '' }}>
+                                                    {{ __('Januari') }}</option>
+                                                <option value="2" {{ strftime('%B') == 'February' ? 'selected' : '' }}>
+                                                    {{ __('Febuari') }}</option>
+                                                <option value="3" {{ strftime('%B') == 'March' ? 'selected' : '' }}>
+                                                    {{ __('Maret') }}</option>
+                                                <option value="4" {{ strftime('%B') == 'April' ? 'selected' : '' }}>
+                                                    {{ __('April') }}</option>
+                                                <option value="5" {{ strftime('%B') == 'May' ? 'selected' : '' }}>
+                                                    {{ __('Mei') }}</option>
+                                                <option value="6" {{ strftime('%B') == 'June' ? 'selected' : '' }}>
+                                                    {{ __('Juni') }}</option>
+                                                <option value="7" {{ strftime('%B') == 'July' ? 'selected' : '' }}>
+                                                    {{ __('Juli') }}</option>
+                                                <option value="8" {{ strftime('%B') == 'August' ? 'selected' : '' }}>
+                                                    {{ __('Agustus') }}</option>
+                                                <option value="9" {{ strftime('%B') == 'September' ? 'selected' : '' }}>
+                                                    {{ __('September') }}</option>
+                                                <option value="10" {{ strftime('%B') == 'October' ? 'selected' : '' }}>
+                                                    {{ __('Oktober') }}</option>
+                                                <option value="11" {{ strftime('%B') == 'November' ? 'selected' : '' }}>
+                                                    {{ __('November') }}</option>
+                                                <option value="12" {{ strftime('%B') == 'December' ? 'selected' : '' }}>
+                                                    {{ __('Desember') }}</option>
+                                            </select>
                                         </div>
-                                        <div class="col-lg-6 col-6 text-right">
+                                        <div class="col-md-4" style="text-align-last: center;">
+                                            <select class="custom-select border-1 text-muted mt-2" id="year">
+                                                <option value="">--{{ __('Tahun') }}--</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 col-6 text-right">
+                                            <div class="btn-group">
+                                                <button type="submit" class="btn btn-primary btn-md" id="submit_filter">Search</button>
+                                            </div>
                                             <div class="btn-group">
                                                 <button class="btn btn-success btn-md" id="export_excel">Excel</button>
                                                 <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
                                             </div>
                                             <div class="btn-group">
-                                                <button class="btn btn-info btn-md" id="btn_add"><i
+                                                <a type="button" class="btn btn-info btn-md" id="btn_add"><i
                                                         class="fas fa-plus"></i>
-                                                    {{ __('Tambah') }}</button> 
+                                                    {{ __('Tambah') }}</a>
                                             </div>
                                         </div>
                                     </div>
+                                </form>
                                 </div>
+
+                                <div class="justify-content-between m-3 d-none">
+                                    <h4>Total Data: <b id="nama_akun"></b></h4>
+                                    <h4>Periode: <b id="periode"></b></h4>
+                                </div>
+                                
+                                <div class="d-none justify-content-end">
+                                    <div class="btn-group">
+                                        <button class="btn btn-success btn-md" id="export_excel">Excel</button>
+                                        <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
+                                    </div>
+                                </div>
+                                
                                 <div class="table-responsive">
                                     <table class="table table-hover data-table" id="t_jurnalUmum">
                                         <thead class="thead-light">
@@ -179,18 +214,39 @@
                                                 <td style="width:15%;" id="id">
                                                     <strong>{{ __('Tanggal') }}</strong>
                                                 </td>
-                                                <td style="width: 30;" id="id">
-                                                    <strong>{{ __('Keterangan') }}</strong>
+                                                <td style="width: 15%;" id="id" class="noExl noImport">
+                                                    <strong>{{ __('Action') }}</strong>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2" class="text-center">LOADING...</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+
+                                        </tfoot>
+                                    </table>
+
+                                    <!-- tabel detail -->
+                                    <table class="table table-hover data-table" id="t_detailJurnalUmum" style="display: none">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <td style="width:5%;" class="text-center">
+                                                    <strong>{{ __('No') }}</strong>
+                                                </td>
+                                                <td style="width:15%;" id="id">
+                                                    <strong>{{ __('Tanggal') }}</strong>
+                                                </td>
+                                                <td style="width: 20;" id="id">
+                                                    <strong>{{ __('Akun') }}</strong>
                                                 </td>
                                                 <td style="width: 10%;" id="id">
                                                     <strong>{{ __('Debet') }}</strong>
                                                 </td>
                                                 <td style="width: 10%;" id="id">
                                                     <strong>{{ __('Kredit') }}</strong>
-                                                </td>
-                                                <td style="width: 20%;" id="id">
-                                                    <strong>{{ __('Jumlah') }}</strong>
-                                                    <p>(IDR)</p>
                                                 </td>
                                                 <td style="width: 15%;" id="id" class="noExl noImport">
                                                     <strong>{{ __('Action') }}</strong>
@@ -203,7 +259,11 @@
                                             </tr>
                                         </tbody>
                                         <tfoot>
-
+                                            <tr>
+                                                <th colspan="3" class="text-left">Jumlah</th>
+                                                <th class="text-roght" id="jumlahDebit">-</th>
+                                                <th class="text-roght" id="jumlahKredit">-</th>
+                                            </tr>
                                         </tfoot>
                                     </table>
                                 </div>
@@ -242,16 +302,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="">{{ __('Debet') }}</label>
-                        <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
+                        <label for="">{{ __('Perkiraan') }}</label>
+                        <select name="perkiraan_id" id="direct_perkiraan" class="form-control" style="width: 100%;">
                             <option value="">-- {{ __('Select Perkiraan') }} --</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="">{{ __('Kredit') }}</label>
-                        <select name="kredit_id" id="direct_kredit" class="form-control" style="width: 100%;">
+                        <label for="">{{ __('Tipe') }}</label>
+                        <select name="tipe" class="form-control" style="width: 100%;">
                             <option value="">-- {{ __('Select Perkiraan') }} --</option>
+                            <option value="d">{{ __('Debet') }}</option>
+                            <option value="k">{{ __('Kredit') }}</option>
                         </select>
                     </div>
 
@@ -265,60 +327,6 @@
                     <button type="button" class="btn btn-danger waves-effect"
                         data-dismiss="modal">{{ __('Tutup') }}</button>
                     <button type="submit" class="btn btn-info waves-effect" id="btn_submit">{{ __('Simpan') }}</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</form>
-
-<!-- modal edit -->
-<form id="form_edit">
-    <div id="modal_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">{{ __('Edit Jurnal') }}</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <label for="">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control"/>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="">{{ __('Keterangan') }}</label>
-                        <input type="text" name="keterangan" id="keterangan" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Debet') }}</label>
-                        <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
-                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Kredit') }}</label>
-                        <select name="kredit_id" id="direct_kredit" class="form-control" style="width: 100%;">
-                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Jumlah') }}</label>
-                        <input type="text" name="jumlah" id="jumlah" class="form-control">
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger waves-effect"
-                        data-dismiss="modal">{{ __('Tutup') }}</button>
-                    <button type="submit" class="btn btn-info waves-effect" id="btn_edit">{{ __('Update') }}</button>
                 </div>
             </div>
             <!-- /.modal-content -->

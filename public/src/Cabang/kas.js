@@ -1,21 +1,14 @@
 const KasUI = ((SET) => {
     return {
         __renderDirectData: ({ results }, { search, limit, sort_by, sort_by_option }) => {
-            let body = results.data
+            let body = results
                 .map((v) => {
                     return `
                     <tr>
-                        <td style="width: 15%;">${v.tanggal}</td>
-                        <td style="width: 30%;">${v.keterangan}</td>
-                        <td style="width: 10%;">${SET.__threedigis(v.debet[0].perkiraan_no)}</td>
-                        <td style="width: 10%;">${SET.__threedigis(v.kredit[0].perkiraan_no)}</td>
-                        <td style="width: 20%;">${v.jumlah !== null ? `${SET.__realCurrency(v.jumlah)}` : '-'}</td>
+                    <td style="width: 15%;">${SET.__getMonth(v.waktu)}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <a href="${SET.__baseURL()}editjurnalUmumCabang/${v.id}"
-                                    type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
-                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}"
-                                    data-name="${v.keterangan}">Delete</button>
+                            <button type="button" class="btn btn-sm btn-primary waves-effect" id="btn_detail" name="${v.waktu}">Detail</button>
                             </div>
                         </td>
                     </tr>
@@ -24,6 +17,50 @@ const KasUI = ((SET) => {
                 .join("");
 
             $("#t_jurnalUmum tbody").html(body);
+        },
+
+        __renderDirectDataDetail: (results) => {
+            $(".d-none").toggleClass("d-flex");
+            $("#nama_akun").html(results.total_jurnal);
+            $("#periode").html(results.periode);
+
+            let i = 1;
+
+            $("#jumlahDebit").html(`Rp. ${SET.__threedigis(results.total_debit)},-`);
+            $("#jumlahKredit").html(`Rp. ${SET.__threedigis(results.total_kredit)},-`);
+
+            let body = results.daftar_jurnal
+                .map((v) => {
+                    return `
+                    <tr>
+                        <td style="width: 5%;" class="text-left">
+                            ${i++}
+                        </td>
+                        <td style="width: 15%;" class="text-left">
+                            ${v.tanggal}
+                        </td>
+                        <td style="width: 20%;" class="text-left">
+                            ${v.perkiraan.perkiraan_name}
+                        </td>
+                        <td style="width: 10%;" class="text-center">
+                            ${v.tipe === "d" ? `Rp. ${SET.__threedigis(v.jumlah)},-` : "-"}
+                        </td>
+                        <td style="width: 10%;" class="text-center">
+                            ${v.tipe === "k" ? `Rp. ${SET.__threedigis(v.jumlah)},-` : "-"}
+                        </td>
+                        <td style="width: 15%;" class="noExl noImport">
+                            <div class="btn-group">
+                                <a href="${SET.__baseURL()}editjurnalUmumCabang/${v.id}" type="button"
+                                    class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
+                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                })
+                .join("");
+
+            $("#t_detailJurnalUmum tbody").html(body);
         },
 
         __renderDirectFooter: (
@@ -42,7 +79,7 @@ const KasUI = ((SET) => {
             }
             let footer = `
                 <tr class="noExl noImport">
-                    <td colspan="6" class="text-center">
+                    <td colspan="2" class="text-center">
                         <div class="btn-group mr-2" role="group" aria-label="First group">
                             <button type="button" class="btn btn-secondary btn-pagination" ${
                                 results.prev_page_url === null
@@ -136,19 +173,19 @@ const KasUI = ((SET) => {
 const KasController = ((SET, UI) => {
     const __fetchDirectKas = (TOKEN, filter = {}, link = null) => {
         $.ajax({
-            url: `${link === null ? SET.__apiURL() + "cabang/get_kas" : link}`,
+            url: `${link === null ? SET.__apiURL() + "cabang/get_showJurnalUmum" : link}`,
             type: "GET",
             dataType: "JSON",
             data: filter,
-            beforeSend: SET.__tableLoader("#t_jurnalUmum", 7),
+            beforeSend: SET.__tableLoader("#t_jurnalUmum", 2),
             headers: {
                 Authorization: `Bearer ${TOKEN}`,
             },
             success: (res) => {
-                $("#count_regencies").text(res.total_all);
-                if (res.results.data.length !== 0) {
+                // $("#count_regencies").text(res.total_all);
+                if (res.results.length !== 0) {
                     UI.__renderDirectData(res, filter);
-                    UI.__renderDirectFooter(res, filter);
+                    // UI.__renderDirectFooter(res, filter);
                 } else {
                     UI.__renderDirectNoData();
                 }
@@ -178,56 +215,58 @@ const KasController = ((SET, UI) => {
         });
     };
 
-    const __pluginDirectInitDebit = (TOKEN) => {
-        $("#direct_debit").select2({
-            placeholder: "-- Select Perkiraan --",
-            ajax: {
-                url: `${SET.__apiURL()}cabang/get_perkiraan`,
+    const __detailJurnalUmum = (TOKEN) => {
+        let table_hidden = $("#t_jurnalUmum, #direct_filter");
+        $("#t_jurnalUmum tbody").on("click", "button", function (e) {
+            id = this.id.slice(-1);
+            table_hidden.hide();
+            $("#t_detailJurnalUmum").show();
+            const waktu = this.name;
+            $.ajax({
+                url: `${SET.__apiURL() + "cabang/get_jurnalUmum?waktu="}${waktu}`,
+                type: "POST",
                 dataType: "JSON",
-                type: "GET",
+                beforeSend: SET.__tableLoader("#t_detailJurnalUmum", 6),
                 headers: {
                     Authorization: `Bearer ${TOKEN}`,
                 },
-                data: function (params) {
-                    let query = {
-                        search: params.term,
-                    };
-
-                    return query;
-                },
-                processResults: function (res) {
-                    let filtered = [];
-
-                    if (res.results.data.length !== 0) {
-                        let group = {
-                            text: "Perkiraan",
-                            children: [],
-                        };
-
-                        res.results.data.map((v) => {
-                            let perkiraan = {
-                                id: v.id,
-                                text: `${SET.__threedigis(v.perkiraan_no)} | ${
-                                    v.perkiraan_name
-                                }`,
-                            };
-
-                            group.children.push(perkiraan);
-                        });
-
-                        filtered.push(group);
+                success: (res) => {
+                    // $("#count_regencies").text(res.total_all);
+                    if (res.length !== 0) {
+                        UI.__renderDirectDataDetail(res);
+                        // UI.__renderDirectFooter(res, filter);
+                    } else {
+                        UI.__renderDirectNoData();
                     }
-                    return {
-                        results: filtered,
-                    };
                 },
-                cache: true,
-            },
+                error: (err) => {},
+                complete: () => {},
+                statusCode: {
+                    404: function () {
+                        toastr.error(
+                            "Endpoint Not Found",
+                            "Failed 404",
+                            SET.__bottomNotif()
+                        );
+                    },
+                    422: function () {
+                        toastr.error(
+                            "Please Check Input Name or Value",
+                            "Failed 422",
+                            SET.__bottomNotif()
+                        );
+                    },
+                    401: function () {
+                        window.location.href = `${SET.__baseURL()}delete_session`;
+                    },
+                    500: function () {},
+                },
+            });
         });
-    };
+    }
 
-    const __pluginDirectInitkredit = (TOKEN) => {
-        $("#direct_kredit").select2({
+    const __pluginDirectInitPerkiraan = (TOKEN) => {
+        $("#direct_perkiraan").select2({
             placeholder: "-- Select Perkiraan --",
             ajax: {
                 url: `${SET.__apiURL()}cabang/get_perkiraan`,
@@ -255,9 +294,7 @@ const KasController = ((SET, UI) => {
                         res.results.data.map((v) => {
                             let perkiraan = {
                                 id: v.id,
-                                text: `${SET.__threedigis(v.perkiraan_no)} | ${
-                                    v.perkiraan_name
-                                }`,
+                                text: `${SET.__threedigis(v.perkiraan_no)} | ${v.perkiraan_name}`,
                             };
 
                             group.children.push(perkiraan);
@@ -488,25 +525,24 @@ const KasController = ((SET, UI) => {
             });
     };
 
-    const __openDelete = () => {
-        $("#t_jurnalUmum, #options").on("click", ".btn-delete", function () {
-            let delete_id = $(this).data("id");
-            let delete_name = $(this).data("name");
-
-            $("#delete_id").val(delete_id);
-            $("#delete_name").text(delete_name);
-            $("#modal_delete").modal("show");
+    const __direct = (TOKEN, filter) => {
+        $("#month").on("change", function() {
+            __fetchDirectKas(TOKEN, filter, null);
         });
-    };
-
-    // const __openEdit = () => {
-    //     $("#t_jurnalUmum, #options").on("click", ".btn-edit", function () {
-    //         let edit_id = $(this).data('id');
-
-    //         $("#edit_id").val(edit_id);
-    //         $('#modal_edit').modal('show');
-    //     });
-    // }
+        $("#year").on("change", function() {
+            __fetchDirectKas(TOKEN, filter, null);
+        });
+    
+        var start_year = new Date().getFullYear();
+        var nowMonth = new Date().getMonth();
+    
+        for (var i = start_year; i >= 2017; i--) {
+            $("#year").append(
+                `<option value="${i}" ${i == start_year ? "selected" : ""}>${i}</option> `
+            );
+        }
+    
+    }
 
     const __pluginInit = TOKEN => {
         $(".datepicker").datepicker({
@@ -524,6 +560,68 @@ const KasController = ((SET, UI) => {
             }
         });
     }
+
+    const __submitDirectFilter = (TOKEN, filter) => {
+        $(document).ready(function () {
+            $('#submit_filter').on("click", "button", function (e) {
+                e.preventDefault();
+
+                bulan = $('#month').val()
+                tahun = $('#year').val()
+
+                $.ajax({
+                    url: `${SET.__apiURL()}cabang/get_searchJurnalUmum?bulan=${bulan}&tahun=${tahun}`,
+                    type: "GET",
+                    dataType: "JSON",
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`,
+                    },
+                    success: (res) => {
+                        if (res.periode !== null) {
+                            __fetchDirectKas(TOKEN, filter, null);
+                        } else {
+                            UI.__renderDirectNoData();
+                        }
+                    },
+                    error: (err) => {
+                        let error = err.responseJSON;
+                        toastr.error(
+                            "Failed",
+                            error.error,
+                            SET.__bottomNotif()
+                        );
+                    },
+                    complete: () => {
+                        SET.__closeButtonLoader("#btn_submit");
+                    },
+                    statusCode: {
+                        422: function () {
+                            toastr.error(
+                                "Please Check Input Name or Value",
+                                "Failed",
+                                SET.__bottomNotif()
+                            );
+                        },
+                        401: function () {
+                            window.location.href = `${SET.__baseURL()}delete_session`;
+                        },
+                        500: function () {},
+                    },
+                });
+            });
+        });
+    };
+
+    const __openDelete = () => {
+        $("#t_jurnalUmum, #options").on("click", ".btn-delete", function () {
+            let delete_id = $(this).data("id");
+            let delete_name = $(this).data("name");
+
+            $("#delete_id").val(delete_id);
+            $("#delete_name").text(delete_name);
+            $("#modal_delete").modal("show");
+        });
+    };
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -552,35 +650,26 @@ const KasController = ((SET, UI) => {
         });
     };
 
-    const __submitDirectFilter = (TOKEN, filter) => {
-        $("#form_direct_filter").on("submit", function (e) {
-            e.preventDefault();
+    // const __submitDirectFilter = (TOKEN, filter) => {
+    //     $("#form_direct_filter").on("submit", function (e) {
+    //         e.preventDefault();
 
-            filter.keterangan = $('#search_keterangan').val()
-            filter.jumlah = $('#search_jumlah').val()
-            filter.start_date = $('#start_date').val()
-            filter.end_date = $('#end_date').val()
+    //         filter.keterangan = $('#search_keterangan').val()
+    //         filter.jumlah = $('#search_jumlah').val()
+    //         filter.start_date = $('#start_date').val()
+    //         filter.end_date = $('#end_date').val()
 
-            filter.sort_by = $("#sort_by").val()
-            filter.sort_by_option = $("#sort_by_option").val()
-            filter.limit = $("#limit").val()
+    //         filter.sort_by = $("#sort_by").val()
+    //         filter.sort_by_option = $("#sort_by_option").val()
+    //         filter.limit = $("#limit").val()
 
-            __fetchDirectKas(TOKEN, filter, null);
-        });
-    };
+    //         __fetchDirectKas(TOKEN, filter, null);
+    //     });
+    // };
 
     const __resetDirectFilter = (TOKEN, filter) => {
         $("#btn_direct_reset").on("click", function () {
             $("#form_direct_filter")[0].reset();
-
-            // delete filter.keterangan
-            // delete filter.jumlah
-            // delete filter.start_date
-            // delete filter.end_date
-
-            // filter.sort_by = $("#sort_by").val()
-            // filter.sort_by_option = $("#sort_by_option").val()
-            // filter.limit = $("#limit").val()
 
             __fetchDirectKas(TOKEN, { limit: 10 });
         });
@@ -589,7 +678,6 @@ const KasController = ((SET, UI) => {
     $("#date").datepicker({
         autoclose: true,
         todayHighlight: true,
-        // startDate: new Date(),
         format: "dd-mm-yyyy",
         orientation: "bottom",
         maxViewMode: 0,
@@ -603,14 +691,15 @@ const KasController = ((SET, UI) => {
                 limit: $("#direct_filter_limit").val(),
             };
 
-            // $("input[type=text]").autocomplete({
-            //     disabled: true,
-            // });
+            $("input[type=text]").autocomplete({
+                disabled: true,
+            });
 
             SET.__openOption();
             SET.__closeGlobalLoader();
 
             __pluginInit(TOKEN)
+            __direct(TOKEN);
 
             __openAdd();
             __submitAdd(TOKEN);
@@ -627,10 +716,11 @@ const KasController = ((SET, UI) => {
             __fetchDirectKas(TOKEN, direct_filter, null);
             __clickDirectPagination(TOKEN, direct_filter);
             __closeDirectFilter(TOKEN);
-            __pluginDirectInitDebit(TOKEN);
-            __pluginDirectInitkredit(TOKEN);
+            __pluginDirectInitPerkiraan(TOKEN);
 
             __submitUpdateKas(TOKEN, id);
+
+            __detailJurnalUmum(TOKEN);
         },
 
         detail: (TOKEN, id) => {
