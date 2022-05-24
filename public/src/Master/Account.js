@@ -1,7 +1,7 @@
 const CorporateUI = ((SET) => {
     return {
         __renderDirectData: ({ results }, { limit }) => {
-            console.log(results.data);
+            // console.log(results.data);
             let body = results.data
                 .map((v) => {
                     return `

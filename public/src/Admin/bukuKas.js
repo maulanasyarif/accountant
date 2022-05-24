@@ -1,18 +1,18 @@
 const BukuKasUI = ((SET) => {
     return {
-        __renderDirectData: ({ results }) => {
+        __renderDirectData: ({ results },  { search, limit, sort_by, sort_by_option }) => {
             let i = 1;
-            let body = results
+            let body = results.data
                 .map((v) => {
                     return `
                     <tr>
-                        <td style="width: 10%;">${i++}</td>
                         <td style="width: 15%;">${v.perkiraan_name}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail${
-                                    v.id
-                                }">Detail</button>
+                                <button type="button" class="btn btn-sm btn-warning waves-effect"
+                                    id="btn_detail${v.id}" name="${v.id}">Detail
+                                </button>
+                            </div>
                     </tr>
                 `;
                 })
@@ -192,7 +192,7 @@ const BukuKasUI = ((SET) => {
         `;
             $("#detail , #form_edit_route").html(nodata);
 
-            $("#t_bukuKas tbody").html(html);
+            $("#t_bukuKas, tbody").html(html);
         },
 
         __renderDirectOrder: (results) => {
@@ -215,10 +215,10 @@ const BukuKasController = ((SET, UI) => {
                 Authorization: `Bearer ${TOKEN}`,
             },
             success: (res) => {
-                $("#count_regencies").text(res.total_all);
-                if (res.results.length !== 0) {
+                // $("#count_regencies").text(res.total_all);
+                if (res.results.data.length !== 0) {
                     UI.__renderDirectData(res, filter);
-                    // UI.__renderDirectFooter(res, filter);
+                    UI.__renderDirectFooter(res, filter);
                 } else {
                     UI.__renderDirectNoData();
                 }
@@ -252,8 +252,9 @@ const BukuKasController = ((SET, UI) => {
         var ID = 0;
         let table = $("#t_bukuKas");
         let table_hidden = $("#t_bukuKas_hidden");
-        $("#t_bukuKas").on("click", "button", function (e) {
-            ID = this.id.slice(-1);
+        $("#t_bukuKas tbody").on("click", "button", function (e) {
+            // ID = this.id.slice(-1);
+            ID = this.name;
             table.hide();
             table_hidden.show();
             $.ajax({
@@ -714,9 +715,9 @@ const BukuKasController = ((SET, UI) => {
                 limit: $("#direct_filter_limit").val(),
             };
 
-            $("input[type=text]").autocomplete({
-                disabled: true,
-            });
+            // $("input[type=text]").autocomplete({
+            //     disabled: true,
+            // });
 
             SET.__openOption();
             SET.__closeGlobalLoader();
@@ -741,6 +742,8 @@ const BukuKasController = ((SET, UI) => {
             __pluginDirectInitPerkiraan(TOKEN);
 
             __submitUpdateBukuKas(TOKEN, id);
+
+            __fetchDetailBukuKas(TOKEN, id);
 
             __HiddenTipe(TOKEN);
         },

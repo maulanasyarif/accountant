@@ -23,7 +23,9 @@
                         <li class="breadcrumb-item" aria-current="page">
                             <a href="{{ url('dashboard') }}">{{ __('Dasbor') }}</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Buku KAS') }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <a href="{{ url('bukuKasAdmin') }}">{{ __('Buku Kas') }}</a>
+                        </li>
                     </ol>
                 </nav>
             </div>
@@ -53,11 +55,11 @@
                                                 <button class="btn btn-success btn-md" id="export_excel">Excel</button>
                                                 <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
                                             </div>
-                                            <div class="btn-group">
+                                            <!-- <div class="btn-group">
                                                 <button class="btn btn-info btn-md" id="btn_add"><i
                                                         class="fas fa-plus"></i>
                                                     {{ __('Tambah') }}</button> 
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -76,18 +78,6 @@
 
                                                             <div class="col-lg-6 col-12">
                                                                 <div class="form-group">
-                                                                    <label for="">{{ __('Keterangan') }}</label>
-                                                                    <input type="text" id="search_keterangan"
-                                                                        autocomplete="off" name="keterangan"
-                                                                        class="form-control"
-                                                                        placeholder="{{ __('Search Keterangan') }}"
-                                                                        aria-label="{{ __('Search Keterangan') }}"
-                                                                        aria-describedby="basic-addon1">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <div class="form-group">
                                                                     <label for="">{{ __('Nama Perkiraan') }}</label>
                                                                     <input type="text" id="search_name"
                                                                         autocomplete="off" name="perkiraan_name"
@@ -99,18 +89,25 @@
                                                             </div>
 
                                                             <div class="col-lg-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('No Perkiraan') }}</label>
+                                                                    <input type="text" id="search_no" autocomplete="off"
+                                                                        name="perkiraan_no" class="form-control"
+                                                                        placeholder="{{ __('Search No Perkiraan') }}"
+                                                                        aria-label="{{ __('Search No Perkiraan') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
                                                                 <label>{{ __('Sortir Berdasarkan') }}</label>
                                                                 <div class="input-group mb-3">
                                                                     <select name="sort_by" id="sort_by"
                                                                         class="form-control">
-                                                                        <option value="tanggal" selected>
-                                                                            {{ __('Tanggal') }}</option>
-                                                                        <option value="keterangan">
-                                                                            {{ __('Keterangan') }}</option>
-                                                                        <option value="debet">
-                                                                            {{ __('Debet') }}</option>
-                                                                        <option value="kredit">
-                                                                            {{ __('Kredit') }}</option>
+                                                                        <option value="perkiraan_name" selected>
+                                                                            {{ __('Nama Perkiraan') }}</option>
+                                                                        <option value="perkiraan_no">
+                                                                            {{ __('No Perkiraan') }}</option>
                                                                     </select>
                                                                     <select name="sort_by_option" id="sort_by_option"
                                                                         class="form-control">
@@ -176,9 +173,9 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="width:10%;" id="id">
-                                                    <strong>{{ __('Tanggal') }}</strong>
-                                                </td>
+                                                <!-- <td style="width:10%;" id="id">
+                                                    <strong>{{ __('No') }}</strong>
+                                                </td> -->
                                                 <td style="width: 15;" id="id">
                                                     <strong>{{ __('Keterangan') }}</strong>
                                                 </td>
@@ -196,113 +193,12 @@
 
                                         </tfoot>
                                     </table>
-                                    {{-- start table hidden --}}
+                                    
+                                    <!-- start table hidden  -->
                                     <table class="table table-hover data-table" id="t_bukuKas_hidden" style="display: none">
                                         <thead class="thead-light">
                                             <tr id="option_direct_container" style="display: none;" class="noExl">
                                                 <th scope="col" colspan="8">
-                                                    <form id="form_direct_filter">
-                                                        <div class="row">
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="">{{ __('Keterangan') }}</label>
-                                                                    <input type="text" id="search_keterangan"
-                                                                        autocomplete="off" name="keterangan"
-                                                                        class="form-control"
-                                                                        placeholder="{{ __('Search Keterangan') }}"
-                                                                        aria-label="{{ __('Search Keterangan') }}"
-                                                                        aria-describedby="basic-addon1">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="">{{ __('Nama Perkiraan') }}</label>
-                                                                    <input type="text" id="search_name"
-                                                                        autocomplete="off" name="perkiraan_name"
-                                                                        class="form-control"
-                                                                        placeholder="{{ __('Search Nama Perkiraan') }}"
-                                                                        aria-label="{{ __('Search Nama Perkiraan') }}"
-                                                                        aria-describedby="basic-addon1">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <label>{{ __('Sortir Berdasarkan') }}</label>
-                                                                <div class="input-group mb-3">
-                                                                    <select name="sort_by" id="sort_by"
-                                                                        class="form-control">
-                                                                        <option value="tanggal" selected>
-                                                                            {{ __('Tanggal') }}</option>
-                                                                        <option value="keterangan">
-                                                                            {{ __('Keterangan') }}</option>
-                                                                        <option value="debet">
-                                                                            {{ __('Debet') }}</option>
-                                                                        <option value="kredit">
-                                                                            {{ __('Kredit') }}</option>
-                                                                    </select>
-                                                                    <select name="sort_by_option" id="sort_by_option"
-                                                                        class="form-control">
-                                                                        <option value="asc" selected>Ascending</option>
-                                                                        <option value="desc">Descending</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <label>Tampilkan</label>
-                                                                <div class="input-group mb-3">
-                                                                    <input type="number" name="limit" id="limit"
-                                                                        class="form-control" value="10">
-                                                                    <div class="input-group-append">
-                                                                        <span class="input-group-text">/page</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-12 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="">{{ __('Rentang Waktu') }}</label>
-                                                                    <div class="input-daterange input-group"
-                                                                        id="date-range">
-                                                                        <input type="text" autocomplete="off"
-                                                                            class="form-control datepicker"
-                                                                            name="start_date" id="start_date"
-                                                                            placeholder="{{ __('Start Date') }}" />
-                                                                        <div class="input-group-append">
-                                                                            <span
-                                                                                class="input-group-text bg-info b-0 text-white">TO</span>
-                                                                        </div>
-                                                                        <input type="text" autocomplete="off"
-                                                                            class="form-control datepicker"
-                                                                            name="end_date" id="end_date"
-                                                                            placeholder="{{ __('End Date') }}" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-12 col-12">
-                                                                <div class="form-group">
-                                                                    <div class="row">
-                                                                        <div class="col-md-6 col-6 text-left">
-                                                                            <button class="btn btn-filter btn-danger"
-                                                                                id="btn_direct_close"
-                                                                                type="button">{{ __('Tutup') }}</button>
-                                                                        </div>
-                                                                        <div class="col-md-6 col-6 text-right">
-                                                                            <button class="btn btn-filter btn-warning"
-                                                                                type="button"
-                                                                                id="btn_direct_reset">Reset</button>
-                                                                            <button class="btn btn-filter btn-info"
-                                                                                type="submit">{{ __('Cari') }}</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </form>
                                                 </th>
                                             </tr>
                                             <tr>
@@ -326,114 +222,13 @@
 
                                         </tfoot>
                                     </table>
-                                    {{-- end table hidden --}}
-                                    {{-- start table detail buku besar --}}
+                                    <!-- end table hidden 
+                                    start table detail buku besar  -->
                                     <table class="table table-hover data-table" id="t_bukuKas_detail" style="display: none">
                                         <thead class="thead-light">
                                             <tr id="option_direct_container" style="display: none;" class="noExl">
                                                 <th scope="col" colspan="1">
-                                                    <form id="form_direct_filter">
-                                                        <div class="row">
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="">{{ __('Keterangan') }}</label>
-                                                                    <input type="text" id="search_keterangan"
-                                                                        autocomplete="off" name="keterangan"
-                                                                        class="form-control"
-                                                                        placeholder="{{ __('Search Keterangan') }}"
-                                                                        aria-label="{{ __('Search Keterangan') }}"
-                                                                        aria-describedby="basic-addon1">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="">{{ __('Nama Perkiraan') }}</label>
-                                                                    <input type="text" id="search_name"
-                                                                        autocomplete="off" name="perkiraan_name"
-                                                                        class="form-control"
-                                                                        placeholder="{{ __('Search Nama Perkiraan') }}"
-                                                                        aria-label="{{ __('Search Nama Perkiraan') }}"
-                                                                        aria-describedby="basic-addon1">
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <label>{{ __('Sortir Berdasarkan') }}</label>
-                                                                <div class="input-group mb-3">
-                                                                    <select name="sort_by" id="sort_by"
-                                                                        class="form-control">
-                                                                        <option value="tanggal" selected>
-                                                                            {{ __('Tanggal') }}</option>
-                                                                        <option value="keterangan">
-                                                                            {{ __('Keterangan') }}</option>
-                                                                        <option value="debet">
-                                                                            {{ __('Debet') }}</option>
-                                                                        <option value="kredit">
-                                                                            {{ __('Kredit') }}</option>
-                                                                    </select>
-                                                                    <select name="sort_by_option" id="sort_by_option"
-                                                                        class="form-control">
-                                                                        <option value="asc" selected>Ascending</option>
-                                                                        <option value="desc">Descending</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <label>Tampilkan</label>
-                                                                <div class="input-group mb-3">
-                                                                    <input type="number" name="limit" id="limit"
-                                                                        class="form-control" value="10">
-                                                                    <div class="input-group-append">
-                                                                        <span class="input-group-text">/page</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-lg-12 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="">{{ __('Rentang Waktu') }}</label>
-                                                                    <div class="input-daterange input-group"
-                                                                        id="date-range">
-                                                                        <input type="text" autocomplete="off"
-                                                                            class="form-control datepicker"
-                                                                            name="start_date" id="start_date"
-                                                                            placeholder="{{ __('Start Date') }}" />
-                                                                        <div class="input-group-append">
-                                                                            <span
-                                                                                class="input-group-text bg-info b-0 text-white">TO</span>
-                                                                        </div>
-                                                                        <input type="text" autocomplete="off"
-                                                                            class="form-control datepicker"
-                                                                            name="end_date" id="end_date"
-                                                                            placeholder="{{ __('End Date') }}" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="col-md-12 col-12">
-                                                                <div class="form-group">
-                                                                    <div class="row">
-                                                                        <div class="col-md-6 col-6 text-left">
-                                                                            <button class="btn btn-filter btn-danger"
-                                                                                id="btn_direct_close"
-                                                                                type="button">{{ __('Tutup') }}</button>
-                                                                        </div>
-                                                                        <div class="col-md-6 col-6 text-right">
-                                                                            <button class="btn btn-filter btn-warning"
-                                                                                type="button"
-                                                                                id="btn_direct_reset">Reset</button>
-                                                                            <button class="btn btn-filter btn-info"
-                                                                                type="submit">{{ __('Cari') }}</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </form>
+                                                    
                                                 </th>
                                             </tr>
                                             <tr>
@@ -477,7 +272,7 @@
 
                                         </tfoot>
                                     </table>
-                                    {{-- end table detail buku besar --}}
+                                    <!-- end table detail buku besar  -->
                                 </div>
                             </div>
                         </div>
