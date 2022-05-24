@@ -1,6 +1,9 @@
 const PengajuanUI = ((SET) => {
     return {
-        __renderDirectData: ({ results },  { search, limit, sort_by, sort_by_option }) => {
+        __renderDirectData: (
+            { results },
+            { search, limit, sort_by, sort_by_option }
+        ) => {
             let body = results.data
                 .map((v) => {
                     return `
@@ -9,27 +12,32 @@ const PengajuanUI = ((SET) => {
                             <td style="width: 20%;">${v.kegiatan.no_surat}</td>
                             <td style="width: 25%;">${v.kegiatan.judul}</td>
                             <td id="action" style="width: 30%;" class="noExl noImport text-white">
-                                    ${v.status === 'pending' ? `<form method="post" id="vpengajuan${v.kegiatan.id}">
+                                    ${
+                                        v.status === "pending"
+                                            ? `<form method="post" id="vpengajuan${v.kegiatan.id}">
                                     <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                    JSON.stringify(v.kegiatan) +
-                                    `'>
+                                              JSON.stringify(v.kegiatan) +
+                                              `'>
                                     <div class="btn-group">
                                         <button type="button" value="review" name="${v.kegiatan.id}" id="review${v.kegiatan.id}" class="btn btn-sm btn-warning">Review</button>
                                         <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
                                         <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
                                         </form>
-                                    </div>` 
-                                : v.status === 'review' ? 
-                                    `<form method="post" id="vpengajuan${v.kegiatan.id}">
+                                    </div>`
+                                            : v.status === "review"
+                                            ? `<form method="post" id="vpengajuan${v.kegiatan.id}">
                                     <input type="hidden" id="data_json${v.kegiatan.id}" value='` +
-                                    JSON.stringify(v.kegiatan) +
-                                    `'>
+                                              JSON.stringify(v.kegiatan) +
+                                              `'>
                                     <div class="btn-group">
                                         <button type="button" value="approve" id="approve${v.kegiatan.id}" class="btn btn-sm btn-success">Approve</button>
                                         <button type="button" value="decline" id="decline${v.kegiatan.id}" class="btn btn-sm btn-danger">Decline</button>
                                         </form>
-                                    </div>` : v.status === 'approve' ? `<a type="button" class="btn btn-success">${v.status}</a>`
-                                    : `<a type="button" class="btn btn-danger">${v.status}</a>`}
+                                    </div>`
+                                            : v.status === "approve"
+                                            ? `<a type="button" class="btn btn-success">${v.status}</a>`
+                                            : `<a type="button" class="btn btn-danger">${v.status}</a>`
+                                    }
                             </td>
                         </tr>
                     `;
@@ -201,7 +209,7 @@ const PengajuanController = ((SET, UI) => {
 
     const __verifikasiPengajuan = (TOKEN, filter) => {
         $(document).ready(function () {
-            $('#t_pengajuan tbody').on("click", "button", function (e) {
+            $("#t_pengajuan tbody").on("click", "button", function (e) {
                 e.preventDefault();
                 var formData = {
                     data: $("#data_json" + this.id.slice(-1)).val(),
@@ -220,7 +228,9 @@ const PengajuanController = ((SET, UI) => {
                     },
                     success: (res) => {
                         if (formData.value === "review") {
-                            location.href = `${SET.__baseURL()}editPengajuanAdmin/${formData.id}`;
+                            location.href = `${SET.__baseURL()}editPengajuanAdmin/${
+                                formData.id
+                            }`;
                         } else {
                             __fetchDirectPengajuan(TOKEN, filter);
                         }
@@ -402,22 +412,22 @@ const PengajuanController = ((SET, UI) => {
         });
     };
 
-    const __pluginInit = TOKEN => {
+    const __pluginInit = (TOKEN) => {
         $(".datepicker").datepicker({
-            format: 'yyyy-mm-dd',
+            format: "yyyy-mm-dd",
             autoclose: true,
             todayHighlight: true,
         });
 
-        $("#start_date").on('changeDate', function (selected) {
+        $("#start_date").on("changeDate", function (selected) {
             let startDate = new Date(selected.date.valueOf());
 
-            $("#end_date").datepicker('setStartDate', startDate);
+            $("#end_date").datepicker("setStartDate", startDate);
             if ($("#start_date").val() > $("#end_date").val()) {
                 $("#end_date").val($("#start_date").val());
             }
         });
-    }
+    };
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -450,16 +460,16 @@ const PengajuanController = ((SET, UI) => {
         $("#form_direct_filter").on("submit", function (e) {
             e.preventDefault();
 
-                filter.judul = $('#search_judul').val()
-                filter.surat = $('#search_surat').val()
-                filter.start_date = $('#start_date').val()
-                filter.end_date = $('#end_date').val()
+            filter.judul = $("#search_judul").val();
+            filter.surat = $("#search_surat").val();
+            filter.start_date = $("#start_date").val();
+            filter.end_date = $("#end_date").val();
 
-                filter.sort_by = $("#sort_by").val()
-                filter.sort_by_option = $("#sort_by_option").val()
-                filter.limit = $("#limit").val()
+            filter.sort_by = $("#sort_by").val();
+            filter.sort_by_option = $("#sort_by_option").val();
+            filter.limit = $("#limit").val();
 
-                __fetchDirectPengajuan(TOKEN, filter, null);
+            __fetchDirectPengajuan(TOKEN, filter, null);
         });
     };
 
@@ -529,7 +539,7 @@ const PengajuanController = ((SET, UI) => {
 
             SET.__closeGlobalLoader();
 
-            __pluginInit(TOKEN)
+            __pluginInit(TOKEN);
 
             __openAdd();
             __submitAdd(TOKEN);
@@ -572,8 +582,8 @@ const PengajuanController = ((SET, UI) => {
                         `${SET.__baseURL()}editPengajuanAdmin/${id}?page=${
                             data.prev_page_url
                                 ? data.prev_page_url.substr(
-                                        data.prev_page_url.length - 1
-                                )
+                                      data.prev_page_url.length - 1
+                                  )
                                 : getParam
                         }`
                     );
@@ -582,8 +592,8 @@ const PengajuanController = ((SET, UI) => {
                         `${SET.__baseURL()}editPengajuanAdmin/${id}?page=${
                             data.next_page_url
                                 ? data.next_page_url.substr(
-                                        data.next_page_url.length - 1
-                                    )
+                                      data.next_page_url.length - 1
+                                  )
                                 : getParam
                         }`
                     );

@@ -1,6 +1,6 @@
 @extends('__layout.app')
 
-@section('title', 'Buku KAS')
+@section('title', 'Buku Besar')
 
 @section('css-source')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/select2_new/dist/css/select2.min.css') }}">
@@ -14,7 +14,7 @@
 <div class="page-breadcrumb">
     <div class="row">
         <div class="col-5 align-self-center">
-            <h4 class="page-title">{{ __('Buku KAS') }}</h4>
+            <h4 class="page-title">{{ __('Buku Besar') }}</h4>
         </div>
         <div class="col-7 align-self-center">
             <div class="d-flex align-items-center justify-content-end">
@@ -60,6 +60,11 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="justify-content-between m-3 d-none">
+                                    <h4>Nama Akun: <b id="nama_akun"></b></h4>
+                                    <h4>Periode: <b id="periode"></b></h4>
+                                    <h4>Kode Akun: <b id="kode_akun"></b></h4>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover data-table" id="t_bukuKas">
@@ -177,23 +182,135 @@
                                                 <td style="width: 15;" id="id">
                                                     <strong>{{ __('Keterangan') }}</strong>
                                                 </td>
+                                                <td style="width: 15%;" id="id" class="noExl noImport">
+                                                    <strong>{{ __('Action') }}</strong>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="8" class="text-center">LOADING...</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+
+                                        </tfoot>
+                                    </table>
+                                    {{-- start table hidden --}}
+                                    <table class="table table-hover data-table" id="t_bukuKas_hidden" style="display: none">
+                                        <thead class="thead-light">
+                                            <tr id="option_direct_container" style="display: none;" class="noExl">
+                                                <th scope="col" colspan="8">
+                                                    <form id="form_direct_filter">
+                                                        <div class="row">
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Keterangan') }}</label>
+                                                                    <input type="text" id="search_keterangan"
+                                                                        autocomplete="off" name="keterangan"
+                                                                        class="form-control"
+                                                                        placeholder="{{ __('Search Keterangan') }}"
+                                                                        aria-label="{{ __('Search Keterangan') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Nama Perkiraan') }}</label>
+                                                                    <input type="text" id="search_name"
+                                                                        autocomplete="off" name="perkiraan_name"
+                                                                        class="form-control"
+                                                                        placeholder="{{ __('Search Nama Perkiraan') }}"
+                                                                        aria-label="{{ __('Search Nama Perkiraan') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>{{ __('Sortir Berdasarkan') }}</label>
+                                                                <div class="input-group mb-3">
+                                                                    <select name="sort_by" id="sort_by"
+                                                                        class="form-control">
+                                                                        <option value="tanggal" selected>
+                                                                            {{ __('Tanggal') }}</option>
+                                                                        <option value="keterangan">
+                                                                            {{ __('Keterangan') }}</option>
+                                                                        <option value="debet">
+                                                                            {{ __('Debet') }}</option>
+                                                                        <option value="kredit">
+                                                                            {{ __('Kredit') }}</option>
+                                                                    </select>
+                                                                    <select name="sort_by_option" id="sort_by_option"
+                                                                        class="form-control">
+                                                                        <option value="asc" selected>Ascending</option>
+                                                                        <option value="desc">Descending</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>Tampilkan</label>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="number" name="limit" id="limit"
+                                                                        class="form-control" value="10">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">/page</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Rentang Waktu') }}</label>
+                                                                    <div class="input-daterange input-group"
+                                                                        id="date-range">
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="start_date" id="start_date"
+                                                                            placeholder="{{ __('Start Date') }}" />
+                                                                        <div class="input-group-append">
+                                                                            <span
+                                                                                class="input-group-text bg-info b-0 text-white">TO</span>
+                                                                        </div>
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="end_date" id="end_date"
+                                                                            placeholder="{{ __('End Date') }}" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12 col-12">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-6 text-left">
+                                                                            <button class="btn btn-filter btn-danger"
+                                                                                id="btn_direct_close"
+                                                                                type="button">{{ __('Tutup') }}</button>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-6 text-right">
+                                                                            <button class="btn btn-filter btn-warning"
+                                                                                type="button"
+                                                                                id="btn_direct_reset">Reset</button>
+                                                                            <button class="btn btn-filter btn-info"
+                                                                                type="submit">{{ __('Cari') }}</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </form>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:10%;" id="id">
+                                                    <strong>{{ __('No') }}</strong>
+                                                </td>
                                                 <td style="width: 15;" id="id">
-                                                    <strong>{{ __('Nama Perkiraan') }}</strong>
-                                                </td>
-                                                <td style="width: 10;" id="id">
-                                                    <strong>{{ __('No Perkiraan') }}</strong>
-                                                </td>
-                                                <td style="width: 10%;" id="id">
-                                                    <strong>{{ __('Debet') }}</strong>
-                                                    <p>(IDR)</p>
-                                                </td>
-                                                <td style="width: 10%;" id="id">
-                                                    <strong>{{ __('Kredit') }}</strong>
-                                                    <p>(IDR)</p>
-                                                </td>
-                                                <td style="width: 15%;" id="id">
-                                                    <strong>{{ __('Saldo') }}</strong>
-                                                    <p>(IDR)</p>
+                                                    <strong>{{ __('Tanggal') }}</strong>
                                                 </td>
                                                 <td style="width: 15%;" id="id" class="noExl noImport">
                                                     <strong>{{ __('Action') }}</strong>
@@ -209,6 +326,158 @@
 
                                         </tfoot>
                                     </table>
+                                    {{-- end table hidden --}}
+                                    {{-- start table detail buku besar --}}
+                                    <table class="table table-hover data-table" id="t_bukuKas_detail" style="display: none">
+                                        <thead class="thead-light">
+                                            <tr id="option_direct_container" style="display: none;" class="noExl">
+                                                <th scope="col" colspan="1">
+                                                    <form id="form_direct_filter">
+                                                        <div class="row">
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Keterangan') }}</label>
+                                                                    <input type="text" id="search_keterangan"
+                                                                        autocomplete="off" name="keterangan"
+                                                                        class="form-control"
+                                                                        placeholder="{{ __('Search Keterangan') }}"
+                                                                        aria-label="{{ __('Search Keterangan') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Nama Perkiraan') }}</label>
+                                                                    <input type="text" id="search_name"
+                                                                        autocomplete="off" name="perkiraan_name"
+                                                                        class="form-control"
+                                                                        placeholder="{{ __('Search Nama Perkiraan') }}"
+                                                                        aria-label="{{ __('Search Nama Perkiraan') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>{{ __('Sortir Berdasarkan') }}</label>
+                                                                <div class="input-group mb-3">
+                                                                    <select name="sort_by" id="sort_by"
+                                                                        class="form-control">
+                                                                        <option value="tanggal" selected>
+                                                                            {{ __('Tanggal') }}</option>
+                                                                        <option value="keterangan">
+                                                                            {{ __('Keterangan') }}</option>
+                                                                        <option value="debet">
+                                                                            {{ __('Debet') }}</option>
+                                                                        <option value="kredit">
+                                                                            {{ __('Kredit') }}</option>
+                                                                    </select>
+                                                                    <select name="sort_by_option" id="sort_by_option"
+                                                                        class="form-control">
+                                                                        <option value="asc" selected>Ascending</option>
+                                                                        <option value="desc">Descending</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
+                                                                <label>Tampilkan</label>
+                                                                <div class="input-group mb-3">
+                                                                    <input type="number" name="limit" id="limit"
+                                                                        class="form-control" value="10">
+                                                                    <div class="input-group-append">
+                                                                        <span class="input-group-text">/page</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-12 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('Rentang Waktu') }}</label>
+                                                                    <div class="input-daterange input-group"
+                                                                        id="date-range">
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="start_date" id="start_date"
+                                                                            placeholder="{{ __('Start Date') }}" />
+                                                                        <div class="input-group-append">
+                                                                            <span
+                                                                                class="input-group-text bg-info b-0 text-white">TO</span>
+                                                                        </div>
+                                                                        <input type="text" autocomplete="off"
+                                                                            class="form-control datepicker"
+                                                                            name="end_date" id="end_date"
+                                                                            placeholder="{{ __('End Date') }}" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12 col-12">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-6 text-left">
+                                                                            <button class="btn btn-filter btn-danger"
+                                                                                id="btn_direct_close"
+                                                                                type="button">{{ __('Tutup') }}</button>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-6 text-right">
+                                                                            <button class="btn btn-filter btn-warning"
+                                                                                type="button"
+                                                                                id="btn_direct_reset">Reset</button>
+                                                                            <button class="btn btn-filter btn-info"
+                                                                                type="submit">{{ __('Cari') }}</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </form>
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <tr>
+                                                    <th class="text-center" colspan="3">Transaksi</th>
+                                                    <th class="text-center" colspan="2">Saldo</th>
+                                                </tr>
+                                                <td style="width:10%;" class="text-center">
+                                                    <strong>{{ __('No') }}</strong>
+                                                </td>
+                                                <td style="width: 20;" class="text-center">
+                                                    <strong>{{ __('Waktu Transaksi') }}</strong>
+                                                </td>
+                                                <td style="width: 15%;" class="text-center">
+                                                    <strong>{{ __('Keterangan') }}</strong>
+                                                </td>
+                                                <td style="width: 15%;" class="text-center">
+                                                    <strong>{{ __('Debit') }}</strong>
+                                                </td>
+                                                </td>
+                                                <td style="width: 15%;" class="text-center">
+                                                    <strong>{{ __('Kredit') }}</strong>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="4" class="text-center">LOADING...</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-center">Jumlah</th>
+                                                <th class="text-center" id="jumlahDebit">-</th>
+                                                <th class="text-center" id="jumlahKredit">-</th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="3" class="text-center">Saldo</th>
+                                                <th class="text-center" colspan="2" id="totalSaldo">-</th>
+                                            </tr>
+
+                                        </tfoot>
+                                    </table>
+                                    {{-- end table detail buku besar --}}
                                 </div>
                             </div>
                         </div>

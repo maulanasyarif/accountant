@@ -1,35 +1,93 @@
 const BukuKasUI = ((SET) => {
     return {
-        __renderDirectData: ({ results }, { search, limit, sort_by, sort_by_option }) => {
-            let body = results.data
+        __renderDirectData: ({ results }) => {
+            let i = 1;
+            let body = results
                 .map((v) => {
                     return `
                     <tr>
-                        <td style="width: 10%;">${v.tanggal}</td>
-                        <td style="width: 15%;">${v.keterangan}</td>
-                        <td style="width: 15%;">${v.perkiraan.perkiraan_name}</td>
-                        <td style="width: 10%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
-                        <td style="width: 10%;">
-                            ${v.debet !== null ? `${SET.__realCurrency(v.debet)}` : '-'}
-                        </td>
-                        <td style="width: 10%;">
-                            ${v.kredit !== null ? `${SET.__realCurrency(v.kredit)}` : '-'}
-                        </td>
-                        <td style="width: 15%;">
-                            ${v.jmlh !== null ? `${SET.__realCurrency(v.jmlh)}` : '-'}
-                        </td>
+                        <td style="width: 10%;">${i++}</td>
+                        <td style="width: 15%;">${v.perkiraan_name}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <a href="${SET.__baseURL()}editBukuKasAdmin/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
-                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
-                            </div>
-                        </td>
+                                <button type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail${
+                                    v.id
+                                }">Detail</button>
                     </tr>
                 `;
                 })
                 .join("");
 
             $("#t_bukuKas tbody").html(body);
+        },
+        __renderDirectDataHidden: (results) => {
+            let i = 1;
+            let body = results.daftar_buku
+                .map((v) => {
+                    return `
+                    <tr>
+                        <td style="width: 10%;">${i++}</td>
+                        <td style="width: 15%;">${SET.__getMonth(v.waktu)}</td>
+                        <td style="width: 15%;" class="noExl noImport">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail${
+                                    v.waktu
+                                }">Detail</button>
+                    </tr>
+                `;
+                })
+                .join("");
+            $("#t_bukuKas_hidden tbody").html(body);
+        },
+        __renderDirectDataDetail: (results) => {
+            $(".d-none").toggleClass("d-flex");
+            $("#nama_akun").html(results.perkiraan.perkiraan_name);
+            $("#periode").html(results.periode);
+            $("#kode_akun").html(results.perkiraan.perkiraan_no);
+
+            let i = 1;
+            let jumlahSaldo = results.perkiraan.perkiraan_no;
+
+            $("#jumlahDebit").html(
+                `Rp. ${SET.__threedigis(results.total_debit)},-`
+            );
+            $("#jumlahKredit").html(
+                `Rp. ${SET.__threedigis(results.total_kredit)},-`
+            );
+            $("#totalSaldo").html(
+                `Rp. ${SET.__threedigis(
+                    jumlahSaldo.toString().substr(0, 1) === "1" ||
+                        jumlahSaldo.toString().substr(0, 1) === "4"
+                        ? results.total_debit - results.total_kredit
+                        : results.total_kredit - results.total_debit
+                )},-`
+            );
+            let body = results.daftar_buku
+                .map((v) => {
+                    return `
+                    <tr>
+                        <td style="width: 10%;" class="text-center">${i++}</td>
+                        <td style="width: 15%;" class="text-center">${
+                            v.tanggal
+                        }</td>
+                        <td style="width: 15%;" class="text-center">${
+                            v.keterangan
+                        }</td>
+                        <td style="width: 15%;" class="text-center">${
+                            v.tipe === "d"
+                                ? `Rp. ${SET.__threedigis(v.jumlah)},-`
+                                : "-"
+                        }</td>
+                        <td style="width: 15%;" class="text-center">${
+                            v.tipe === "k"
+                                ? `Rp. ${SET.__threedigis(v.jumlah)},-`
+                                : "-"
+                        }</td>
+                    </tr>
+                `;
+                })
+                .join("");
+            $("#t_bukuKas_detail tbody").html(body);
         },
 
         __renderDirectFooter: (
@@ -112,8 +170,8 @@ const BukuKasUI = ((SET) => {
         </tr>
     `;
 
-        $("#t_bukuKas tfoot").html(footer);
-    },
+            $("#t_bukuKas tfoot").html(footer);
+        },
 
         __renderDirectNoData: () => {
             let html = `
@@ -146,7 +204,9 @@ const BukuKasUI = ((SET) => {
 const BukuKasController = ((SET, UI) => {
     const __fetchDirectBukuKas = (TOKEN, filter = {}, link = null) => {
         $.ajax({
-            url: `${link === null ? SET.__apiURL() + "admin/get_bukuKas" : link}`,
+            url: `${
+                link === null ? SET.__apiURL() + "admin/get_bukuBesar" : link
+            }`,
             type: "GET",
             dataType: "JSON",
             data: filter,
@@ -156,9 +216,9 @@ const BukuKasController = ((SET, UI) => {
             },
             success: (res) => {
                 $("#count_regencies").text(res.total_all);
-                if (res.results.data.length !== 0) {
+                if (res.results.length !== 0) {
                     UI.__renderDirectData(res, filter);
-                    UI.__renderDirectFooter(res, filter);
+                    // UI.__renderDirectFooter(res, filter);
                 } else {
                     UI.__renderDirectNoData();
                 }
@@ -186,6 +246,104 @@ const BukuKasController = ((SET, UI) => {
                 500: function () {},
             },
         });
+    };
+
+    const __HiddenTipe = (TOKEN) => {
+        var ID = 0;
+        let table = $("#t_bukuKas");
+        let table_hidden = $("#t_bukuKas_hidden");
+        $("#t_bukuKas").on("click", "button", function (e) {
+            ID = this.id.slice(-1);
+            table.hide();
+            table_hidden.show();
+            $.ajax({
+                url: `${SET.__apiURL() + "admin/get_showBukuBesar/" + ID}`,
+                type: "POST",
+                dataType: "JSON",
+                beforeSend: SET.__tableLoader("#t_bukuKasHidden", 8),
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`,
+                },
+                success: (res) => {
+                    $("#count_regencies").text(res.total_all);
+                    if (res.length !== 0) {
+                        UI.__renderDirectDataHidden(res);
+                        // UI.__renderDirectFooter(res, filter);
+                    } else {
+                        UI.__renderDirectNoData();
+                    }
+                },
+                error: (err) => {},
+                complete: () => {},
+                statusCode: {
+                    404: function () {
+                        toastr.error(
+                            "Endpoint Not Found",
+                            "Failed 404",
+                            SET.__bottomNotif()
+                        );
+                    },
+                    422: function () {
+                        toastr.error(
+                            "Please Check Input Name or Value",
+                            "Failed 422",
+                            SET.__bottomNotif()
+                        );
+                    },
+                    401: function () {
+                        window.location.href = `${SET.__baseURL()}delete_session`;
+                    },
+                    500: function () {},
+                },
+            });
+        }),
+            $("#t_bukuKas_hidden").on("click", "button", function (e) {
+                table_hidden.hide();
+                $("#t_bukuKas_detail").show();
+                const waktu = this.id.slice(-6);
+                $.ajax({
+                    url: `${
+                        SET.__apiURL() + "admin/get_detailBukuBesar/" + ID
+                    }/${waktu}`,
+                    type: "POST",
+                    dataType: "JSON",
+                    beforeSend: SET.__tableLoader("#t_bukuKas_detail", 8),
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`,
+                    },
+                    success: (res) => {
+                        $("#count_regencies").text(res.total_all);
+                        if (res.length !== 0) {
+                            UI.__renderDirectDataDetail(res);
+                            // UI.__renderDirectFooter(res, filter);
+                        } else {
+                            UI.__renderDirectNoData();
+                        }
+                    },
+                    error: (err) => {},
+                    complete: () => {},
+                    statusCode: {
+                        404: function () {
+                            toastr.error(
+                                "Endpoint Not Found",
+                                "Failed 404",
+                                SET.__bottomNotif()
+                            );
+                        },
+                        422: function () {
+                            toastr.error(
+                                "Please Check Input Name or Value",
+                                "Failed 422",
+                                SET.__bottomNotif()
+                            );
+                        },
+                        401: function () {
+                            window.location.href = `${SET.__baseURL()}delete_session`;
+                        },
+                        500: function () {},
+                    },
+                });
+            });
     };
 
     const __pluginDirectInitPerkiraan = (TOKEN) => {
@@ -366,106 +524,106 @@ const BukuKasController = ((SET, UI) => {
 
     const __fetchDetailBukuKas = (TOKEN, id, callback) => {
         $.ajax({
-            url: `${SET.__apiURL()}admin/detailbukuKas/${id}`,
-            type: 'GET',
-            dataType: 'JSON',
+            url: `${SET.__apiURL()}admin/get_showBukuBesar/${id}`,
+            type: "GET",
+            dataType: "JSON",
             headers: {
-                'Authorization': `Bearer ${TOKEN}`
+                Authorization: `Bearer ${TOKEN}`,
             },
             success: (res) => {
                 callback(res.results);
             },
-            error: err => {
-
-            },
-            complete: () => {
-
-            },
+            error: (err) => {},
+            complete: () => {},
             statusCode: {
                 404: function () {
-                    toastr.error("Endpoint Not Found", "Failed 404", SET.__bottomNotif());
+                    toastr.error(
+                        "Endpoint Not Found",
+                        "Failed 404",
+                        SET.__bottomNotif()
+                    );
                 },
                 401: function () {
                     window.location.href = `${SET.__baseURL()}delete_session`;
                 },
-                500: function () {
-
-                }
-            }
-        })
-    }
+                500: function () {},
+            },
+        });
+    };
 
     const __submitUpdateBukuKas = (TOKEN, id) => {
         var url = window.location.pathname;
-        var id = url.substring(url.lastIndexOf('/') + 1);
+        var id = url.substring(url.lastIndexOf("/") + 1);
 
-        $("#form_edit_kas").on('submit', function(e){
-            e.preventDefault()
-        }).validate({
-            errorElement: "div",
-            errorPlacement: function (error, element) {
-                error.addClass("invalid-feedback");
-                error.insertAfter(element);
-            },
-            rules: {
-                tanggal: 'required',
-                keterangan: 'required',
-                debet_id: 'required',
-                kredit_id: 'required',
-                jumlah: 'required'
-            },
-            submitHandler: form => {
-                $.ajax({
-                    url: `${SET.__apiURL()}admin/updatebukuKas/${id}`,
-                    type: "POST",
-                    dataType: "JSON",
-                    data: new FormData(form),
-                    contentType: false,
-                    processData: false,
-                    beforeSend: xhr => {
-                        SET.__buttonLoader("#btn_update_kas");
-                    },
-                    headers: {
-                        Authorization: `Bearer ${TOKEN}`
-                    },
-                    success: (res) => {
-                        window.location.href = `${SET.__baseURL()}bukuKasAdmin`;
-                        toastr.success(
-                            "Success",
-                            res.message,
-                            SET.__bottomNotif()
-                        );
-                    },
-                    error: err => {
-                        let error = err.responseJSON;
+        $("#form_edit_kas")
+            .on("submit", function (e) {
+                e.preventDefault();
+            })
+            .validate({
+                errorElement: "div",
+                errorPlacement: function (error, element) {
+                    error.addClass("invalid-feedback");
+                    error.insertAfter(element);
+                },
+                rules: {
+                    tanggal: "required",
+                    keterangan: "required",
+                    debet_id: "required",
+                    kredit_id: "required",
+                    jumlah: "required",
+                },
+                submitHandler: (form) => {
+                    $.ajax({
+                        url: `${SET.__apiURL()}admin/updatebukuKas/${id}`,
+                        type: "POST",
+                        dataType: "JSON",
+                        data: new FormData(form),
+                        contentType: false,
+                        processData: false,
+                        beforeSend: (xhr) => {
+                            SET.__buttonLoader("#btn_update_kas");
+                        },
+                        headers: {
+                            Authorization: `Bearer ${TOKEN}`,
+                        },
+                        success: (res) => {
+                            window.location.href = `${SET.__baseURL()}bukuKasAdmin`;
+                            toastr.success(
+                                "Success",
+                                res.message,
+                                SET.__bottomNotif()
+                            );
+                        },
+                        error: (err) => {
+                            let error = err.responseJSON;
 
-                        toastr.error(
-                            "Failed",
-                            error.message,
-                            SET.__bottomNotif()
-                        );
-                    },
-                });
-            }
-        });
-    }
+                            toastr.error(
+                                "Failed",
+                                error.message,
+                                SET.__bottomNotif()
+                            );
+                        },
+                    });
+                },
+            });
+    };
 
-    const __pluginInit = TOKEN => {
+    const __pluginInit = (TOKEN) => {
         $(".datepicker").datepicker({
-            format: 'yyyy-mm-dd',
+            format: "yyyy-mm-dd",
             autoclose: true,
             todayHighlight: true,
         });
 
-        $("#start_date").on('changeDate', function (selected) {
+        $("#start_date").on("changeDate", function (selected) {
             let startDate = new Date(selected.date.valueOf());
 
-            $("#end_date").datepicker('setStartDate', startDate);
+            $("#end_date").datepicker("setStartDate", startDate);
             if ($("#start_date").val() > $("#end_date").val()) {
                 $("#end_date").val($("#start_date").val());
             }
         });
-    }
+    };
 
     const __openDelete = () => {
         $("#t_bukuKas, #options").on("click", ".btn-delete", function () {
@@ -485,7 +643,7 @@ const BukuKasController = ((SET, UI) => {
     //         $("#edit_id").val(edit_id);
     //         $('#modal_edit').modal('show');
     //     });
-    // }    
+    // }
 
     const __openAdd = () => {
         $("#btn_add").on("click", function () {
@@ -518,16 +676,16 @@ const BukuKasController = ((SET, UI) => {
         $("#form_direct_filter").on("submit", function (e) {
             e.preventDefault();
 
-                filter.keterangan = $('#search_keterangan').val()
-                filter.name = $('#search_name').val()
-                filter.start_date = $('#start_date').val()
-                filter.end_date = $('#end_date').val()
+            filter.keterangan = $("#search_keterangan").val();
+            filter.name = $("#search_name").val();
+            filter.start_date = $("#start_date").val();
+            filter.end_date = $("#end_date").val();
 
-                filter.sort_by = $("#sort_by").val()
-                filter.sort_by_option = $("#sort_by_option").val()
-                filter.limit = $("#limit").val()
+            filter.sort_by = $("#sort_by").val();
+            filter.sort_by_option = $("#sort_by_option").val();
+            filter.limit = $("#limit").val();
 
-                __fetchDirectBukuKas(TOKEN, filter, null);
+            __fetchDirectBukuKas(TOKEN, filter, null);
         });
     };
 
@@ -567,10 +725,10 @@ const BukuKasController = ((SET, UI) => {
 
             __openAdd();
             __submitAdd(TOKEN);
-            
+
             // __openEdit(TOKEN);
             // __getDetail(TOKEN, id);
-            
+
             __openDelete();
             __submitDelete(TOKEN, direct_filter);
 
@@ -578,31 +736,13 @@ const BukuKasController = ((SET, UI) => {
             __submitDirectFilter(TOKEN, direct_filter);
             __resetDirectFilter(TOKEN);
             __fetchDirectBukuKas(TOKEN, direct_filter, null);
-            __clickDirectPagination(TOKEN, direct_filter)
-            __closeDirectFilter(TOKEN)
-            __pluginDirectInitPerkiraan(TOKEN)
+            __clickDirectPagination(TOKEN, direct_filter);
+            __closeDirectFilter(TOKEN);
+            __pluginDirectInitPerkiraan(TOKEN);
 
             __submitUpdateBukuKas(TOKEN, id);
 
+            __HiddenTipe(TOKEN);
         },
-
-        detail: (TOKEN, id) => {
-            __fetchDetailBukuKas(TOKEN, id, data => {
-                $('#fetch_tanggal').text(data.tanggal);
-                $('#fetch_keterangan').text(data.keterangan);
-                $('#fetch_noPerkiraan').text(data.perkiraan.perkiraan_no);
-                $('#fetch_namaPerkiraan').text(data.perkiraan.perkiraan_name);
-                $('#fetch_debet').text(data.debet !== null ? `${SET.__threedigis(data.debet)}` : '-');
-                $('#fetch_kredit').text(data.kredit !== null ? `${SET.__threedigis(data.kredit)}` : '-');
-
-                //edit kas
-                $('#tanggal').val(data.tanggal);
-                $('#keterangan').val(data.keterangan);
-                $('#debet').val(data.debet);
-                $('#kredit').val(data.kredit);
-            })
-        }
-        
     };
-
-})(SettingController, BukuKasUI)
+})(SettingController, BukuKasUI);
