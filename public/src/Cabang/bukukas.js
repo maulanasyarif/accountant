@@ -8,23 +8,12 @@ const KasUI = ((SET) => {
                 .map((v) => {
                     return `
                     <tr>
-                        <td style="width: 10%;">${v.tanggal}</td>
-                        <td style="width: 15%;">${v.keterangan}</td>
-                        <td style="width: 15%;">${v.perkiraan.perkiraan_name}</td>
-                        <td style="width: 10%;">${SET.__threedigis(v.perkiraan.perkiraan_no)}</td>
-                        <td style="width: 10%;">
-                            ${v.debet !== null ? `${SET.__realCurrency(v.debet)}` : '-'}
-                        </td>
-                        <td style="width: 10%;">
-                            ${v.kredit !== null ? `${SET.__realCurrency(v.kredit)}` : '-'}
-                        </td>
-                        <td style="width: 15%;">
-                            ${v.jmlh !== null ? `${SET.__realCurrency(v.jmlh)}` : '-'}
-                        </td>
+                        <td style="width: 15%;">${v.perkiraan_name}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <a href="${SET.__baseURL()}editBukuKasCabang/${v.id}" type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
-                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
+                                <button type="button" class="btn btn-sm btn-warning waves-effect"
+                                    id="btn_detail${v.id}" name="${v.id}">Detail
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -33,6 +22,77 @@ const KasUI = ((SET) => {
                 .join("");
 
             $("#t_bukuKas tbody").html(body);
+        },
+
+        __renderDirectDataHidden: (results) => {
+            let i = 1;
+            let body = results.daftar_buku
+                .map((v) => {
+                    return `
+                    <tr>
+                        <td style="width: 10%;">${i++}</td>
+                        <td style="width: 15%;">${SET.__getMonth(v.waktu)}</td>
+                        <td style="width: 15%;" class="noExl noImport">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-sm btn-warning waves-effect"
+                                    id="btn_detail${v.waktu}" name="${v.waktu}">Detail</button>
+                    </tr>
+                `;
+                })
+                .join("");
+            $("#t_bukuKas_hidden tbody").html(body);
+        },
+
+        __renderDirectDataDetail: (results) => {
+            $(".d-none").toggleClass("d-flex");
+            $("#nama_akun").html(results.perkiraan.perkiraan_name);
+            $("#periode").html(results.periode);
+            $("#kode_akun").html(results.perkiraan.perkiraan_no);
+
+            let i = 1;
+            let jumlahSaldo = results.perkiraan.perkiraan_no;
+
+            $("#jumlahDebit").html(
+                `Rp. ${SET.__threedigis(results.total_debit)},-`
+            );
+            $("#jumlahKredit").html(
+                `Rp. ${SET.__threedigis(results.total_kredit)},-`
+            );
+            $("#totalSaldo").html(
+                `Rp. ${SET.__threedigis(
+                    jumlahSaldo.toString().substr(0, 1) === "1" ||
+                        jumlahSaldo.toString().substr(0, 1) === "4"
+                        ? results.total_debit - results.total_kredit
+                        : results.total_kredit - results.total_debit
+                )},-`
+            );
+            let body = results.daftar_buku
+                .map((v) => {
+                    return `
+                    <tr>
+                        <td style="width: 10%;" class="text-center">${i++}</td>
+                        <td style="width: 15%;" class="text-center">${
+                            v.tanggal
+                        }</td>
+                        <td style="width: 15%;" class="text-center">${
+                            v.keterangan
+                        }</td>
+                        <td style="width: 15%;" class="text-center">${
+                            v.tipe === "d"
+                                ? `Rp. ${SET.__threedigis(v.jumlah)},-`
+                                : "-"
+                        }</td>
+                        <td style="width: 15%;" class="text-center">${
+                            v.tipe === "k"
+                                ? `Rp. ${SET.__threedigis(v.jumlah)},-`
+                                : "-"
+                        }</td>
+                    </tr>
+                `;
+                })
+                .join("");
+
+            $("#t_bukuKas_detail tbody").html(body);
         },
 
         __renderDirectFooter: (
@@ -146,7 +206,7 @@ const KasController = ((SET, UI) => {
     const __fetchDirectKas = (TOKEN, filter = {}, link = null) => {
         $.ajax({
             url: `${
-                link === null ? SET.__apiURL() + "cabang/get_bukukas" : link
+                link === null ? SET.__apiURL() + "cabang/get_bukuBesar" : link
             }`,
             type: "GET",
             dataType: "JSON",
@@ -187,6 +247,107 @@ const KasController = ((SET, UI) => {
                 500: function () {},
             },
         });
+    };
+
+    const __HiddenTipe = (TOKEN) => {
+        var ID = 0;
+        let table = $("#t_bukuKas");
+        let table_hidden = $("#t_bukuKas_hidden");
+        let filter = $("#btn_direct_option");
+        $("#t_bukuKas tbody").on("click", "button", function (e) {
+            // ID = this.id.slice(-1);
+            ID = this.name;
+            table.hide();
+            filter.hide();
+            table_hidden.show();
+            $.ajax({
+                url: `${SET.__apiURL() + "cabang/get_showBukuBesar/" + ID}`,
+                type: "POST",
+                dataType: "JSON",
+                beforeSend: SET.__tableLoader("#t_bukuKasHidden", 8),
+                headers: {
+                    Authorization: `Bearer ${TOKEN}`,
+                },
+                success: (res) => {
+                    $("#count_regencies").text(res.total_all);
+                    if (res.length !== 0) {
+                        UI.__renderDirectDataHidden(res);
+                        // UI.__renderDirectFooter(res, filter);
+                    } else {
+                        UI.__renderDirectNoData();
+                    }
+                },
+                error: (err) => {},
+                complete: () => {},
+                statusCode: {
+                    404: function () {
+                        toastr.error(
+                            "Endpoint Not Found",
+                            "Failed 404",
+                            SET.__bottomNotif()
+                        );
+                    },
+                    422: function () {
+                        toastr.error(
+                            "Please Check Input Name or Value",
+                            "Failed 422",
+                            SET.__bottomNotif()
+                        );
+                    },
+                    401: function () {
+                        window.location.href = `${SET.__baseURL()}delete_session`;
+                    },
+                    500: function () {},
+                },
+            });
+        }),
+            $("#t_bukuKas_hidden").on("click", "button", function (e) {
+                table_hidden.hide();
+                filter.hide();
+                $("#t_bukuKas_detail").show();
+                // const waktu = this.id.slice(-6);
+                const waktu = this.name;
+                $.ajax({
+                    url: `${SET.__apiURL() + "cabang/get_detailBukuBesar/" + ID }/${waktu}`,
+                    type: "POST",
+                    dataType: "JSON",
+                    beforeSend: SET.__tableLoader("#t_bukuKas_detail", 8),
+                    headers: {
+                        Authorization: `Bearer ${TOKEN}`,
+                    },
+                    success: (res) => {
+                        $("#count_regencies").text(res.total_all);
+                        if (res.length !== 0) {
+                            UI.__renderDirectDataDetail(res);
+                            // UI.__renderDirectFooter(res, filter);
+                        } else {
+                            UI.__renderDirectNoData();
+                        }
+                    },
+                    error: (err) => {},
+                    complete: () => {},
+                    statusCode: {
+                        404: function () {
+                            toastr.error(
+                                "Endpoint Not Found",
+                                "Failed 404",
+                                SET.__bottomNotif()
+                            );
+                        },
+                        422: function () {
+                            toastr.error(
+                                "Please Check Input Name or Value",
+                                "Failed 422",
+                                SET.__bottomNotif()
+                            );
+                        },
+                        401: function () {
+                            window.location.href = `${SET.__baseURL()}delete_session`;
+                        },
+                        500: function () {},
+                    },
+                });
+            });
     };
 
     const __pluginDirectInitPerkiraan = (TOKEN) => {
@@ -557,9 +718,9 @@ const KasController = ((SET, UI) => {
                 limit: $("#direct_filter_limit").val(),
             };
 
-            $("input[type=text]").autocomplete({
-                disabled: true,
-            });
+            // $("input[type=text]").autocomplete({
+            //     disabled: true,
+            // });
 
             SET.__openOption();
             SET.__closeGlobalLoader();
@@ -583,6 +744,10 @@ const KasController = ((SET, UI) => {
             __pluginDirectInitPerkiraan(TOKEN);
 
             __submitUpdateBukuKas(TOKEN, id);
+
+            __fetchDetailBukuKas(TOKEN, id);
+
+            __HiddenTipe(TOKEN);
         },
 
         detail: (TOKEN, id) => {

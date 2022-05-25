@@ -23,7 +23,9 @@
                         <li class="breadcrumb-item" aria-current="page">
                             <a href="{{ url('dashboard') }}">{{ __('Dasbor') }}</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">{{ __('Buku Kas') }}</li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            <a href="{{ url('bukuKas') }}">{{ __('Buku Kas') }}</a>
+                        </li>
                     </ol>
                 </nav>
             </div>
@@ -34,20 +36,6 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-
-            <!-- <div class="card bg-blue round-card">
-                <div class="card-body text-white">
-                    <div class="d-flex flex-row">
-                        <div class="p-10 align-self-center">
-                            <h4 class="m-b-0">Total Daftar Perkiraan</h4>
-                            <span>{{ __('Semua') }}</span>
-                        </div>
-                        <div class="ml-auto align-self-center">
-                            <h2 class="font-medium m-b-0" id="count_regencies">0</h2>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
 
             <div class="tab-content tabcontent-border">
 
@@ -67,15 +55,21 @@
                                                 <button class="btn btn-success btn-md" id="export_excel">Excel</button>
                                                 <button class="btn btn-danger btn-md" id="export_pdf">PDF</button>
                                             </div>
-                                            <div class="btn-group">
+                                            <!-- <div class="btn-group">
                                                 <button class="btn btn-info btn-md" id="btn_add"><i
                                                         class="fas fa-plus"></i>
                                                     {{ __('Tambah') }}</button> 
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
                                 
+                                <div class="justify-content-between m-3 d-none">
+                                    <h4>Nama Akun: <b id="nama_akun"></b></h4>
+                                    <h4>Periode: <b id="periode"></b></h4>
+                                    <h4>Kode Akun: <b id="kode_akun"></b></h4>
+                                </div>
+
                                 <div class="table-responsive">
                                     <table class="table table-hover data-table" id="t_bukuKas">
                                         <thead class="thead-light">
@@ -83,18 +77,6 @@
                                                 <th scope="col" colspan="8">
                                                     <form id="form_direct_filter">
                                                         <div class="row">
-
-                                                            <div class="col-lg-6 col-12">
-                                                                <div class="form-group">
-                                                                    <label for="">{{ __('Keterangan') }}</label>
-                                                                    <input type="text" id="search_keterangan"
-                                                                        autocomplete="off" name="keterangan"
-                                                                        class="form-control"
-                                                                        placeholder="{{ __('Search Keterangan') }}"
-                                                                        aria-label="{{ __('Search Keterangan') }}"
-                                                                        aria-describedby="basic-addon1">
-                                                                </div>
-                                                            </div>
 
                                                             <div class="col-lg-6 col-12">
                                                                 <div class="form-group">
@@ -109,14 +91,25 @@
                                                             </div>
 
                                                             <div class="col-lg-6 col-12">
+                                                                <div class="form-group">
+                                                                    <label for="">{{ __('No Perkiraan') }}</label>
+                                                                    <input type="text" id="search_no" autocomplete="off"
+                                                                        name="perkiraan_no" class="form-control"
+                                                                        placeholder="{{ __('Search No Perkiraan') }}"
+                                                                        aria-label="{{ __('Search No Perkiraan') }}"
+                                                                        aria-describedby="basic-addon1">
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-lg-6 col-12">
                                                                 <label>{{ __('Sortir Berdasarkan') }}</label>
                                                                 <div class="input-group mb-3">
                                                                     <select name="sort_by" id="sort_by"
                                                                         class="form-control">
-                                                                        <option value="tanggal" selected>
-                                                                            {{ __('Tanggal') }}</option>
-                                                                        <option value="keterangan">
-                                                                            {{ __('Keterangan') }}</option>
+                                                                        <option value="perkiraan_name" selected>
+                                                                            {{ __('Nama Perkiraan') }}</option>
+                                                                        <option value="perkiraan_no">
+                                                                            {{ __('No Perkiraan') }}</option>
                                                                     </select>
                                                                     <select name="sort_by_option" id="sort_by_option"
                                                                         class="form-control">
@@ -182,29 +175,40 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <td style="width:10%;" id="id">
-                                                    <strong>{{ __('Tanggal') }}</strong>
-                                                </td>
+                                                <!-- <td style="width:10%;" id="id">
+                                                    <strong>{{ __('No') }}</strong>
+                                                </td> -->
                                                 <td style="width: 15;" id="id">
                                                     <strong>{{ __('Keterangan') }}</strong>
                                                 </td>
+                                                <td style="width: 15%;" id="id" class="noExl noImport">
+                                                    <strong>{{ __('Action') }}</strong>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="2" class="text-center">LOADING...</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+
+                                        </tfoot>
+                                    </table>
+
+                                    <!-- start table hidden  -->
+                                    <table class="table table-hover data-table" id="t_bukuKas_hidden" style="display: none">
+                                        <thead class="thead-light">
+                                            <tr id="option_direct_container" style="display: none;" class="noExl">
+                                                <th scope="col" colspan="8">
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <td style="width:10%;" id="id">
+                                                    <strong>{{ __('No') }}</strong>
+                                                </td>
                                                 <td style="width: 15;" id="id">
-                                                    <strong>{{ __('Nama Perkiraan') }}</strong>
-                                                </td>
-                                                <td style="width: 10;" id="id">
-                                                    <strong>{{ __('No Perkiraan') }}</strong>
-                                                </td>
-                                                <td style="width: 10%;" id="id">
-                                                    <strong>{{ __('Debet') }}</strong>
-                                                    <p>(IDR)</p>
-                                                </td>
-                                                <td style="width: 10%;" id="id">
-                                                    <strong>{{ __('Kredit') }}</strong>
-                                                    <p>(IDR)</p>
-                                                </td>
-                                                <td style="width: 15%;" id="id">
-                                                    <strong>{{ __('Saldo') }}</strong>
-                                                    <p>(IDR)</p>
+                                                    <strong>{{ __('Tanggal') }}</strong>
                                                 </td>
                                                 <td style="width: 15%;" id="id" class="noExl noImport">
                                                     <strong>{{ __('Action') }}</strong>
@@ -220,6 +224,57 @@
 
                                         </tfoot>
                                     </table>
+                                    <!-- end table hidden 
+                                    start table detail buku besar  -->
+                                    <table class="table table-hover data-table" id="t_bukuKas_detail" style="display: none">
+                                        <thead class="thead-light">
+                                            <tr id="option_direct_container" style="display: none;" class="noExl">
+                                                <th scope="col" colspan="1">
+                                                    
+                                                </th>
+                                            </tr>
+                                            <tr>
+                                                <tr>
+                                                    <th class="text-center" colspan="3">Transaksi</th>
+                                                    <th class="text-center" colspan="2">Saldo</th>
+                                                </tr>
+                                                <td style="width:10%;" class="text-center">
+                                                    <strong>{{ __('No') }}</strong>
+                                                </td>
+                                                <td style="width: 20;" class="text-center">
+                                                    <strong>{{ __('Waktu Transaksi') }}</strong>
+                                                </td>
+                                                <td style="width: 15%;" class="text-center">
+                                                    <strong>{{ __('Keterangan') }}</strong>
+                                                </td>
+                                                <td style="width: 15%;" class="text-center">
+                                                    <strong>{{ __('Debit') }}</strong>
+                                                </td>
+                                                </td>
+                                                <td style="width: 15%;" class="text-center">
+                                                    <strong>{{ __('Kredit') }}</strong>
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="4" class="text-center">LOADING...</td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-center">Jumlah</th>
+                                                <th class="text-center" id="jumlahDebit">-</th>
+                                                <th class="text-center" id="jumlahKredit">-</th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="3" class="text-center">Saldo</th>
+                                                <th class="text-center" colspan="2" id="totalSaldo">-</th>
+                                            </tr>
+
+                                        </tfoot>
+                                    </table>
+                                    <!-- end table detail buku besar  -->
                                 </div>
                             </div>
                         </div>
@@ -271,60 +326,6 @@
                     <button type="button" class="btn btn-danger waves-effect"
                         data-dismiss="modal">{{ __('Tutup') }}</button>
                     <button type="submit" class="btn btn-info waves-effect" id="btn_submit">{{ __('Simpan') }}</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-</form>
-
-<!-- modal edit -->
-<form id="form_edit">
-    <div id="modal_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">{{ __('Edit Kas') }}</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="form-group">
-                        <label for="">Tanggal</label>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control"/>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="">{{ __('Keterangan') }}</label>
-                        <input type="text" name="keterangan" id="keterangan" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Debit') }}</label>
-                        <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
-                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Kredit') }}</label>
-                        <select name="kredit_id" id="direct_kredit" class="form-control" style="width: 100%;">
-                            <option value="">-- {{ __('Select Perkiraan') }} --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="">{{ __('Jumlah') }}</label>
-                        <input type="text" name="jumlah" id="jumlah" class="form-control">
-                    </div>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger waves-effect"
-                        data-dismiss="modal">{{ __('Tutup') }}</button>
-                    <button type="submit" class="btn btn-info waves-effect" id="btn_edit">{{ __('Update') }}</button>
                 </div>
             </div>
             <!-- /.modal-content -->

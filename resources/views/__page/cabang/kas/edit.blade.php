@@ -45,11 +45,11 @@
                     <h6 class="text-muted p-t-30 db">Keterangan</h6>
                     <h6 id="fetch_keterangan">-</h6>
                     
-                    <h6 class="text-muted p-t-30 db">Debet</h6>
-                    <h6 id="fetch_debet">-</h6>
+                    <h6 class="text-muted p-t-30 db">Nama Perkiraan</h6>
+                    <h6 id="fetch_perkiraan_name">-</h6>
                     
-                    <h6 class="text-muted p-t-30 db">Kredit</h6>
-                    <h6 id="fetch_kredit">-</h6>
+                    <h6 class="text-muted p-t-30 db">Tipe</h6>
+                    <h6 id="fetch_tipe">-</h6>
                     
                     <h6 class="text-muted p-t-30 db">Jumlah</h6>
                     <h6 id="fetch_jumlah">-</h6>
@@ -81,16 +81,18 @@
                         </div>
     
                         <div class="form-group">
-                            <label for="">{{ __('Debet') }}</label>
-                            <select name="debet_id" id="direct_debit" class="form-control" style="width: 100%;">
+                            <label for="">{{ __('Perkiraan') }}</label>
+                            <select name="perkiraan_id" id="direct_perkiraan" class="form-control" style="width: 100%;">
                                 <option value="">-- {{ __('Select Perkiraan') }} --</option>
                             </select>
                         </div>
     
                         <div class="form-group">
-                            <label for="">{{ __('Kredit') }}</label>
-                            <select name="kredit_id" id="direct_kredit" class="form-control" style="width: 100%;">
+                            <label for="">{{ __('Tipe') }}</label>
+                            <select name="tipe" class="form-control" style="width: 100%;">
                                 <option value="">-- {{ __('Select Perkiraan') }} --</option>
+                                <option value="d">{{ __('Debet') }}</option>
+                                <option value="k">{{ __('Kredit') }}</option>
                             </select>
                         </div>
     

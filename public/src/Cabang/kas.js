@@ -8,7 +8,8 @@ const KasUI = ((SET) => {
                     <td style="width: 15%;">${SET.__getMonth(v.waktu)}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                            <button type="button" class="btn btn-sm btn-primary waves-effect" id="btn_detail" name="${v.waktu}">Detail</button>
+                            <button type="button" class="btn btn-sm btn-primary waves-effect"
+                                id="btn_detail" name="${v.waktu}">Detail</button>
                             </div>
                         </td>
                     </tr>
@@ -52,7 +53,8 @@ const KasUI = ((SET) => {
                             <div class="btn-group">
                                 <a href="${SET.__baseURL()}editjurnalUmumCabang/${v.id}" type="button"
                                     class="btn btn-sm btn-warning waves-effect" id="btn_detail">Detail</a>
-                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}" data-name="${v.keterangan}">Delete</button>
+                                <button class="btn btn-sm btn-danger btn-delete" data-id="${v.id}"
+                                    data-name="${v.keterangan}">Delete</button>
                             </div>
                         </td>
                     </tr>
@@ -613,7 +615,7 @@ const KasController = ((SET, UI) => {
     };
 
     const __openDelete = () => {
-        $("#t_jurnalUmum, #options").on("click", ".btn-delete", function () {
+        $("#t_detailJurnalUmum, #options").on("click", ".btn-delete", function () {
             let delete_id = $(this).data("id");
             let delete_name = $(this).data("name");
 
@@ -725,38 +727,18 @@ const KasController = ((SET, UI) => {
 
         detail: (TOKEN, id) => {
             __fetchDetailKas(TOKEN, id, (data) => {
-                $("#fetch_tanggal").text(data.tanggal);
-                $("#fetch_keterangan").text(data.keterangan);
-                $("#fetch_debet").text(
-                    data.debet !== null
-                        ? `${SET.__threedigis(data.debet[0].perkiraan_no)}`
-                        : "-"
-                );
-                $("#fetch_kredit").text(
-                    data.kredit !== null
-                        ? `${SET.__threedigis(data.kredit[0].perkiraan_no)}`
-                        : "-"
-                );
-                $("#fetch_jumlah").text(
-                    data.jumlah !== null
-                        ? `IDR ${SET.__realCurrency(data.jumlah)}`
-                        : "-"
-                );
+                $('#fetch_tanggal').text(data.tanggal);
+                $('#fetch_keterangan').text(data.keterangan);
+                $('#fetch_perkiraan_name').text(data.perkiraan.perkiraan_name);
+                $('#fetch_tipe').text(data.tipe !== 'd' ? `Kredit` : 'Debet');
+                $('#fetch_jumlah').text(data.jumlah !== null ? `IDR ${SET.__realCurrency(data.jumlah)}` : '-');
 
                 //edit jurnal
-                $("#tanggal").val(data.tanggal);
-                $("#keterangan").val(data.keterangan);
-                $("#debet").val(
-                    data.debet !== null
-                        ? `${SET.__threedigis(data.debet[0].perkiraan_no)}`
-                        : "-"
-                );
-                $("#kredit").val(
-                    data.kredit !== null
-                        ? `${SET.__threedigis(data.kredit[0].perkiraan_no)}`
-                        : "-"
-                );
-                $("#jumlah").val(data.jumlah);
+                $('#tanggal').val(data.tanggal);
+                $('#keterangan').val(data.keterangan);
+                $('#perkiraan').val(data.perkiraan.perkiraan_name);
+                $('#tipe').val(data.tipe !== 'd' ? `Kredit` : 'Debet');
+                $('#jumlah').val(data.jumlah);
             });
         },
     };

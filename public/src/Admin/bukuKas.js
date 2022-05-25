@@ -13,6 +13,7 @@ const BukuKasUI = ((SET) => {
                                     id="btn_detail${v.id}" name="${v.id}">Detail
                                 </button>
                             </div>
+                        </td>
                     </tr>
                 `;
                 })
@@ -32,13 +33,14 @@ const BukuKasUI = ((SET) => {
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-warning waves-effect" id="btn_detail${
                                     v.waktu
-                                }">Detail</button>
+                                }" name="${v.waktu}">Detail</button>
                     </tr>
                 `;
                 })
                 .join("");
             $("#t_bukuKas_hidden tbody").html(body);
         },
+
         __renderDirectDataDetail: (results) => {
             $(".d-none").toggleClass("d-flex");
             $("#nama_akun").html(results.perkiraan.perkiraan_name);
@@ -67,26 +69,23 @@ const BukuKasUI = ((SET) => {
                     return `
                     <tr>
                         <td style="width: 10%;" class="text-center">${i++}</td>
-                        <td style="width: 15%;" class="text-center">${
-                            v.tanggal
-                        }</td>
-                        <td style="width: 15%;" class="text-center">${
-                            v.keterangan
-                        }</td>
-                        <td style="width: 15%;" class="text-center">${
-                            v.tipe === "d"
-                                ? `Rp. ${SET.__threedigis(v.jumlah)},-`
-                                : "-"
-                        }</td>
-                        <td style="width: 15%;" class="text-center">${
-                            v.tipe === "k"
-                                ? `Rp. ${SET.__threedigis(v.jumlah)},-`
-                                : "-"
-                        }</td>
+                        <td style="width: 15%;" class="text-center">
+                            ${v.tanggal}
+                        </td>
+                        <td style="width: 15%;" class="text-center">
+                            ${v.keterangan}
+                        </td>
+                        <td style="width: 15%;" class="text-center">
+                            ${v.tipe === "d" ? `Rp. ${SET.__threedigis(v.jumlah)},-` : "-"}
+                        </td>
+                        <td style="width: 15%;" class="text-center">
+                            ${v.tipe === "k" ? `Rp. ${SET.__threedigis(v.jumlah)},-` : "-"}
+                        </td>
                     </tr>
                 `;
                 })
                 .join("");
+
             $("#t_bukuKas_detail tbody").html(body);
         },
 
@@ -252,10 +251,13 @@ const BukuKasController = ((SET, UI) => {
         var ID = 0;
         let table = $("#t_bukuKas");
         let table_hidden = $("#t_bukuKas_hidden");
+        let filter = $("#btn_direct_option");
+
         $("#t_bukuKas tbody").on("click", "button", function (e) {
             // ID = this.id.slice(-1);
             ID = this.name;
             table.hide();
+            filter.hide();
             table_hidden.show();
             $.ajax({
                 url: `${SET.__apiURL() + "admin/get_showBukuBesar/" + ID}`,
@@ -300,8 +302,10 @@ const BukuKasController = ((SET, UI) => {
         }),
             $("#t_bukuKas_hidden").on("click", "button", function (e) {
                 table_hidden.hide();
+                filter.hide();
                 $("#t_bukuKas_detail").show();
-                const waktu = this.id.slice(-6);
+                // const waktu = this.id.slice(-6);
+                const waktu = this.name;
                 $.ajax({
                     url: `${
                         SET.__apiURL() + "admin/get_detailBukuBesar/" + ID
@@ -556,8 +560,7 @@ const BukuKasController = ((SET, UI) => {
         var url = window.location.pathname;
         var id = url.substring(url.lastIndexOf("/") + 1);
 
-        $("#form_edit_kas")
-            .on("submit", function (e) {
+        $("#form_edit_kas").on("submit", function (e) {
                 e.preventDefault();
             })
             .validate({

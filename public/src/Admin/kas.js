@@ -8,7 +8,8 @@ const KasUI = ((SET) => {
                         <td style="width: 15%;">${SET.__getMonth(v.waktu)}</td>
                         <td style="width: 15%;" class="noExl noImport">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-sm btn-primary waves-effect" id="btn_detail" name="${v.waktu}">Detail</button>
+                                <button type="button" class="btn btn-sm btn-primary waves-effect"
+                                    id="btn_detail" name="${v.waktu}">Detail</button>
                             </div>
                         </td>
                     </tr>
