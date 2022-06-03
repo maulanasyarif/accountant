@@ -1,7 +1,7 @@
 const KasUI = ((SET) => {
     return {
         __renderDirectData: ({ results }, { search, limit, sort_by, sort_by_option }) => {
-            let body = results
+            let body = results.data
                 .map((v) => {
                     return `
                     <tr>
@@ -178,7 +178,7 @@ const KasUI = ((SET) => {
 const KasController = ((SET, UI) => {
     const __fetchDirectKas = (TOKEN, filter = {}, link = null) => {
         $.ajax({
-            url: `${link === null ? SET.__apiURL() + "admin/get_showJurnalUmum" : link}`,
+            url: `${link === null ? SET.__apiURL() + "admin/jurnalUmum" : link}`,
             type: "GET",
             dataType: "JSON",
             data: filter,
@@ -188,9 +188,9 @@ const KasController = ((SET, UI) => {
             },
             success: (res) => {
                 // $("#count_regencies").text(res.total_all);
-                if (res.results.length !== 0) {
+                if (res.results.data.length !== 0) {
                     UI.__renderDirectData(res, filter);
-                    // UI.__renderDirectFooter(res, filter);
+                    UI.__renderDirectFooter(res, filter);
                 } else {
                     UI.__renderDirectNoData();
                 }
@@ -221,7 +221,7 @@ const KasController = ((SET, UI) => {
     };
 
     const __detailJurnalUmum = (TOKEN) => {
-        let table_hidden = $("#t_jurnalUmum, #direct_filter");
+        let table_hidden = $("#t_jurnalUmum, #search");
         $("#t_jurnalUmum tbody").on("click", "button", function (e) {
             id = this.id.slice(-1);
             table_hidden.hide();
@@ -269,52 +269,6 @@ const KasController = ((SET, UI) => {
             });
         });
     }
-
-    const __pluginDirectInitPerkiraan = (TOKEN) => {
-        $("#direct_perkiraan").select2({
-            placeholder: "-- Select Perkiraan --",
-            ajax: {
-                url: `${SET.__apiURL()}admin/get_perkiraan`,
-                dataType: "JSON",
-                type: "GET",
-                headers: {
-                    Authorization: `Bearer ${TOKEN}`,
-                },
-                data: function (params) {
-                    let query = {
-                        search: params.term,
-                    };
-
-                    return query;
-                },
-                processResults: function (res) {
-                    let filtered = [];
-
-                    if (res.results.data.length !== 0) {
-                        let group = {
-                            text: "Perkiraan",
-                            children: [],
-                        };
-
-                        res.results.data.map((v) => {
-                            let perkiraan = {
-                                id: v.id,
-                                text: `${SET.__threedigis(v.perkiraan_no)} | ${v.perkiraan_name}`,
-                            };
-
-                            group.children.push(perkiraan);
-                        });
-
-                        filtered.push(group);
-                    }
-                    return {
-                        results: filtered,
-                    };
-                },
-                cache: true,
-            },
-        });
-    };
 
     const __submitAdd = (TOKEN, filter) => {
         $("#form_add").validate({
@@ -565,56 +519,56 @@ const KasController = ((SET, UI) => {
         });
     }
 
-    const __submitDirectFilter = (TOKEN, filter) => {
-        $(document).ready(function () {
-            $('#submit_filter').on("click", "button", function (e) {
-                e.preventDefault();
+    // const __submitDirectFilter = (TOKEN, filter) => {
+    //     $(document).ready(function () {
+    //         $('#submit_filter').on("submit", function (e) {
+    //             e.preventDefault();
 
-                bulan = $('#month').val()
-                tahun = $('#year').val()
+    //             bulan = $('#month').val()
+    //             tahun = $('#year').val()
 
-                $.ajax({
-                    url: `${SET.__apiURL()}admin/get_searchJurnalUmum?bulan=${bulan}&tahun=${tahun}`,
-                    type: "GET",
-                    dataType: "JSON",
-                    headers: {
-                        Authorization: `Bearer ${TOKEN}`,
-                    },
-                    success: (res) => {
-                        if (res.periode !== null) {
-                            __fetchDirectKas(TOKEN, filter, null);
-                        } else {
-                            UI.__renderDirectNoData();
-                        }
-                    },
-                    error: (err) => {
-                        let error = err.responseJSON;
-                        toastr.error(
-                            "Failed",
-                            error.error,
-                            SET.__bottomNotif()
-                        );
-                    },
-                    complete: () => {
-                        SET.__closeButtonLoader("#btn_submit");
-                    },
-                    statusCode: {
-                        422: function () {
-                            toastr.error(
-                                "Please Check Input Name or Value",
-                                "Failed",
-                                SET.__bottomNotif()
-                            );
-                        },
-                        401: function () {
-                            window.location.href = `${SET.__baseURL()}delete_session`;
-                        },
-                        500: function () {},
-                    },
-                });
-            });
-        });
-    };
+    //             $.ajax({
+    //                 url: `${SET.__apiURL()}admin/get_searchJurnalUmum?bulan=${bulan}&tahun=${tahun}`,
+    //                 type: "GET",
+    //                 dataType: "JSON",
+    //                 headers: {
+    //                     Authorization: `Bearer ${TOKEN}`,
+    //                 },
+    //                 success: (res) => {
+    //                     if (res.periode !== null) {
+    //                         __fetchDirectKas(TOKEN, filter);
+    //                     } else {
+    //                         UI.__renderDirectNoData();
+    //                     }
+    //                 },
+    //                 error: (err) => {
+    //                     let error = err.responseJSON;
+    //                     toastr.error(
+    //                         "Failed",
+    //                         error.error,
+    //                         SET.__bottomNotif()
+    //                     );
+    //                 },
+    //                 complete: () => {
+    //                     SET.__closeButtonLoader("#btn_submit");
+    //                 },
+    //                 statusCode: {
+    //                     422: function () {
+    //                         toastr.error(
+    //                             "Please Check Input Name or Value",
+    //                             "Failed",
+    //                             SET.__bottomNotif()
+    //                         );
+    //                     },
+    //                     401: function () {
+    //                         window.location.href = `${SET.__baseURL()}delete_session`;
+    //                     },
+    //                     500: function () {},
+    //                 },
+    //             });
+    //         });
+    //     });
+    // };
 
     const __openDelete = () => {
         $("#t_detailJurnalUmum, #options").on("click", ".btn-delete", function () {
@@ -658,6 +612,18 @@ const KasController = ((SET, UI) => {
     const __openDirectOption = () => {
         $("#btn_direct_option").on("click", function () {
             $("#option_direct_container").toggle();
+        });
+    };
+
+    const __submitDirectFilter = (TOKEN, filter) => {
+        $("#form_direct_filter").on("submit", function (e) {
+            e.preventDefault();
+
+                filter.month = $('#month').val()
+                filter.year = $('#year').val()
+                filter.limit = $("#limit").val()
+
+                __fetchDirectKas(TOKEN, filter, null);
         });
     };
 
@@ -707,7 +673,6 @@ const KasController = ((SET, UI) => {
             __fetchDirectKas(TOKEN, direct_filter, null);
             __clickDirectPagination(TOKEN, direct_filter)
             __closeDirectFilter(TOKEN)
-            __pluginDirectInitPerkiraan(TOKEN)
 
             __submitUpdateKas(TOKEN, id);
 

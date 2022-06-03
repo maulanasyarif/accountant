@@ -1,6 +1,6 @@
 @extends('__layout.app')
 
-@section('title', 'Buku Kas')
+@section('title', 'Buku Besar')
 
 @section('css-source')
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/libs/select2_new/dist/css/select2.min.css') }}">
@@ -14,7 +14,7 @@
 <div class="page-breadcrumb">
     <div class="row">
         <div class="col-5 align-self-center">
-            <h4 class="page-title">{{ __('Buku Kas') }}</h4>
+            <h4 class="page-title">{{ __('Buku Besar') }}</h4>
         </div>
         <div class="col-7 align-self-center">
             <div class="d-flex align-items-center justify-content-end">
@@ -24,7 +24,7 @@
                             <a href="{{ url('dashboard') }}">{{ __('Dasbor') }}</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            <a href="{{ url('bukuKas') }}">{{ __('Buku Kas') }}</a>
+                            <a href="{{ url('bukuKas') }}">{{ __('Buku Besar') }}</a>
                         </li>
                     </ol>
                 </nav>

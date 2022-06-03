@@ -9,25 +9,25 @@ const SettingController = (() => {
         if (ENV === "DEVELOPMENT") {
             return `${PROTOCOL}//${HOST}/`;
         } else {
-            return `${PROTOCOL}//${HOST}/admin-dipass-provider/public/`;
+            return `${PROTOCOL}//${HOST}/user-mika/public/`;
         }
     }
 
     const __selfPublicURL = () => {
 
         if (ENV === "DEVELOPMENT") {
-            return "http://admin-dipass-provider.test/";
+            return "http://user-mika.test:8080/";
         } else {
-            return "http://dipass.id/admin-dipass-provider/public/";
+            return "http://user-mika/public/";
         }
     }
 
     return {
         __publicURL: () => {
             if (ENV === "DEVELOPMENT") {
-                return "http://admin-dipass-provider.test/";
+                return "http://user-mika.test:8080/";
             } else {
-                return "http://dipass.id/admin-dipass-provider/public/";
+                return "http://user-mika/public/";
             }
         },
 
@@ -38,23 +38,23 @@ const SettingController = (() => {
             if (ENV === "DEVELOPMENT") {
                 return `${PROTOCOL}//${HOST}/`;
             } else {
-                return `${PROTOCOL}//${HOST}/admin-dipass-provider/public/`;
+                return `${PROTOCOL}//${HOST}/user-mika/public/`;
             }
         },
 
         __apiURL: () => {
             if (ENV === "DEVELOPMENT") {
-                return "http://api-dipass-provider.test/admin/";
+                return "http://api-mika.test:8080/api/";
             } else {
-                return "http://dipass.id/api-dipass-provider/public/admin/";
+                return "http://api-mika/public/";
             }
         },
 
         __fileURL: () => {
             if (ENV === "DEVELOPMENT") {
-                return "http://api-dipass-provider.test/file/";
+                return "http://api-mika.test:8080/api/file/";
             } else {
-                return "http://dipass.id/api-dipass-provider/public/file/";
+                return "http://api-mika/public/file/";
             }
         },
 
@@ -220,11 +220,24 @@ const SettingController = (() => {
             return Math.abs(num) * -1;
         },
 
-         __threedigis: num => {
+        __getMonth: (date) => {
+
+            const d = new Date(date);
+            const ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(d);
+            const mo = new Intl.DateTimeFormat('en', { month: 'long' }).format(d);
+            
+            return `${mo} ${ye}`;
+        },
+
+        __getlastthreedigit: num =>{
+            return sprintf("%04d", num);
+        },
+
+        __threedigis: num => {
             return parseFloat(num).toLocaleString();
             // return parseFloat(num.replace(".", "").replace("", "."));
         },
-
+        
         __realCurrency: num => {
             return parseFloat(num).toLocaleString(["ban", "id"]);
         },

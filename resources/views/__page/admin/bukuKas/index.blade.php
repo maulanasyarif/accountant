@@ -24,7 +24,7 @@
                             <a href="{{ url('dashboard') }}">{{ __('Dasbor') }}</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            <a href="{{ url('bukuKasAdmin') }}">{{ __('Buku Kas') }}</a>
+                            <a href="{{ url('bukuKasAdmin') }}">{{ __('Buku Besar') }}</a>
                         </li>
                     </ol>
                 </nav>

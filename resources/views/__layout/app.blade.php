@@ -285,10 +285,10 @@
                                     href="{{ url('perkiraanAdmin') }}" aria-expanded="false"><i
                                         class="mdi mdi-receipt"></i><span
                                         class="hide-menu text-white">{{ __('Perkiraan') }}</span></a></li>
-                            <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
+                            <!-- <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                     href="{{ url('daftarPerkiraanAdmin') }}" aria-expanded="false"><i
                                         class="mdi mdi-receipt"></i><span
-                                        class="hide-menu text-white">{{ __('Daftar Perkiraan') }}</span></a></li>
+                                        class="hide-menu text-white">{{ __('Daftar Perkiraan') }}</span></a></li> -->
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                     href="{{ url('jurnalUmumAdmin') }}" aria-expanded="false"><i
                                         class="mdi mdi-receipt"></i><span
@@ -296,7 +296,7 @@
                             <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                     href="{{ url('bukuKasAdmin') }}" aria-expanded="false"><i
                                         class="mdi mdi-receipt"></i><span
-                                        class="hide-menu text-white">{{ __('Buku KAS') }}</span></a></li>
+                                        class="hide-menu text-white">{{ __('Buku Besar') }}</span></a></li>
                         </ul>
                     </li>
 
@@ -360,13 +360,13 @@
                                 href="javascript:void(0)" aria-expanded="false"><span
                                     class="hide-menu text-white">Manajemen Laporan</span></a>
                             <ul aria-expanded="false" class="collapse first-level">
-                                <li class="sidebar-item">
+                                <!-- <li class="sidebar-item">
                                     <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('neraca') }}" aria-expanded="false"><i
                                             class="mdi mdi-receipt"></i><span
                                             class="hide-menu text-white">{{ __('Neraca') }}</span>
                                     </a>
-                                </li>
+                                </li> -->
                                 <li class="sidebar-item">
                                     <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('saldo') }}" aria-expanded="false"><i
@@ -374,13 +374,13 @@
                                             class="hide-menu text-white">{{ __('Neraca Saldo') }}</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-item">
+                                <!-- <li class="sidebar-item">
                                     <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('labaRugi') }}" aria-expanded="false"><i
                                             class="mdi mdi-receipt"></i><span
                                             class="hide-menu text-white">{{ __('Laba Rugi') }}</span>
                                     </a>
-                                </li>
+                                </li> -->
                             </ul>
                         </li>
 
@@ -404,7 +404,7 @@
                                 <li class="sidebar-item"> <a class="sidebar-link waves-effect waves-dark sidebar-link"
                                         href="{{ url('bukuKas') }}" aria-expanded="false"><i
                                             class="mdi mdi-receipt"></i><span
-                                            class="hide-menu text-white">{{ __('Buku Kas') }}</span></a></li>
+                                            class="hide-menu text-white">{{ __('Buku Besar') }}</span></a></li>
                             </ul>
                         </li>
 
